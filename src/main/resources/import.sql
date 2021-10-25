@@ -1,0 +1,5 @@
+-- SELECT * from note;
+-- INSERT INTO note (header, content)
+-- VALUES
+-- ('header1','content1'),
+-- ('header2','content2');

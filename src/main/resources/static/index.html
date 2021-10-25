@@ -1,0 +1,71 @@
+<!doctype html>
+
+<html ng-app="app">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script src="index.js"></script>
+    <script type="text/javascript">
+
+        function auto_grow(element) {
+            element.style.height = "5px";
+            element.style.height = (element.scrollHeight)+"px";
+        }
+
+    </script>
+    <style>
+        textarea {
+            resize: none;
+            overflow: hidden;
+            min-height: 50px;
+            max-height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container" ng-controller="indexController">
+    <h1>Team Notes</h1>
+
+    <h3>Notes</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-6 col-sm-4 col-md-4 " ng-repeat="n in Notes">
+                <div class="border border-info rounded mb-3">
+                    <div class="margin-top border-bottom ">
+                       <input class="form-control bg-primary bg-opacity-10 text-white rounded-15" value="{{n.header}}"/>
+                    </div>
+                    <div class="m-1">
+                        <textarea class="form-control">{{n.content}}</textarea>
+                    </div>
+
+                    <div class="margin-bottom m-1 font-weight-light small">created at: {{n.createDate}}</div>
+                    <div class="margin-bottom m-1 font-weight-light small">updated at: {{n.lastModifiedDate}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3>Save new note</h3>
+    <form novalidate ng-submit="saveNote()">
+        <div class="form-group col-md-6">
+            <label>Header</label>
+            <input class="form-control" type="text" ng-model="newNote.header">
+        </div>
+        <div class="form-group col-md-6">
+            <label>Content</label>
+            <textarea oninput="auto_grow(this)" class="form-control" type="text" ng-model="newNote.content"></textarea>
+        </div>
+        <div>
+            <button class="btn btn-success" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
