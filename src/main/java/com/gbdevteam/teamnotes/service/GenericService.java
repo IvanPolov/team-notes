@@ -12,7 +12,7 @@ public interface GenericService<T> {
 
     void findById(UUID id);
 
-    void delete(T t);
+    void deleteById(UUID id);
 
     void create(T t);
 

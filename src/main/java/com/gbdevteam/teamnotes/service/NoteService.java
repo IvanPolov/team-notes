@@ -32,8 +32,8 @@ public class NoteService implements  GenericService<Note>{
     }
 
     @Override
-    public void delete(Note note) {
-        noteRepository.delete(note);
+    public void deleteById(UUID id) {
+        noteRepository.deleteById(id);
     }
 
     @Override
