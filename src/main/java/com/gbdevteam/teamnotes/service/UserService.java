@@ -1,16 +1,18 @@
 package com.gbdevteam.teamnotes.service;
 
+import com.gbdevteam.teamnotes.dtos.BoardDto;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements GenericService<User>{
+public class UserService implements GenericService<User> {
 
     private final UserRepository userRepository;
 
@@ -22,13 +24,9 @@ public class UserService implements GenericService<User>{
 
     @Override
     public void findById(UUID id) {
-        userRepository.findById(id);
+         userRepository.findById(id);
     }
 
-    @Override
-    public void delete(User user) {
-        userRepository.delete(user);
-    }
 
     @Override
     public void create(User user) {
@@ -38,5 +36,10 @@ public class UserService implements GenericService<User>{
     @Override
     public void update(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public void delete(User user) {
+        userRepository.delete(user);
     }
 }
