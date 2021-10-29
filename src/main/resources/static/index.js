@@ -8,6 +8,14 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
                 $scope.fillTable();
             })
 
+    }
+    $scope.deleteNote = function (id) {
+        console.log('product id: '+id)
+        $http.delete(contextPath + '/note/'+ id)
+            .then(function (resp){
+                $scope.fillTable();
+            })
+
     };
 
     $scope.fillTable = function () {

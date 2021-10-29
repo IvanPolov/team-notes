@@ -26,8 +26,8 @@ public class BoardService implements GenericService<Board> {
     }
 
     @Override
-    public void delete(Board board) {
-        boardRepository.delete(board);
+    public void deleteById(UUID id) {
+        boardRepository.deleteById(id);
     }
 
     @Override

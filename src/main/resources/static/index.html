@@ -1,22 +1,27 @@
 <!doctype html>
 
-<html ng-app="app">
+<html ng-app="app" xmlns="http://www.w3.org/1999/html">
 
 <head>
+    <title>Team Notes</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
     <script src="index.js"></script>
     <script type="text/javascript">
-
         function auto_grow(element) {
             element.style.height = "5px";
-            element.style.height = (element.scrollHeight)+"px";
+            element.style.height = (element.scrollHeight) + "px";
         }
 
+        function showStuff(id, show) {
+            let btn = document.getElementById(id);
+            if (show) {
+                btn.style.display = 'block';
+            } else btn.style.display = 'none';
+        }
     </script>
     <style>
         textarea {
@@ -25,47 +30,89 @@
             min-height: 50px;
             max-height: 100px;
         }
+
+        html,body {
+            height: 100%;
+        }
+        body{
+            min-height: 100%;
+        }
+        .notes{
+            height: 100%;
+        }
+        .row{
+            margin:auto;
+            width: 100%;
+        }
+        .circle{
+            width: 50px;
+            height: 50px;
+        }
     </style>
 </head>
 
-<body>
+<body onload="showStuff('add_new_note',false)" class="d-flex flex-column">
+<div class="header">
+    <h3 class="text-secondary m-2">Team Notes</h3>
+</div>
+<div class="pl-4 row bg-secondary">
+    <div class="align-self-center">
+        <h3 class="mr-3">Boards</h3>
+    </div>
+    <div class="circle border border-primary rounded-circle m-2 p-2 bg-white align-self-center">
+        <h5 class="text-center">b1w</h5>
+    </div>
+    <div class="circle border border-primary rounded-circle m-2 p-2 bg-white align-self-center">
+        <h5 class="text-center">b2</h5>
+    </div>
+</div>
+<div class="notes d-flex bg-light">
+    <div class="m-3 container" ng-controller="indexController">
 
-<div class="container" ng-controller="indexController">
-    <h1>Team Notes</h1>
-
-    <h3>Notes</h3>
-    <div class="container">
+        <div class="row m-1">
+            <h4>Notes</h4>
+            <input type="button" class="btn btn-primary ml-2" value="add"
+                   onclick="showStuff('add_new_note',true)"/>
+        </div>
         <div class="row">
-            <div class="col-xs-6 col-sm-4 col-md-4 " ng-repeat="n in Notes">
-                <div class="border border-info rounded mb-3">
-                    <div class="margin-top border-bottom ">
-                       <input class="form-control bg-primary bg-opacity-10 text-white rounded-15" value="{{n.header}}"/>
-                    </div>
-                    <div class="m-1">
-                        <textarea class="form-control">{{n.content}}</textarea>
-                    </div>
+            <div class="d-flex align-content-start flex-wrap">
+                <!--       add note         -->
+                <div id="add_new_note" class="border border-info rounded mb-3 m-2 ">
+                    <form novalidate ng-submit="saveNote()">
+                        <div class="margin-top border-bottom input_group bg-primary bg-opacity-10 text-white rounded-15 p-1">
+                            <input class="form-control" type="text" ng-model="newNote.header"
+                                   placeholder="note header...">
+                        </div>
+                        <div class="m-1">
+                            <textarea oninput="auto_grow(this)" placeholder="text of your note..."
+                                      class="form-control" type="text" ng-model="newNote.content"></textarea>
+                        </div>
+                        <button class="btn btn-success m-1" type="submit">Create</button>
+                        <button class="btn btn-success m-1" type="button" onclick="showStuff('add_new_note',false)">
+                            Hide
+                        </button>
+                    </form>
+                </div>
+                <!--      notes from database          -->
+                <div id="notes-from-database" ng-repeat="n in Notes">
+                    <div class="border border-info rounded mb-3 m-2">
+                        <div class="margin-top border-bottom input_group bg-primary bg-opacity-10 text-white rounded-15 p-1">
+                            <input class="" value="{{n.header}}"/>
+                            <input type="button" class="btn btn-danger rounded-circle" value="X"
+                                   ng-click="deleteNote(n.id)"/>
+                        </div>
+                        <div class="m-1">
+                            <textarea class="form-control">{{n.content}}</textarea>
+                        </div>
 
-                    <div class="margin-bottom m-1 font-weight-light small">created at: {{n.createDate}}</div>
-                    <div class="margin-bottom m-1 font-weight-light small">updated at: {{n.lastModifiedDate}}</div>
+                        <div class="margin-bottom m-1 font-weight-light small">created at: {{n.createDate}}</div>
+                        <div class="margin-bottom m-1 font-weight-light small">updated at: {{n.lastModifiedDate}}</div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
-
-    <h3>Save new note</h3>
-    <form novalidate ng-submit="saveNote()">
-        <div class="form-group col-md-6">
-            <label>Header</label>
-            <input class="form-control" type="text" ng-model="newNote.header">
-        </div>
-        <div class="form-group col-md-6">
-            <label>Content</label>
-            <textarea oninput="auto_grow(this)" class="form-control" type="text" ng-model="newNote.content"></textarea>
-        </div>
-        <div>
-            <button class="btn btn-success" type="submit">Save</button>
-        </div>
-    </form>
 </div>
 </body>
 </html>
