@@ -6,17 +6,16 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
 @Entity
 @NoArgsConstructor
-public class Board {
+public class Board implements Serializable {
     @Id
     private UUID id;
-
     private String name;
-
     private String description;
 
 
@@ -24,4 +23,10 @@ public class Board {
     @ManyToOne
     private User owner;
 
+    public Board(UUID id, String name, String description, User owner) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.owner = owner;
+    }
 }

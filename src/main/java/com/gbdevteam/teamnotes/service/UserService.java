@@ -6,14 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements GenericService<User>{
+public class UserService implements GenericService<User> {
 
     private final UserRepository userRepository;
-
 
     @Override
     public List<User> findAll() {
@@ -21,13 +21,8 @@ public class UserService implements GenericService<User>{
     }
 
     @Override
-    public void findById(UUID id) {
-        userRepository.findById(id);
-    }
-
-    @Override
-    public void deleteById(UUID id) {
-        userRepository.deleteById(id);
+    public Optional<User> findById(UUID id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -38,5 +33,9 @@ public class UserService implements GenericService<User>{
     @Override
     public void update(User user) {
         userRepository.save(user);
+    }
+
+    public void deleteById(UUID id) {
+        userRepository.deleteById(id);
     }
 }

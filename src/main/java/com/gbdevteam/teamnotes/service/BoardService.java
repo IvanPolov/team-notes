@@ -2,11 +2,12 @@ package com.gbdevteam.teamnotes.service;
 
 import com.gbdevteam.teamnotes.model.Board;
 import com.gbdevteam.teamnotes.repository.BoardRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -14,29 +15,25 @@ import java.util.UUID;
 public class BoardService implements GenericService<Board> {
 
     private final BoardRepository boardRepository;
+    private final NoteService noteService; //TODO для связи с записками
 
-    @Override
     public List<Board> findAll() {
        return boardRepository.findAll();
     }
 
-    @Override
-    public void findById(UUID id) {
-        boardRepository.findById(id);
+    public Optional<Board> findById(UUID id) {
+        return boardRepository.findById(id);
     }
 
-    @Override
-    public void deleteById(UUID id) {
-        boardRepository.deleteById(id);
-    }
-
-    @Override
     public void create(Board board) {
         boardRepository.save(board);
     }
 
-    @Override
     public void update(Board board) {
         boardRepository.save(board);
+    }
+
+    public void deleteById(UUID id) {
+        boardRepository.deleteById(id);
     }
 }
