@@ -1,6 +1,5 @@
 package com.gbdevteam.teamnotes.controller;
 
-import com.gbdevteam.teamnotes.dtos.BoardDto;
 import com.gbdevteam.teamnotes.model.Board;
 import com.gbdevteam.teamnotes.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -26,30 +26,29 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public BoardDto getOneBoardById(@PathVariable UUID id) {
-        Board board = boardService.findById(id).orElseThrow(() ->
+    public Optional getOneBoardById(@PathVariable UUID id) throws Throwable {
+        boardService.findById(id).orElseThrow(() ->
                 new NoSuchElementException(
                         "Board doesn't exist with id: " + id));
-        return new BoardDto(board);
+        return boardService.findById(id);
     }
 
     @PostMapping("/create/{id}")
-    public void create(@RequestBody BoardDto boardDto, @RequestParam(name = "id") UUID id) {
-        boardService.create(boardDto);
+    public void create(@RequestBody Board board, @RequestParam(name = "id") UUID id) {
+        boardService.create(board);
         log.info("create new board " + id);
     }
 
     //example, not implemented
     @PutMapping
-    public BoardDto update(@RequestBody BoardDto boardDto){
-        return boardService.update(boardDto);
+    public void update(@RequestBody Board board){
+       boardService.update(board);
     }
 
     //example, not implemented
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable UUID id) {
+    public void deleteById(@PathVariable UUID id) {
         boardService.deleteById(id);
     }
-
 }

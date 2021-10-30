@@ -23,4 +23,10 @@ public class Board implements Serializable {
     @ManyToOne
     private User owner;
 
+    public Board(UUID id, String name, String description, User owner) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.owner = owner;
+    }
 }

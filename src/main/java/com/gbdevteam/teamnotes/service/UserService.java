@@ -1,6 +1,5 @@
 package com.gbdevteam.teamnotes.service;
 
-import com.gbdevteam.teamnotes.dtos.BoardDto;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,17 +15,15 @@ public class UserService implements GenericService<User> {
 
     private final UserRepository userRepository;
 
-
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public void findById(UUID id) {
-         userRepository.findById(id);
+    public Optional<User> findById(UUID id) {
+        return userRepository.findById(id);
     }
-
 
     @Override
     public void create(User user) {
@@ -38,8 +35,7 @@ public class UserService implements GenericService<User> {
         userRepository.save(user);
     }
 
-    @Override
-    public void delete(User user) {
-        userRepository.delete(user);
+    public void deleteById(UUID id) {
+        userRepository.deleteById(id);
     }
 }

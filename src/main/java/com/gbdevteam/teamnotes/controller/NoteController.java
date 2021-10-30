@@ -3,15 +3,19 @@ package com.gbdevteam.teamnotes.controller;
 import com.gbdevteam.teamnotes.model.Note;
 import com.gbdevteam.teamnotes.service.NoteService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequestMapping("/api/v1/note")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class NoteController {
 
     private final NoteService noteService;
@@ -21,9 +25,18 @@ public class NoteController {
         return noteService.findAll();
     }
 
-    @PostMapping
-    public void create(@RequestBody Note note){
+    @GetMapping("/{id}")
+    public Optional getOneNotedById(@PathVariable UUID id) throws Throwable {
+        noteService.findById(id).orElseThrow(() ->
+                new NoSuchElementException(
+                        "Note with id:" + id + "doesn't exist"));
+        return noteService.findById(id);
+    }
+
+    @PostMapping("/create/{id}")
+    public void create(@RequestBody Note note, @RequestParam(name = "id") UUID id){
         noteService.create(note);
+        log.info("create new note " + id);
     }
 
     //example, not implemented
@@ -35,8 +48,8 @@ public class NoteController {
     //example, not implemented
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Note note){
-        noteService.delete(note);
+    public void deleteById(@PathVariable UUID id){
+        noteService.deleteById(id);
     }
 
 }
