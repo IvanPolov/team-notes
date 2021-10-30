@@ -8,9 +8,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="index.js"></script>
     <script type="text/javascript">
+
         function auto_grow(element) {
             element.style.height = "5px";
             element.style.height = (element.scrollHeight) + "px";
@@ -31,20 +32,24 @@
             max-height: 100px;
         }
 
-        html,body {
+        html, body {
             height: 100%;
         }
-        body{
+
+        body {
             min-height: 100%;
         }
-        .notes{
+
+        .notes {
             height: 100%;
         }
-        .row{
-            margin:auto;
+
+        .row {
+            margin: auto;
             width: 100%;
         }
-        .circle{
+
+        .circle {
             width: 50px;
             height: 50px;
         }
@@ -96,17 +101,21 @@
                 <!--      notes from database          -->
                 <div id="notes-from-database" ng-repeat="n in Notes">
                     <div class="border border-info rounded mb-3 m-2">
-                        <div class="margin-top border-bottom input_group bg-primary bg-opacity-10 text-white rounded-15 p-1">
-                            <input class="" value="{{n.header}}"/>
-                            <input type="button" class="btn btn-danger rounded-circle" value="X"
-                                   ng-click="deleteNote(n.id)"/>
-                        </div>
-                        <div class="m-1">
-                            <textarea class="form-control">{{n.content}}</textarea>
-                        </div>
+                      <form name="noteForm" novalidate ng-submit="updateNote(n)" ng-init="updatingNote = {n}" >
+                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-10 text-white rounded-15 p-1">
+                                <input class="" ng-model="n.header" ng-init="n.header" type="text"/>
+                                <input type="button" class="btn btn-danger rounded-circle" value="X"
+                                       ng-click="deleteNote(n.id)"/>
+                            </div>
+                            <div class="m-1">
+                                <textarea class="form-control" ng-model="n.content" ng-init="n.content" required></textarea>
+                            </div>
 
-                        <div class="margin-bottom m-1 font-weight-light small">created at: {{n.createDate}}</div>
-                        <div class="margin-bottom m-1 font-weight-light small">updated at: {{n.lastModifiedDate}}</div>
+                            <div class="margin-bottom m-1 font-weight-light small">created at: {{n.createDate}}</div>
+                            <div class="margin-bottom m-1 font-weight-light small">updated at: {{n.lastModifiedDate}}
+                            </div>
+                            <button class="btn btn-success m-1" type="submit" ng-disabled="noteForm.$pristine|| noteForm.$invalid">Update</button>
+                      </form>
                     </div>
                 </div>
             </div>
