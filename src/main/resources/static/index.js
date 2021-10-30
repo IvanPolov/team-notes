@@ -9,6 +9,14 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             })
 
     }
+
+    $scope.updateNote = function () {
+        $http.put(contextPath + '/note', this.n)
+            .then(function (resp) {
+                $scope.fillTable();
+            })
+
+    }
     $scope.deleteNote = function (id) {
         console.log('product id: '+id)
         $http.delete(contextPath + '/note/'+ id)
