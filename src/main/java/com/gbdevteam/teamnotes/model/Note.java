@@ -30,6 +30,9 @@ public class Note implements Serializable {
     private String content;//second split String -> class Content
 
     @ManyToOne
+    private Board board;
+
+    @ManyToOne
     private User creator;
 
     @CreationTimestamp

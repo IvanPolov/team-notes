@@ -1,6 +1,7 @@
 package com.gbdevteam.teamnotes.controller;
 
 import com.gbdevteam.teamnotes.model.Board;
+import com.gbdevteam.teamnotes.model.Note;
 import com.gbdevteam.teamnotes.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,30 +23,33 @@ public class BoardController {
 
     @GetMapping
     public List<Board> findAll(){
+        log.info("findAllBoards()");
         return boardService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional getOneBoardById(@PathVariable UUID id) throws Throwable {
+    public Optional<Board> getOneBoardById(@PathVariable UUID id) throws Throwable {
         boardService.findById(id).orElseThrow(() ->
                 new NoSuchElementException(
                         "Board doesn't exist with id: " + id));
         return boardService.findById(id);
     }
 
-    @PostMapping("/create/{id}")
-    public void create(@RequestBody Board board, @RequestParam(name = "id") UUID id) {
-        boardService.create(board);
-        log.info("create new board " + id);
+    @GetMapping("/{id}/notes")
+    public List<Note> getNotesByBoardId(@PathVariable UUID id){
+        return boardService.findNotes(id);
     }
 
-    //example, not implemented
+    @PostMapping
+    public void create(@RequestBody Board board) {
+        boardService.create(board);
+    }
+
     @PutMapping
     public void update(@RequestBody Board board){
        boardService.update(board);
     }
 
-    //example, not implemented
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable UUID id) {

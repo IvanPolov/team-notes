@@ -15,7 +15,6 @@ public class UserService implements GenericService<User> {
 
     private final UserRepository userRepository;
 
-    @Override
     public List<User> findAll() {
         return userRepository.findAll();
     }

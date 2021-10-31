@@ -22,21 +22,20 @@ public class NoteController {
 
     @GetMapping
     public List<Note> findAll(){
-        return noteService.findAll();
+        return noteService.findAll(UUID.randomUUID());
     }
 
     @GetMapping("/{id}")
-    public Optional getOneNotedById(@PathVariable UUID id) throws Throwable {
+    public Optional<Note> getOneNotedById(@PathVariable UUID id) throws Throwable {
         noteService.findById(id).orElseThrow(() ->
                 new NoSuchElementException(
                         "Note with id:" + id + "doesn't exist"));
         return noteService.findById(id);
     }
 
-    @PostMapping("/create/{id}")
-    public void create(@RequestBody Note note, @RequestParam(name = "id") UUID id){
+    @PostMapping
+    public void create(@RequestBody Note note){
         noteService.create(note);
-        log.info("create new note " + id);
     }
 
     //example, not implemented

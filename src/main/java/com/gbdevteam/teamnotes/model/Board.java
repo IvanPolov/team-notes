@@ -2,11 +2,11 @@ package com.gbdevteam.teamnotes.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -14,19 +14,22 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Board implements Serializable {
     @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
     private String name;
     private String description;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Note> notes;
 
-    //next split
     @ManyToOne
     private User owner;
 
-    public Board(UUID id, String name, String description, User owner) {
-        this.id = id;
+    public Board(String name, String description) {
         this.name = name;
         this.description = description;
-        this.owner = owner;
     }
 }

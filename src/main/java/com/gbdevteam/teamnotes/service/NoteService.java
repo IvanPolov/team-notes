@@ -19,8 +19,8 @@ public class NoteService implements GenericService<Note> {
 
     private final NoteRepository noteRepository;
 
-    public List<Note> findAll(){
-        return noteRepository.findAll();
+    public List<Note> findAll(UUID boardId){
+        return noteRepository.findAllByBoardId(boardId);
     }
 
     public Optional<Note> findById(UUID id) {

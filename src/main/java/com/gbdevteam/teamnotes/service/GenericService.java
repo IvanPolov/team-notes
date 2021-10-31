@@ -11,7 +11,6 @@ import java.util.UUID;
 @Service
 public interface GenericService<T> {
 
-    List<T> findAll();
     Optional<T> findById(UUID id);
     void create(T t);
     void update(T t);

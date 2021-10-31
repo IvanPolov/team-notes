@@ -23,6 +23,7 @@
                 btn.style.display = 'block';
             } else btn.style.display = 'none';
         }
+
     </script>
     <style>
         textarea {
@@ -53,10 +54,18 @@
             width: 50px;
             height: 50px;
         }
+        /*#add_new_note,.notes_block{*/
+        /*    display: none;*/
+        /*}*/
+        input,textarea
+        {
+            background: transparent;
+            border: none;
+        }
     </style>
 </head>
 
-<body onload="showStuff('add_new_note',false)" class="d-flex flex-column">
+<body class="d-flex flex-column" ng-controller="indexController">
 <div class="header">
     <h3 class="text-secondary m-2">Team Notes</h3>
 </div>
@@ -72,14 +81,52 @@
     </div>
 </div>
 <div class="notes d-flex bg-light">
-    <div class="m-3 container" ng-controller="indexController">
-
-        <div class="row m-1">
+    <div class="m-3 container" >
+        <div class="notes_block row m-1">
             <h4>Notes</h4>
             <input type="button" class="btn btn-primary ml-2" value="add"
                    onclick="showStuff('add_new_note',true)"/>
         </div>
-        <div class="row">
+        <div class="boards_block row">
+            <div class="d-flex align-content-start flex-wrap">
+<!--                       add board         -->
+                <div id="add_new_board" class="border border-info rounded mb-3 m-2 ">
+                    <form novalidate ng-submit="saveBoard()">
+                        <div class="margin-top border-bottom input_group bg-primary bg-opacity-10 text-white rounded-15 p-1">
+                            <input class="form-control" type="text" ng-model="newBoard.name"
+                                   placeholder="board header...">
+                        </div>
+                        <div class="m-1">
+                            <textarea oninput="auto_grow(this)" placeholder="description of your board..."
+                                      class="form-control" type="text" ng-model="newBoard.description"></textarea>
+                        </div>
+                        <button class="btn btn-success m-1" type="submit">Create</button>
+                        <button class="btn btn-success m-1" type="button" onclick="showStuff('add_new_board',false)">Hide</button>
+                    </form>
+                </div>
+                <!--      boards from database          -->
+                <div id="boards-from-database" ng-repeat="board in Boards">
+                    <div class="border border-info rounded mb-3 m-2">
+                       <form name="boardForm" novalidate ng-submit="updateBoard(b)" ng-init="updatingBoard = {b}" >
+                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-10 text-white rounded-15 p-1">
+                                <input class="" ng-model="board.name" ng-init="board.name" type="text"/>
+                                <input type="button" class="btn btn-danger rounded-circle" value="X"
+                                       ng-click="deleteBoard(board.id)"/>
+                            </div>
+                            <div class="m-1">
+                                <textarea class="form-control" ng-model="board.description" ng-init="board.description" required></textarea>
+                            </div>
+
+                            <button class="btn btn-success m-1" type="submit" ng-disabled="boardForm.$pristine|| boardForm.$invalid">Update</button>
+                        </form>
+                            <button class="btn btn-success m-1" type="button" ng-click="fillBoardWithNotes(board)">Select</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="notes_block row">
             <div class="d-flex align-content-start flex-wrap">
                 <!--       add note         -->
                 <div id="add_new_note" class="border border-info rounded mb-3 m-2 ">
