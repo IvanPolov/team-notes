@@ -1,5 +1,14 @@
 angular.module('app', []).controller('indexController', function ($scope, $http) {
     const contextPath = 'http://localhost:8180/team-notes/api/v1';
+
+
+    $scope.acronym = function (sentence, size) {
+        console.log('acronym: ' + sentence + 'size: ' + size);
+        let acro = sentence.split(' ').map(x => x[0]).join('').slice(0, size).toUpperCase();
+        console.log(acro);
+        return acro;
+    }
+
     $scope.saveNote = function () {
         $scope.newNote.board = $scope.currentBoard;
         console.log($scope.newNote)
@@ -20,19 +29,19 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
     }
     $scope.deleteNote = function (id) {
-        console.log('product id: '+id)
-        $http.delete(contextPath + '/note/'+ id)
-            .then(function (resp){
+        console.log('product id: ' + id)
+        $http.delete(contextPath + '/note/' + id)
+            .then(function (resp) {
                 $scope.fillBoardWithNotes();
             })
 
     };
 
     $scope.fillBoardWithNotes = function (currentBoard) {
-        console.log('board id: '+currentBoard.id)
+        console.log('board id: ' + currentBoard.id)
         $scope.currentBoard = currentBoard;
         $http({
-            url: contextPath + '/board/'+ currentBoard.id + '/notes',
+            url: contextPath + '/board/' + currentBoard.id + '/notes',
             method: 'GET'
         }).then(function (response) {
             $scope.Notes = response.data;
@@ -40,7 +49,7 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
     };
 
     $scope.getBoards = function () {
-        console.log('getBoards function');
+        console.log('get all boards function');
         $http({
             url: contextPath + '/board',
             method: 'GET'
@@ -49,6 +58,8 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             console.log($scope.Boards);
         });
     }
+
+    $scope.updateBoard = this.board;
 
     $scope.updateBoard = function () {
         $http.put(contextPath + '/board', this.board)
@@ -69,9 +80,9 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
     }
 
     $scope.deleteBoard = function (id) {
-        console.log('board id: '+id)
-        $http.delete(contextPath + '/board/'+ id)
-            .then(function (resp){
+        console.log('board id: ' + id)
+        $http.delete(contextPath + '/board/' + id)
+            .then(function (resp) {
                 $scope.getBoards();
             })
 
@@ -79,8 +90,10 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
     $scope.getBoards();
 
-    function auto_grow(element) {
+    $scope.auto_grow =  function (element) {
         element.style.height = "5px";
         element.style.height = (element.scrollHeight)+"px";
     }
+
+
 });
