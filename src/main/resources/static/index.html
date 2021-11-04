@@ -40,6 +40,20 @@
         }
 
 
+        function getRandomColor() {
+            console.log('getRandomColor function starts');
+            let elements = document.getElementsByClassName('.header');
+            elements = Array.prototype.slice.call(elements);
+            console.log(elements)
+            var letters = 'BCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * letters.length)];
+            }
+            elements.forEach((el) => {
+                el.style.backgroundColor = color;
+            })
+        }
 
         $(document).ready(function(){
             $('#addBoard').on('shown.bs.modal', function () {
@@ -48,21 +62,6 @@
             $('#addNote').on('shown.bs.modal', function () {
                 $('#createNoteButton').trigger('focus')
             });
-            function getRandomColor() {
-                console.log('getRandomColor function starts');
-                let elements = document.getElementsByClassName('.header');
-                elements = Array.prototype.slice.call(elements);
-                console.log(elements)
-                var letters = 'BCDEF'.split('');
-                var color = '#';
-                for (var i = 0; i < 6; i++ ) {
-                    color += letters[Math.floor(Math.random() * letters.length)];
-                }
-                elements.forEach((el) => {
-                    el.style.backgroundColor = color;
-                })
-            }
-            getRandomColor();
         });
 
     </script>
@@ -181,7 +180,7 @@
                 onclick="showStuff('boards_block',true);showStuff('notes_block',false)">Boards
         </button>
         <button id="addBoardButton" type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#addBoard"
-                onclick="showStuff('boards_block',true);getRandomColor()">
+                onclick="showStuff('boards_block',true)">
             Add
         </button>
     </div>
