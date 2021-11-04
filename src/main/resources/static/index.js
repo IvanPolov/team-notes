@@ -3,10 +3,13 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
 
     $scope.acronym = function (sentence, size) {
-        console.log('acronym: ' + sentence + 'size: ' + size);
-        let acro = sentence.split(' ').map(x => x[0]).join('').slice(0, size).toUpperCase();
-        console.log(acro);
-        return acro;
+        if(sentence != null) {
+            console.log('acronym: ' + sentence + 'size: ' + size);
+            let acro = sentence.split(' ').map(x => x[0]).join('').slice(0, size).toUpperCase();
+            console.log(acro);
+            return acro;
+        }
+        return '';
     }
 
     $scope.saveNote = function () {
@@ -15,7 +18,8 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         $http.post(contextPath + '/note', $scope.newNote)
             .then(function (resp) {
                 $scope.fillBoardWithNotes($scope.newNote.board);
-                $scope.newNote = null
+                $scope.newNote = null;
+                document.querySelector('#closeNoteButton').click();
             })
 
     }
@@ -29,10 +33,10 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
     }
     $scope.deleteNote = function (id) {
-        console.log('product id: ' + id)
+        console.log('note id: ' + id)
         $http.delete(contextPath + '/note/' + id)
             .then(function (resp) {
-                $scope.fillBoardWithNotes();
+                $scope.fillBoardWithNotes($scope.currentBoard);
             })
 
     };
@@ -59,8 +63,6 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         });
     }
 
-    $scope.updateBoard = this.board;
-
     $scope.updateBoard = function () {
         $http.put(contextPath + '/board', this.board)
             .then(function (resp) {
@@ -73,8 +75,12 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         console.log($scope.newBoard)
         $http.post(contextPath + '/board', $scope.newBoard)
             .then(function (resp) {
-                $scope.newBoard = null
                 $scope.getBoards();
+                $scope.newBoard.id = resp.data;
+                console.log($scope.newBoard);
+                $scope.fillBoardWithNotes($scope.newBoard);
+                $scope.newBoard = null
+                document.querySelector('#closeCreateBoardButton').click();
             })
 
     }
@@ -89,11 +95,6 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
     };
 
     $scope.getBoards();
-
-    $scope.auto_grow =  function (element) {
-        element.style.height = "5px";
-        element.style.height = (element.scrollHeight)+"px";
-    }
 
 
 });

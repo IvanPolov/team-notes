@@ -28,7 +28,7 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Board> getOneBoardById(@PathVariable UUID id) throws Throwable {
+    public Optional<Board> getOneBoardById(@PathVariable UUID id) throws NoSuchElementException {
         boardService.findById(id).orElseThrow(() ->
                 new NoSuchElementException(
                         "Board doesn't exist with id: " + id));
@@ -41,8 +41,8 @@ public class BoardController {
     }
 
     @PostMapping
-    public void create(@RequestBody Board board) {
-        boardService.create(board);
+    public UUID create(@RequestBody Board board) {
+        return boardService.create(board);
     }
 
     @PutMapping

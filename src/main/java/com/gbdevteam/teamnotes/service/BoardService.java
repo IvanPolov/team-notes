@@ -27,8 +27,8 @@ public class BoardService implements GenericService<Board> {
         return boardRepository.findById(id);
     }
 
-    public void create(Board board) {
-        boardRepository.save(board);
+    public UUID create(Board board) {
+       return boardRepository.save(board).getId();
     }
 
     public void update(Board board) {

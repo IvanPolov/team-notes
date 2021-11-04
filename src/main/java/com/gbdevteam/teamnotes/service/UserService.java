@@ -25,8 +25,8 @@ public class UserService implements GenericService<User> {
     }
 
     @Override
-    public void create(User user) {
-        userRepository.save(user);
+    public UUID create(User user) {
+      return  userRepository.save(user).getId();
     }
 
     @Override

@@ -28,8 +28,8 @@ public class NoteService implements GenericService<Note> {
     }
 
     @Override
-    public void create(Note note) {
-        noteRepository.save(note);
+    public UUID create(Note note) {
+        return noteRepository.save(note).getId();
     }
 
     @Override
@@ -41,10 +41,4 @@ public class NoteService implements GenericService<Note> {
         noteRepository.deleteById(id);
     }
 
-    @PostConstruct
-    public void init(){
-        noteRepository.save(new Note("title","some notes"));
-        noteRepository.save(new Note("title2","some notes some notes"));
-        noteRepository.save(new Note("title3","some notes some notes some notes some notes"));
-    }
 }
