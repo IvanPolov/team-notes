@@ -1,0 +1,171 @@
+textarea {
+    resize: none;
+    overflow: hidden;
+    min-height: 50px;
+    max-height: 100px;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+}
+
+.notes {
+    height: 100%;
+}
+
+.note:hover, .board:hover {
+    box-shadow: 3px 3px 4px 4px rgba(0, 70, 130, .5);
+}
+
+.note, .board {
+    box-shadow: 1px 1px 2px 2px rgba(0, 114, 207, .5);
+    background: rgb(235, 235, 245);
+}
+
+.row {
+    margin: auto;
+    width: 100%;
+}
+
+.circle {
+    width: 50px;
+    height: 25px;
+}
+
+#add_new_note, .notes_block {
+    display: none;
+}
+
+.boards_block {
+    display: none;
+}
+
+.input-header[type="text"] {
+    padding-left: 15px;
+    font-weight: bold;
+}
+
+.link_button {
+    display: block;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+    font: small-caps bold 15px/1 sans-serif;
+}
+
+.link_button:hover {
+    text-shadow: 2px 2px 5px 5px rgba(0, 70, 130, .5);
+    position: relative;
+}
+
+.main_header {
+    text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;
+    font: small-caps bold 20px/1 sans-serif;
+    /*height: 20px;*/
+}
+
+.text-dec {
+    text-decoration: none;
+}
+
+.container {
+    max-width: 100%;
+    padding: 0;
+}
+
+.fake-input:disabled {
+    cursor: pointer;
+    background: transparent;
+}
+
+.fake-input {
+    width: 50px;
+    z-index: 1;
+    text-align: center;
+    font: small-caps bold 15px/1 sans-serif;
+    background: transparent;
+}
+
+.fake_label:after {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    content: "";
+    background: transparent;
+    width: 50px;
+    height: 50px;
+    display: block;
+    z-index: 999;
+}
+
+input, textarea {
+    background: transparent;
+    border: none;
+}
+
+.button-no-style, .input-no-style[type="submit"], .input-no-style[type="reset"] {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+.button-no-style:hover {
+    background: rgb(50, 50, 50) none;
+    color: whitesmoke;
+}
+
+.button-simple-style {
+    background: rgba(20, 20, 20, 0.8) none;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    padding: 3px;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+.button-simple-style:hover {
+    background: rgb(80, 80, 100) none;
+}
+
+.dropdown-button {
+    color: whitesmoke;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.bg-easy {
+    background: rgb(225, 225, 225);
+}
+
+.small-button {
+    height: 30px;
+    width: 30px;
+}
+
+.vl {
+    height: 80%;
+    border: 1px solid rgb(50, 50, 50);
+}
+
+.header {
+    box-shadow: 0 2px 7px 0 rgb(27 2 104);
+    order: 0;
+    z-index: 2;
+}

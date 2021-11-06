@@ -1,8 +1,13 @@
 package com.gbdevteam.teamnotes.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -29,8 +34,15 @@ public class Note implements Serializable {
     @Column(length = 600)
     private String content;//second split String -> class Content
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JsonBackReference
     @ManyToOne
+    @JoinColumn(name = "board_id", insertable = false, updatable = false)
     private Board board;
+
+    @Column(name = "board_id")
+    private UUID boardId;
 
     @ManyToOne
     private User creator;

@@ -8,202 +8,195 @@
     <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">-->
     <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
     <!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"-->
+    <!--          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/7ffeb8118c.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-            crossorigin="anonymous"></script>
+    <!--    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"-->
+    <!--            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"-->
+    <!--            crossorigin="anonymous"></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"-->
+    <!--            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"-->
+    <!--            crossorigin="anonymous"></script>-->
+    <!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"-->
+    <!--            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"-->
+    <!--            crossorigin="anonymous"></script>-->
 
+    <!--        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"-->
+    <!--                integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>-->
+    <!--        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"-->
+    <!--                integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>-->
     <script src="index.js"></script>
-    <script>
-
-        function auto_grow(element) {
-            element.style.height = "5px";
-            element.style.height = (element.scrollHeight) + "px";
-        }
-
-        function showStuff(className, show) {
-            console.log(className);
-            let elements = document.getElementsByClassName(className);
-            elements = Array.prototype.slice.call(elements);
-            elements.forEach((el) => {
-                if (show) el.style.display = 'block';
-                else el.style.display = 'none';
-            })
-        }
-
-
-        function getRandomColor() {
-            console.log('getRandomColor function starts');
-            let elements = document.getElementsByClassName('.header');
-            elements = Array.prototype.slice.call(elements);
-            console.log(elements)
-            var letters = 'BCDEF'.split('');
-            var color = '#';
-            for (var i = 0; i < 6; i++ ) {
-                color += letters[Math.floor(Math.random() * letters.length)];
-            }
-            elements.forEach((el) => {
-                el.style.backgroundColor = color;
-            })
-        }
-
-        $(document).ready(function(){
-            $('#addBoard').on('shown.bs.modal', function () {
-                $('#createBoardButton').trigger('focus')
-            });
-            $('#addNote').on('shown.bs.modal', function () {
-                $('#createNoteButton').trigger('focus')
-            });
-        });
-
-    </script>
+    <script type="text/javascript" src="front.js"></script>
+    <link rel="stylesheet" href="style.css">
     <style>
-        textarea {
-            resize: none;
-            overflow: hidden;
-            min-height: 50px;
-            max-height: 100px;
-        }
-
-        html, body {
-            height: 100%;
-        }
-
-        body {
-            min-height: 100%;
-        }
-
-        .notes {
-            height: 100%;
-        }
-        .note:hover,.board:hover{
-            box-shadow: 3px 3px 4px 4px rgba(0, 70, 130, .5);
-        }
-
-        .row {
-            margin: auto;
-            width: 100%;
-        }
-
-        .circle {
-            width: 50px;
-            height: 25px;
-        }
-
-        #add_new_note, .notes_block {
-            display: none;
-        }
-
-        .boards_block {
-            display: none;
-        }
-
-        .link_button {
-            display: block;
-            cursor: pointer;
-            text-decoration: none;
-            font: small-caps bold 15px/1 sans-serif;
-        }
-
-        .link_button:hover {
-            box-shadow: 1px 1px 3px 3px rgba(0, 70, 130, .5);
-            position: relative;
-        }
-
-        .text-dec {
-            text-decoration: none;
-        }
-
-        .container {
-            max-width: 100%;
-        }
-
-        .fake-input:disabled {
-            cursor: pointer;
-            background: transparent;
-        }
-
-        .fake-input {
-            width: 50px;
-            z-index: 1;
-            text-align: center;
-            font: small-caps bold 15px/1 sans-serif;
-            background: transparent;
-        }
-
-        .fake_label:after {
+        .ng-hide:not(.ng-hide-animate) {
+            /* These are just alternative ways of hiding an element */
+            display: block!important;
+            visibility: hidden;
             position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            content: "";
-            background: transparent;
-            width: 50px;
-            height: 50px;
-            display: block;
-            z-index: 999;
+            top: -9999px;
+            left: -9999px;
         }
-
-        input, textarea {
-            background: transparent;
-            border: none;
+        .ng-disable{
+            visibility: hidden;
         }
-
-        .unselectable {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
     </style>
 </head>
 
 <body class="d-flex flex-column" ng-controller="indexController">
-<div class="header bg-dark unselectable">
-    <h3 class="text-light m-2">Team Notes</h3>
+<div class="header bg-dark unselectable d-flex align-items-center flex-wrap">
+        <div class="main_header text-light m-2 text-center align-middle">Team Notes</div>
+        <div class="vl"></div>
+        <div class="dropdown d-flex items-align-center m-2">
+            <button class="button-no-style dropdown-button dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                Boards
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li>
+                    <button class="button-no-style w-100" type="button"
+                            onclick="showStuff('boards_block',true);showStuff('notes_block',false)">Your Boards
+                    </button>
+                    <hr class="m-2">
+                </li>
+
+                <li ng-repeat="board in Boards"><a class="link_button m-2"
+                                                   type="button"
+                                                   onclick="showStuff('boards_block',false);showStuff('notes_block',true)"
+                                                   ng-click="fillBoardWithNotes(board)" title="{{board.name}}">{{board.name}}</a>
+                </li>
+            </ul>
+        </div>
+<!--create board button-->
+        <button id="addBoardButton" type="button" class="button-simple-style m-2" data-bs-toggle="modal"
+                data-bs-target="#addBoard" title="Create a new board"
+                onclick="showStuff('boards_block',true)">
+            Create
+        </button>
+<!--    -->
+        <div class="vl"></div>
 </div>
 <div class="pl-4 d-flex flex-wrap bg-secondary unselectable">
-    <div class="align-self-center">
 
-        <button class="btn btn-dark m-2" type="button"
-                onclick="showStuff('boards_block',true);showStuff('notes_block',false)">Boards
-        </button>
-        <button id="addBoardButton" type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#addBoard"
-                onclick="showStuff('boards_block',true)">
-            Add
-        </button>
-    </div>
+    <!--    old style (button for each board with acronym names) -->
+    <!--    <div class="d-flex align-items-center btn-group btn-group-toggle" ng-repeat="board in Boards">-->
+    <!--        <a class="link_button circle bg-light rounded m-2 align-self-center align-items-center d-flex"-->
+    <!--           type="button" onclick="showStuff('boards_block',false);showStuff('notes_block',true)"-->
+    <!--           ng-click="fillBoardWithNotes(board)" title="{{board.name}}">-->
+    <!--            <label class="fake_label unselectable"><input type="text" class="fake-input user-select-none unselectable"-->
+    <!--                                                          ng-value="acronym(board.name,3)" disabled>-->
+    <!--            </label>-->
 
-        <div class="d-flex align-items-center btn-group btn-group-toggle" ng-repeat="board in Boards">
-                    <a class="link_button circle bg-light rounded m-2 align-self-center align-items-center d-flex"
-                       type="button" onclick="showStuff('boards_block',false);showStuff('notes_block',true)"
-                       ng-click="fillBoardWithNotes(board)" title ="{{board.name}}">
-                        <label class="fake_label unselectable"><input type="text" class="fake-input user-select-none unselectable" ng-value="acronym(board.name,3)" disabled>
-                        </label>
-
-                    </a>
-        </div>
+    <!--        </a>-->
+    <!--    </div>-->
 </div>
+<!-- container for notes or boards -->
+<div class="notes d-flex bg-easy">
+    <div class="container">
+        <div class="notes_block row">
+            <div class="bg-secondary text-light p-1 d-flex justify-content-between align-items-center">
+                <h4>{{currentBoard.name}}</h4>
 
+                <button type="button" class="button-simple-style m-2" data-bs-toggle="modal" data-bs-target="#addUser">
+                    Invite
+                </button>
+            </div>
+            <div class="d-flex align-items-center">
+                <h4>Notes</h4>
+                <button type="button" class="button-simple-style m-2" data-bs-toggle="modal" data-bs-target="#addNote">
+                    Create
+                </button>
+            </div>
+
+
+        </div>
+
+        <!--      boards from database          -->
+        <div class="boards_block row">
+            <div class="d-flex align-content-start flex-wrap">
+                <div id="boards-from-database" ng-repeat="board in Boards">
+                    <div class="board rounded mb-3 m-2">
+                        <form name="boardForm" novalidate ng-submit="updateBoard(b)" ng-init="updatingBoard = {b}">
+                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-5 text-white rounded-15 p-1">
+                                <input class="pl-5 input-header" ng-model="board.name" ng-init="board.name" title="{{board.name}}"
+                                       type="text" required/>
+                                <button type="button" class="btn p-2" aria-label="Edit"
+                                        ng-click="editBoard(board.id)">
+<!--                                        <i class="fas fa-edit"></i>-->
+                                </button>
+                                <button type="button" class="btn p-2" aria-label="Delete"
+                                        ng-click="deleteBoard(board.id)">
+                                        <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <div class="m-1">
+                                <textarea class="form-control" ng-model="board.description" ng-init="board.description"
+                                          required></textarea>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn m-1" type="button"
+                                        onclick="showStuff('boards_block',false);showStuff('notes_block',true)"
+                                        ng-click="fillBoardWithNotes(board)">Select
+                                    <i class="fas fa-hand-pointer fa-lg"></i>
+                                </button>
+                                <button class="btn m-1" type="submit"
+                                        ng-style="{'visibility': boardForm.$pristine|| boardForm.$invalid || (board.name == '{{board.name}}' && board.description == '{{board.description}}')
+                                        ? 'hidden' : 'visible'}">Update
+                                    <i class="far fa-check-square fa-lg"></i>
+                                </button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end -- board from database-->
+        <!--      notes from database          -->
+        <div class="notes_block row">
+            <div class="d-flex align-content-start flex-wrap">
+                <div class="notes-from-database" ng-repeat="n in Notes">
+                    <div class="note rounded mb-3 m-2">
+                        <form name="noteForm" novalidate ng-submit="updateNote(n)" ng-init="updatingNote = {n}">
+                            <div class="margin-top border-bottom input_group bg-primary text-white rounded-15 p-1">
+                                <input class="pl-5 input-header" ng-model="n.header" ng-init="n.header" type="text"/>
+                                <button type="button" class="btn p-2" aria-label="Delete" ng-click="deleteNote(n.id)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <div class="m-1">
+                                <textarea class="form-control" ng-model="n.content" ng-init="n.content"
+                                          required></textarea>
+                            </div>
+
+                            <div class="margin-bottom m-1 font-weight-light small">created at: {{n.createDate}}</div>
+                            <div class="margin-bottom m-1 font-weight-light small">updated at: {{n.lastModifiedDate}}
+                            </div>
+                            <button class="btn m-1" type="submit"
+                                    ng-style="{'visibility': noteForm.$pristine|| noteForm.$invalid || (note.header == '{{board.header}}' && board.content == '{{board.content}}')
+                                        ? 'hidden' : 'visible'}">Update
+                                <i class="far fa-check-square fa-lg"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--modal window for adding board-->
 <div id="addBoard" class="modal hide" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <form id="formBoard" novalidate ng-submit="saveBoard()">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create new board</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="close btn p-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="far fa-window-close fa-lg"></i>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -213,9 +206,12 @@
                               class="form-control" type="text" ng-model="newBoard.description"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeCreateBoardButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="createBoardButton" class="btn btn-primary" type="submit"
-                            onclick="showStuff('boards_block',false);showStuff('notes_block',true)">Create</button>
+                    <button id="closeCreateBoardButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button id="createBoardButton" class="btn m-1" type="submit"
+                            onsubmit="showStuff('boards_block',false);showStuff('notes_block',true)">Create
+                    </button>
                 </div>
             </div>
         </form>
@@ -227,8 +223,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create new note</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="close btn p-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="far fa-window-close fa-lg"></i>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -238,86 +234,45 @@
                               class="form-control" type="text" ng-model="newNote.content"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeNoteButton" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="closeNoteButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                    </button>
                     <button id="createNoteButton" class="btn btn-primary" type="submit">Create</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div class="notes d-flex bg-light">
-    <div class="container">
-        <div class="notes_block row">
-            <div class="bg-dark text-light p-1 rounded-bottom">
-                <h4>{{currentBoard.name}}</h4>
-            </div>
-            <h4>Notes</h4>
-            <button type="button" class="btn btn-primary m-2" data-toggle="modal" data-target="#addNote">
-                Add
-            </button>
-
-        </div>
-        <div class="boards_block row">
-            <div class="d-flex align-content-start flex-wrap">
-                <!--      boards from database          -->
-                <div id="boards-from-database" ng-repeat="board in Boards">
-                    <div class="board border border-info rounded mb-3 m-2">
-                        <form name="boardForm" novalidate ng-submit="updateBoard(b)" ng-init="updatingBoard = {b}">
-                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-10 text-white rounded-15 p-1">
-                                <input class="" ng-model="board.name" ng-init="board.name" type="text"/>
-                                <button type="button" class="close" aria-label="Delete" ng-click="deleteBoard(board.id)">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="m-1">
-                                <textarea class="form-control" ng-model="board.description" ng-init="board.description"
-                                          required></textarea>
-                            </div>
-
-                            <button class="btn btn-success m-1" type="submit"
-                                    ng-disabled="boardForm.$pristine|| boardForm.$invalid || !board.name">Update
-                            </button>
-                        </form>
-                        <button class="btn btn-success m-1" type="button"
-                                onclick="showStuff('boards_block',false);showStuff('notes_block',true)"
-                                ng-click="fillBoardWithNotes(board)">Select
-                        </button>
-                    </div>
+<div id="addUser" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form novalidate id="addUserForm" ng-submit="updateUsers()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Invite users</h5>
+                    <button type="button" class="btn p-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="far fa-window-close fa-lg"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control mb-2" type="email" ng-model="invitedUser.email"
+                               placeholder="User email..." ng-required="true">
+                    <button id="inviteUserButton" class="btn btn-primary" type="submit"
+                            ng-disabled="addUserForm.$invalidEmail">Invite
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button id="closeUserButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                    </button>
                 </div>
             </div>
-
-        </div>
-
-        <div class="notes_block row">
-            <div class="d-flex align-content-start flex-wrap">
-                <!--      notes from database          -->
-                <div class="notes-from-database" ng-repeat="n in Notes">
-                    <div class="note border border-info rounded mb-3 m-2">
-                        <form name="noteForm" novalidate ng-submit="updateNote(n)" ng-init="updatingNote = {n}">
-                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-10 text-white rounded-15 p-1">
-                                <input class="" ng-model="n.header" ng-init="n.header" type="text"/>
-                                <button type="button" class="close" aria-label="Delete" ng-click="deleteNote(n.id)">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="m-1">
-                                <textarea class="form-control" ng-model="n.content" ng-init="n.content"
-                                          required></textarea>
-                            </div>
-
-                            <div class="margin-bottom m-1 font-weight-light small">created at: {{n.createDate}}</div>
-                            <div class="margin-bottom m-1 font-weight-light small">updated at: {{n.lastModifiedDate}}
-                            </div>
-                            <button class="btn btn-success m-1" type="submit"
-                                    ng-disabled="noteForm.$pristine|| noteForm.$invalid">Update
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-        </div>
+        </form>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous">
+</script>
 </body>
+
+
 </html>
