@@ -13,20 +13,22 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
     }
 
     $scope.saveNote = function () {
-        $scope.newNote.board = $scope.currentBoard;
+        $scope.newNote.boardId = $scope.currentBoard.id;
         console.log($scope.newNote)
         $http.post(contextPath + '/note', $scope.newNote)
             .then(function (resp) {
-                $scope.fillBoardWithNotes($scope.newNote.board);
+                $scope.fillBoardWithNotes($scope.currentBoard);
                 $scope.newNote = null;
                 document.querySelector('#closeNoteButton').click();
             })
 
     }
 
-    $scope.updateNote = function () {
+    $scope.updateNote = function (note) {
         console.log($scope.currentBoard)
-        $http.put(contextPath + '/note', this.n)
+        note.boardId = $scope.currentBoard.id
+        console.log(note)
+        $http.put(contextPath + '/note', note)
             .then(function (resp) {
                 $scope.fillBoardWithNotes($scope.currentBoard);
             })
@@ -78,7 +80,8 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
                 $scope.getBoards();
                 $scope.newBoard.id = resp.data;
                 console.log($scope.newBoard);
-                $scope.fillBoardWithNotes($scope.newBoard);
+                $scope.currentBoard = $scope.newBoard;
+                $scope.fillBoardWithNotes($scope.currentBoard);
                 $scope.newBoard = null
                 document.querySelector('#closeCreateBoardButton').click();
             })
@@ -93,6 +96,20 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             })
 
     };
+
+    // $scope.isDataReady = function (dataForm, boardName){
+    //     return !(dataForm.$pristine || dataForm.$invalid || !dataForm.name);
+    //
+    // }
+    // $scope.invitedUser = $scope.user;
+    // $scope.invitedUser.email = 'some@email.com';
+    // $scope.updateUsers = function (){
+        // console.log($scope.invitedUser)
+        // $http.get(contextPath+'/user/' + $scope.invitedUser.email)
+        //     .then(function (resp){
+        //
+        // });
+    // }
 
     $scope.getBoards();
 
