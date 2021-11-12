@@ -111,19 +111,28 @@ input, textarea {
 .button-no-style, .input-no-style[type="submit"], .input-no-style[type="reset"] {
     background: none;
     border: none;
-    padding: 0;
     font: inherit;
     cursor: pointer;
     outline: inherit;
+    text-decoration: none;
+}
+.button-simple-style span, .button-no-style span{
+    padding: 5px;
+}
+.button-simple-style i, .button-no-style i{
+    padding-right: 5px;
 }
 
 .button-no-style:hover {
     background: rgb(50, 50, 50) none;
     color: whitesmoke;
 }
-
+.btn:hover{
+    color: rgb(50, 50, 150) ;
+}
 .button-simple-style {
     background: rgba(20, 20, 20, 0.8) none;
+    display: block;
     border: none;
     border-radius: 3px;
     color: white;
@@ -131,10 +140,12 @@ input, textarea {
     font: inherit;
     cursor: pointer;
     outline: inherit;
+    text-decoration: none;
 }
 
 .button-simple-style:hover {
     background: rgb(80, 80, 100) none;
+    color: white;
 }
 
 .dropdown-button {

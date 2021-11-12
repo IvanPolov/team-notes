@@ -1,6 +1,8 @@
 angular.module('app', []).controller('indexController', function ($scope, $http) {
     const contextPath = 'http://localhost:8180/team-notes/api/v1';
 
+    $scope.invitedUser = null;
+    $scope.foundUser = null;
 
     $scope.acronym = function (sentence, size) {
         if(sentence != null) {
@@ -11,6 +13,8 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         }
         return '';
     }
+
+
 
     $scope.saveNote = function () {
         $scope.newNote.boardId = $scope.currentBoard.id;
@@ -110,7 +114,28 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         //
         // });
     // }
+    $scope.someFunc = function (){
+        console.log('trash info')
+    }
+    $scope.findUser = function (email){
+        console.log(email);
+        $http.get(contextPath + '/user/' + email)
+            .then(function (resp){
+            $scope.foundUser = resp.data
+        })
+    }
+    $scope.getUser = function (){
+        console.log('get user start')
+        $http.get(contextPath + '/user')
+            .then(function (resp){
+                $scope.user = resp.data
+                console.log('get user after response')
+                console.log($scope.user)
+            })
+    }
 
+    $scope.someFunc();
+    $scope.getUser();
     $scope.getBoards();
 
 

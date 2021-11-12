@@ -5,29 +5,10 @@
 <head>
     <title>Team Notes</title>
     <meta charset="utf-8">
-    <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">-->
-    <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
-    <!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>-->
-    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"-->
-    <!--          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/7ffeb8118c.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <!--    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"-->
-    <!--            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"-->
-    <!--            crossorigin="anonymous"></script>-->
-    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"-->
-    <!--            integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"-->
-    <!--            crossorigin="anonymous"></script>-->
-    <!--    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"-->
-    <!--            integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"-->
-    <!--            crossorigin="anonymous"></script>-->
-
-    <!--        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"-->
-    <!--                integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>-->
-    <!--        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"-->
-    <!--                integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>-->
     <script src="index.js"></script>
     <script type="text/javascript" src="front.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -74,10 +55,18 @@
         <button id="addBoardButton" type="button" class="button-simple-style m-2" data-bs-toggle="modal"
                 data-bs-target="#addBoard" title="Create a new board"
                 onclick="showStuff('boards_block',true)">
-            Create
+            <span>Create</span>
+            <i class="fas fa-plus-square fa-lg"></i>
         </button>
 <!--    -->
         <div class="vl"></div>
+        <div class="d-flex flex-grow-1 justify-content-end align-items-center" style="margin-right: 2px">
+            <span class="text-white">{{user.username}}</span>
+            <a class="button-simple-style m-2" href="/team-notes/logout">
+                <span>Sign out</span>
+                <i class="fas fa-sign-out-alt fa-lg"></i>
+            </a>
+        </div>
 </div>
 <div class="pl-4 d-flex flex-wrap bg-secondary unselectable">
 
@@ -104,7 +93,7 @@
                     Invite
                 </button>
             </div>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center" style="width: 100%">
                 <h4>Notes</h4>
                 <button type="button" class="button-simple-style m-2" data-bs-toggle="modal" data-bs-target="#addNote">
                     Create
@@ -244,7 +233,7 @@
 </div>
 <div id="addUser" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <form novalidate id="addUserForm" ng-submit="updateUsers()">
+        <form novalidate id="addUserForm" ng-submit="findUser(invitedUser.email)">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Invite users</h5>
@@ -258,6 +247,7 @@
                     <button id="inviteUserButton" class="btn btn-primary" type="submit"
                             ng-disabled="addUserForm.$invalidEmail">Invite
                     </button>
+                    <span>{{foundUser.username}} is found</span>
                 </div>
                 <div class="modal-footer">
                     <button id="closeUserButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
