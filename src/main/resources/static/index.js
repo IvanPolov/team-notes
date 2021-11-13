@@ -142,6 +142,7 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
     }
 
     $scope.saveBoard = function () {
+        $scope.newBoard.ownerId = $scope.user.id;
         console.log($scope.newBoard)
         $http.post(contextPath + '/board', $scope.newBoard)
             .then(function (resp) {

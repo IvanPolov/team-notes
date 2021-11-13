@@ -53,8 +53,8 @@ public class BoardService implements GenericService<Board> {
 
     @PostConstruct
     public void init(){
-        boardRepository.save(new Board("my board 1","custom description",userService.findByEmail("test@mail.com")));
-        boardRepository.save(new Board("my board 2","random text",userService.findByEmail("test@mail.com")));
-        boardRepository.save(new Board("my board 3","my amazing board description",userService.findByEmail("test2@mail.com")));
+        boardRepository.save(new Board("my board 1","custom description",userService.findByEmail("test@mail.com").getId()));
+        boardRepository.save(new Board("my board 2","random text",userService.findByEmail("test@mail.com").getId()));
+        boardRepository.save(new Board("my board 3","my amazing board description",userService.findByEmail("test2@mail.com").getId()));
     }
 }

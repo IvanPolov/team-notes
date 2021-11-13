@@ -1,5 +1,8 @@
 package com.gbdevteam.teamnotes.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,6 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -30,25 +34,29 @@ public class Board implements Serializable {
     private List<Note> notes;
 
     @ManyToOne
+    @JoinColumn(name = "owner_id", insertable = false, updatable = false)
     private User owner;
 
+    @Column(name = "owner_id")
+    private UUID ownerId;
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @JsonIgnoreProperties("books")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinTable(name = "boards_users",
             joinColumns = @JoinColumn(name = "board_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> users;
+    private Set<User> users;
 
     public void setUser(User user) {
         users.add(user);
     }
 
-    public Board(String name, String description, User owner) {
+    public Board(String name, String description, UUID ownerId) {
         this.name = name;
         this.description = description;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
 
 }

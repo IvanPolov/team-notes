@@ -2,6 +2,7 @@ package com.gbdevteam.teamnotes.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -34,8 +35,8 @@ public class Note implements Serializable {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @JsonBackReference
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "board_id", insertable = false, updatable = false)
     private Board board;
 
@@ -53,8 +54,9 @@ public class Note implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date lastModifiedDate;
 
-    public Note(String header, String content){
+    public Note(String header, String content, UUID boardId){
         this.header = header;
         this.content = content;
+        this.boardId = boardId;
     }
 }

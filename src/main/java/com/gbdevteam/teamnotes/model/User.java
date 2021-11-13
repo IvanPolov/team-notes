@@ -1,6 +1,9 @@
 package com.gbdevteam.teamnotes.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -9,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -38,8 +42,8 @@ public class User implements Serializable {
     private List<Board> myBoards;
 
     @ManyToMany(mappedBy = "users")
-    @JsonBackReference
-    private List<Board> boards;
+    @JsonIgnoreProperties("users")
+    private Set<Board> boards;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
