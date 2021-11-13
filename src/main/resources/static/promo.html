@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="app">
 <head>
     <meta charset="UTF-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -9,20 +9,56 @@
           integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
           crossorigin="anonymous">
   </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="promo.js"></script>
   <link rel="stylesheet" href="style.css">
     <title>Team Notes</title>
 </head>
-<body>
+<body ng-controller="promoController">
 <div class="header bg-dark unselectable d-flex align-items-center flex-wrap">
   <div class="main_header text-light m-2 text-center align-middle">Team Notes</div>
   <!--    -->
   <div class="vl"></div>
   <div class="d-flex flex-grow-1 justify-content-end" style="margin-right: 2px">
-    <a class="button-simple-style m-2" href="/team-notes/signup">
-      <span>Sign up</span></a>
+    <button id="signupFormButton" type="button" class="button-simple-style m-2" data-bs-toggle="modal"
+            data-bs-target="#signup" title="Sign up">
+      <span>Sign up</span>
+      <i class="fas fa-user-plus fa-lg"></i>
+    </button>
 
     <a class="button-simple-style m-2" href="/team-notes/login">
       <span>Log in</span></a>
+  </div>
+</div>
+<div id="signup" class="modal" tabindex="-1" role="dialog" >
+  <div class="modal-dialog" role="document">
+    <form novalidate name="signupForm" id="signupForm" ng-submit="signup()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Sign up form</h5>
+          <button type="button" class="btn p-2" data-bs-dismiss="modal" aria-label="Close">
+            <i class="far fa-window-close fa-lg"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input class="form-control mb-2" type="email" ng-model="newUser.email"
+                 placeholder="Your email..." ng-required="true">
+          <input class="form-control mb-2" type="text" ng-model="newUser.username"
+                 placeholder="Your username..." ng-required="true">
+          <input class="form-control mb-2" type="password" ng-model="newUser.password"
+                 placeholder="Your password..." ng-required="true">
+          <input class="form-control mb-2" type="password" ng-model="newUser.confirmPassword" ng-change="validatePassword()" ng-model-options="{debounce:1000}"
+                 placeholder="Confirm password..." ng-required="true">
+            <button id="signupButton" class="btn btn-primary" type="submit"
+                    ng-disabled="signupForm.$pristine || signupForm.$invalid || !validatePassword()">Sign up
+            </button>
+        </div>
+        <div class="modal-footer">
+          <button id="closeUserButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
 </body>

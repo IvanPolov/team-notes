@@ -3,9 +3,11 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
     $scope.invitedUser = null;
     $scope.foundUser = null;
+    $scope.isFounded = false;
+    $scope.Users = [];
 
     $scope.acronym = function (sentence, size) {
-        if(sentence != null) {
+        if (sentence != null) {
             console.log('acronym: ' + sentence + 'size: ' + size);
             let acro = sentence.split(' ').map(x => x[0]).join('').slice(0, size).toUpperCase();
             console.log(acro);
@@ -13,7 +15,6 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         }
         return '';
     }
-
 
 
     $scope.saveNote = function () {
@@ -47,9 +48,74 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
     };
 
+    // $scope.isDataReady = function (dataForm, boardName){
+    //     return !(dataForm.$pristine || dataForm.$invalid || !dataForm.name);
+    //
+    // }
+    // $scope.invitedUser = $scope.user;
+    // $scope.invitedUser.email = 'some@email.com';
+    // $scope.updateUsers = function (){
+    // console.log($scope.invitedUser)
+    // $http.get(contextPath+'/user/' + $scope.invitedUser.email)
+    //     .then(function (resp){
+    //
+    // });
+    // }
+
+    //get user by email
+    $scope.findUser = function (email) {
+        if(email != null) {
+            console.log(email);
+            $http.get(contextPath + '/user/' + email)
+                .then(function (resp) {
+                    console.log('find user data')
+                    console.log(resp.data)
+                    if (email === resp.data.email) {
+                        $scope.foundUser = resp.data;
+                        $scope.isFounded = true;
+                    }else
+                        $scope.isFounded = false;
+                    // $scope.addUser();
+                })
+        }
+    }
+
+    //get current session user
+    $scope.getUser = function () {
+        $http.get(contextPath + '/user')
+            .then(function (resp) {
+                $scope.user = resp.data
+                console.log($scope.user.id)
+                $scope.getBoards();
+            })
+    }
+    //add user to board
+    $scope.addUser = function () {
+        console.log('add user func')
+        // PUT http://localhost:8180/api/v1/board/{{boardId}}/addUser
+        $http.get(contextPath + '/board/' + $scope.currentBoard.id + '/addUser/' + $scope.foundUser.id)
+            .then(function () {
+                console.log('add user func resp')
+                console.log($scope.foundUser)
+                $scope.Users.push($scope.foundUser);
+            })
+    }
+
+    $scope.getUser();
+    $scope.getBoardUsers = function () {
+
+        // GET http://localhost:8180/api/v1/user/board/{{boardId}}
+        $http.get(contextPath + "/user/board/" + $scope.currentBoard.id)
+            .then(function (resp) {
+                $scope.Users = resp.data;
+                console.log('users of board')
+                console.log($scope.Users)
+            })
+    }
     $scope.fillBoardWithNotes = function (currentBoard) {
         console.log('board id: ' + currentBoard.id)
         $scope.currentBoard = currentBoard;
+        $scope.getBoardUsers();
         $http({
             url: contextPath + '/board/' + currentBoard.id + '/notes',
             method: 'GET'
@@ -60,13 +126,11 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
     $scope.getBoards = function () {
         console.log('get all boards function');
-        $http({
-            url: contextPath + '/board',
-            method: 'GET'
-        }).then(function (response) {
-            $scope.Boards = response.data;
-            console.log($scope.Boards);
-        });
+        $http.get(contextPath + '/board/user/' + $scope.user.id)
+            .then(function (response) {
+                $scope.Boards = response.data;
+                console.log($scope.Boards);
+            });
     }
 
     $scope.updateBoard = function () {
@@ -100,43 +164,4 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             })
 
     };
-
-    // $scope.isDataReady = function (dataForm, boardName){
-    //     return !(dataForm.$pristine || dataForm.$invalid || !dataForm.name);
-    //
-    // }
-    // $scope.invitedUser = $scope.user;
-    // $scope.invitedUser.email = 'some@email.com';
-    // $scope.updateUsers = function (){
-        // console.log($scope.invitedUser)
-        // $http.get(contextPath+'/user/' + $scope.invitedUser.email)
-        //     .then(function (resp){
-        //
-        // });
-    // }
-    $scope.someFunc = function (){
-        console.log('trash info')
-    }
-    $scope.findUser = function (email){
-        console.log(email);
-        $http.get(contextPath + '/user/' + email)
-            .then(function (resp){
-            $scope.foundUser = resp.data
-        })
-    }
-    $scope.getUser = function (){
-        console.log('get user start')
-        $http.get(contextPath + '/user')
-            .then(function (resp){
-                $scope.user = resp.data
-                console.log('get user after response')
-                console.log($scope.user)
-            })
-    }
-
-    $scope.someFunc();
-    $scope.getUser();
-    $scope.getBoards();
-
-
 });

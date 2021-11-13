@@ -13,17 +13,17 @@
     <script type="text/javascript" src="front.js"></script>
     <link rel="stylesheet" href="style.css">
     <style>
-        .ng-hide:not(.ng-hide-animate) {
-            /* These are just alternative ways of hiding an element */
-            display: block!important;
-            visibility: hidden;
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-        }
-        .ng-disable{
-            visibility: hidden;
-        }
+        /*.ng-hide:not(.ng-hide-animate) {*/
+        /*    !* These are just alternative ways of hiding an element *!*/
+        /*    display: block!important;*/
+        /*    visibility: hidden;*/
+        /*    position: absolute;*/
+        /*    top: -9999px;*/
+        /*    left: -9999px;*/
+        /*}*/
+        /*.ng-disable{*/
+        /*    visibility: hidden;*/
+        /*}*/
     </style>
 </head>
 
@@ -88,7 +88,9 @@
         <div class="notes_block row">
             <div class="bg-secondary text-light p-1 d-flex justify-content-between align-items-center">
                 <h4>{{currentBoard.name}}</h4>
-
+                <div ng-repeat="u in Users">
+                    <span>{{u.email}}</span>
+                </div>
                 <button type="button" class="button-simple-style m-2" data-bs-toggle="modal" data-bs-target="#addUser">
                     Invite
                 </button>
@@ -233,7 +235,7 @@
 </div>
 <div id="addUser" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <form novalidate id="addUserForm" ng-submit="findUser(invitedUser.email)">
+        <form novalidate id="addUserForm" ng-submit="addUser()">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Invite users</h5>
@@ -242,12 +244,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input class="form-control mb-2" type="email" ng-model="invitedUser.email"
+                    <input class="form-control mb-2" type="email" ng-model="invitedUser.email" ng-change="findUser(invitedUser.email)" ng-model-options="{debounce:1000}"
                                placeholder="User email..." ng-required="true">
-                    <button id="inviteUserButton" class="btn btn-primary" type="submit"
-                            ng-disabled="addUserForm.$invalidEmail">Invite
-                    </button>
-                    <span>{{foundUser.username}} is found</span>
+                    <div ng-show="isFounded">
+                        <div>{{foundUser.email}} is found</div>
+                        <button id="inviteUserButton" class="btn btn-primary" type="submit"
+                                ng-disabled="addUserForm.$invalidEmail">Invite
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="closeUserButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
@@ -257,7 +261,6 @@
         </form>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
         crossorigin="anonymous">

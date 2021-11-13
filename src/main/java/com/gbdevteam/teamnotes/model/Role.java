@@ -4,21 +4,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
 @Table(name = "roles")
 @NoArgsConstructor
-public class Role {
+public class Role implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    public Role(String name){
+    private String description;
+
+    public Role(String name, String description){
         this.name = name;
+        this.description = description;
     }
 }

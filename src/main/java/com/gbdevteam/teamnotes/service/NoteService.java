@@ -6,8 +6,6 @@ import com.gbdevteam.teamnotes.model.Note;
 import com.gbdevteam.teamnotes.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 import java.util.Optional;

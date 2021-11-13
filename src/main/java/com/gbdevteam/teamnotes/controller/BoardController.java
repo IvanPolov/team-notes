@@ -21,10 +21,10 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping
-    public List<Board> findAll(){
+    @GetMapping("/user/{userId}")
+    public List<Board> findAll(@PathVariable UUID userId){
         log.info("findAllBoards()");
-        return boardService.findAll();
+        return boardService.findAll(userId);
     }
 
     @GetMapping("/{id}")
@@ -54,5 +54,10 @@ public class BoardController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable UUID id) {
         boardService.deleteById(id);
+    }
+
+    @GetMapping("/{boardId}/addUser/{userId}")
+    public void addUser(@PathVariable UUID boardId, @PathVariable UUID userId){
+        boardService.addUser(boardId,userId);
     }
 }

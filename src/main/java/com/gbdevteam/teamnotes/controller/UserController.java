@@ -3,21 +3,20 @@ package com.gbdevteam.teamnotes.controller;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.security.Principal;
-import java.util.NoSuchElementException;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @SessionScope
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/v1/user")
-public class UserContorller {
+public class UserController {
 
     final UserService userService;
 
@@ -36,5 +35,10 @@ public class UserContorller {
     @GetMapping({"/{email}"})
     public User findByEmail(@PathVariable String email) {
        return userService.findByEmail(email);
+    }
+
+    @GetMapping("/board/{boardId}")
+    public List<User> findAllByBoardId(@PathVariable UUID boardId){
+        return userService.findAllByBoardId(boardId);
     }
 }

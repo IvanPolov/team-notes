@@ -9,12 +9,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import javax.annotation.PostConstruct;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,9 +21,16 @@ import java.util.stream.Collectors;
 public class UserService implements GenericService<User> , UserDetailsService {
 
     private final UserRepository userRepository;
+    private final RoleService roleService;
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+
+
+    public List<User> findAllByBoardId(UUID boardId) {
+        return userRepository.findAllByBoards_Id(boardId);
     }
 
     @Override
@@ -38,6 +44,11 @@ public class UserService implements GenericService<User> , UserDetailsService {
 
     @Override
     public UUID create(User user) {
+        if(findByEmail(user.getEmail()) != null) return null;
+        List<Role> roles = new ArrayList<>();
+        roles.add(roleService.findByName("USER"));
+        user.setRoles(roles);
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
       return  userRepository.save(user).getId();
     }
 
@@ -62,5 +73,11 @@ public class UserService implements GenericService<User> , UserDetailsService {
 
     public User save(User user){
         return userRepository.save(user);
+    }
+
+    @PostConstruct
+    private void init() {
+        save(new User("test@mail.com", "test", true, passwordEncoder().encode("12345"), Arrays.asList(roleService.findByName("USER"))));
+        save(new User("test2@mail.com", "test2", true, passwordEncoder().encode("12345"), Arrays.asList(roleService.findByName("USER"))));
     }
 }

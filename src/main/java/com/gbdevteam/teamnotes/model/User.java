@@ -1,10 +1,12 @@
 package com.gbdevteam.teamnotes.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +14,7 @@ import java.util.UUID;
 @Data
 @Entity
 @NoArgsConstructor
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -29,7 +31,14 @@ public class User {
 
     private String password;
 
+    @Transient
+    private String confirmPassword;
+
     @OneToMany
+    private List<Board> myBoards;
+
+    @ManyToMany(mappedBy = "users")
+    @JsonBackReference
     private List<Board> boards;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -44,5 +53,12 @@ public class User {
         this.isVerified = isVerified;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User(String email, String username, String password, String confirmPassword) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
     }
 }

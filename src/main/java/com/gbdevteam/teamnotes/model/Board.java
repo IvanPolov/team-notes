@@ -27,15 +27,28 @@ public class Board implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JsonManagedReference
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private List<Note> notes;
 
     @ManyToOne
     private User owner;
 
-    public Board(String name, String description) {
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JoinTable(name = "boards_users",
+            joinColumns = @JoinColumn(name = "board_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<User> users;
+
+    public void setUser(User user) {
+        users.add(user);
+    }
+
+    public Board(String name, String description, User owner) {
         this.name = name;
         this.description = description;
+        this.owner = owner;
     }
+
 }
