@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,6 +15,7 @@ import java.util.*;
 @Data
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -34,9 +33,6 @@ public class User implements Serializable {
 
     private String password;
 
-    @Transient
-    private String confirmPassword;
-
     @OneToMany(mappedBy = "owner")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -53,7 +49,14 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
-    public void setMyBoards(Board board){
+    public User(UserRegAuthDto userRegAuthDto) {
+        this.email = userRegAuthDto.getEmail();
+        this.username = userRegAuthDto.getUsername();
+        this.isVerified = userRegAuthDto.getIsVerified();
+        this.password = userRegAuthDto.getPassword();
+    }
+
+    public void setMyBoards(Board board) {
         myBoards.add(board);
     }
 
