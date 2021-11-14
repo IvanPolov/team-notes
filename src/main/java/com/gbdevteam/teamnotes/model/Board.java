@@ -34,6 +34,7 @@ public class Board implements Serializable {
     private List<Note> notes;
 
     @ManyToOne
+    @JsonIgnoreProperties("myBoards")
     @JoinColumn(name = "owner_id", insertable = false, updatable = false)
     private User owner;
 

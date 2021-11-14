@@ -4,6 +4,7 @@ import com.gbdevteam.teamnotes.model.Role;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService implements GenericService<User> , UserDetailsService {
 
@@ -30,7 +32,10 @@ public class UserService implements GenericService<User> , UserDetailsService {
 
 
     public List<User> findAllByBoardId(UUID boardId) {
-        return userRepository.findAllByBoards_Id(boardId);
+        List<User> users = new ArrayList<>(userRepository.findAllByBoards_Id(boardId));
+        User owner = userRepository.findByMyBoards_Id(boardId);
+        users.add(owner);
+        return users;
     }
 
     @Override
@@ -39,17 +44,21 @@ public class UserService implements GenericService<User> , UserDetailsService {
     }
 
     public User findByEmail(String email){
-        return userRepository.findUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException(String.format("User '%s' not found", email)));
+        return userRepository.findUserByEmail(email);
     }
 
     @Override
     public UUID create(User user) {
-        if(findByEmail(user.getEmail()) != null) return null;
-        List<Role> roles = new ArrayList<>();
-        roles.add(roleService.findByName("USER"));
-        user.setRoles(roles);
-        user.setPassword(passwordEncoder().encode(user.getPassword()));
-      return  userRepository.save(user).getId();
+        if(findByEmail(user.getEmail()) != null)
+            return null;
+        else {
+            log.info(user.getEmail());
+            List<Role> roles = new ArrayList<>();
+            roles.add(roleService.findByName("USER"));
+            user.setRoles(roles);
+            user.setPassword(passwordEncoder().encode(user.getPassword()));
+            return userRepository.save(user).getId();
+        }
     }
 
     @Override
@@ -75,9 +84,5 @@ public class UserService implements GenericService<User> , UserDetailsService {
         return userRepository.save(user);
     }
 
-    @PostConstruct
-    private void init() {
-        save(new User("test@mail.com", "test", true, passwordEncoder().encode("12345"), Arrays.asList(roleService.findByName("USER"))));
-        save(new User("test2@mail.com", "test2", true, passwordEncoder().encode("12345"), Arrays.asList(roleService.findByName("USER"))));
-    }
+
 }

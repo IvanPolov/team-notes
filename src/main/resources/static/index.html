@@ -54,7 +54,7 @@
 <!--create board button-->
         <button id="addBoardButton" type="button" class="button-simple-style m-2" data-bs-toggle="modal"
                 data-bs-target="#addBoard" title="Create a new board"
-                onclick="showStuff('boards_block',true)">
+                onclick="showStuff('boards_block',true);showStuff('notes_block',false)">
             <span>Create</span>
             <i class="fas fa-plus-square fa-lg"></i>
         </button>
@@ -244,7 +244,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input class="form-control mb-2" type="email" ng-model="invitedUser.email" ng-change="findUser(invitedUser.email)" ng-model-options="{debounce:1000}"
+                    <input class="form-control mb-2" type="email" ng-model="invitedUser.email" ng-change="findUser(invitedUser.email)" ng-model-options="{debounce:500}"
                                placeholder="User email..." ng-required="true">
                     <div ng-show="isFounded">
                         <div>{{foundUser.email}} is found</div>

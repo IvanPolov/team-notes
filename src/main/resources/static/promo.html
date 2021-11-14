@@ -42,13 +42,16 @@
         </div>
         <div class="modal-body">
           <input class="form-control mb-2" type="email" ng-model="newUser.email"
-                 placeholder="Your email..." ng-required="true">
+                 placeholder="Your email..." ng-required="true" ng-change="validateEmail()" ng-model-options="{debounce:1000}">
           <input class="form-control mb-2" type="text" ng-model="newUser.username"
                  placeholder="Your username..." ng-required="true">
           <input class="form-control mb-2" type="password" ng-model="newUser.password"
                  placeholder="Your password..." ng-required="true">
           <input class="form-control mb-2" type="password" ng-model="newUser.confirmPassword" ng-change="validatePassword()" ng-model-options="{debounce:1000}"
                  placeholder="Confirm password..." ng-required="true">
+          <div>
+            <span id="error_tooltip">{{signupNotification}}</span>
+          </div>
             <button id="signupButton" class="btn btn-primary" type="submit"
                     ng-disabled="signupForm.$pristine || signupForm.$invalid || !validatePassword()">Sign up
             </button>

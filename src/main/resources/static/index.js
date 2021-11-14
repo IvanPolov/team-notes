@@ -64,7 +64,7 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
 
     //get user by email
     $scope.findUser = function (email) {
-        if(email != null) {
+        if(email != null && email !== $scope.user.email) {
             console.log(email);
             $http.get(contextPath + '/user/' + email)
                 .then(function (resp) {
@@ -77,7 +77,7 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
                         $scope.isFounded = false;
                     // $scope.addUser();
                 })
-        }
+        }else $scope.isFounded = false;
     }
 
     //get current session user
@@ -132,7 +132,6 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
                 console.log($scope.Boards);
             });
     }
-
     $scope.updateBoard = function () {
         $http.put(contextPath + '/board', this.board)
             .then(function (resp) {

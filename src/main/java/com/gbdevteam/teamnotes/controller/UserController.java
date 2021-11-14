@@ -1,6 +1,7 @@
 package com.gbdevteam.teamnotes.controller;
 
 import com.gbdevteam.teamnotes.model.User;
+import com.gbdevteam.teamnotes.service.BoardService;
 import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class UserController {
 
     final UserService userService;
+    final BoardService boardService;
 
     @GetMapping
     public User getUser(Principal principal){

@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -21,35 +23,36 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 
     private final UserService userService;
 
-    //-- Uncomment the block below to disable security (32-35)
+    //-- Uncomment the block below to disable security
 
 //    @Override
 //    public void configure(WebSecurity web) throws Exception {
 //        web.ignoring().antMatchers("/**");
 //    }
 
-    //-- comment the block below to disable security (40-57)
+    //-- comment the block below to disable security
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         log.info("Dao Authentication Provider");
-//        http.csrf().disable()
-        http.httpBasic()
-                .and()
-                .csrf().csrfTokenRepository(csrfTokenRepository()).and()
+        http.csrf().disable()//csrf disabled for using h2-console
+//        http.httpBasic()
+//                .and()
+                .headers().disable()//for h2-console frame, disable in production
+//                .csrf().csrfTokenRepository(csrfTokenRepository()).and()
                 .authorizeRequests()
                 .antMatchers("/*.js").permitAll()
                 .antMatchers("/*.css").permitAll()
                 .antMatchers("/promo.html").permitAll()
-                .antMatchers("/signup").permitAll()
+                .antMatchers("/h2-console/*").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/v1/signup").permitAll()
                 .anyRequest().authenticated().and()
                 .formLogin().and()
                 .logout()
                 .logoutSuccessUrl("/promo.html")
-                .and()
-                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
-
-        http.headers().disable();//for h2-console frame, disable in production
+//                .and()
+//                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+                ;
     }
 
 
