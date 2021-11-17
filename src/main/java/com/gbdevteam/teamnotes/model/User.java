@@ -1,9 +1,6 @@
 package com.gbdevteam.teamnotes.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -54,10 +51,6 @@ public class User implements Serializable {
         this.username = userRegAuthDto.getUsername();
         this.isVerified = userRegAuthDto.getIsVerified();
         this.password = userRegAuthDto.getPassword();
-    }
-
-    public void setMyBoards(Board board) {
-        myBoards.add(board);
     }
 
     public User(String email, String username, Boolean isVerified, String password, List<Role> roles) {

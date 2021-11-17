@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.controller;
 
+import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
-
-import java.util.UUID;
 
 @RestController
 @SessionScope
@@ -31,7 +30,7 @@ public class SignupController {
     public ResponseEntity<?> save(@Validated @RequestBody UserRegAuthDto userRegAuthDto) throws Exception {
         log.info(userRegAuthDto.getEmail());
         if (userService.findByEmail(userRegAuthDto.getEmail()) != null) {
-            throw new Exception("Email all ready exist");//TODO handle and send message about this error on front
+            throw new Exception("Email already exist");//TODO handle and send message about this error on front
         }
         User user = new User(userRegAuthDto);
         userService.create(user);
