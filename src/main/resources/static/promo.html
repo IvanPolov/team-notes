@@ -41,13 +41,13 @@
           </button>
         </div>
         <div class="modal-body">
-          <input class="form-control mb-2" type="email" ng-model="newUser.email"
+          <input class="form-control mb-2" type="email" ng-model="user.email"
                  placeholder="Your email..." ng-required="true" ng-change="validateEmail()" ng-model-options="{debounce:1000}">
-          <input class="form-control mb-2" type="text" ng-model="newUser.username"
+          <input class="form-control mb-2" type="text" ng-model="user.username"
                  placeholder="Your username..." ng-required="true">
-          <input class="form-control mb-2" type="password" ng-model="newUser.password"
+          <input class="form-control mb-2" type="password" ng-model="user.password"
                  placeholder="Your password..." ng-required="true">
-          <input class="form-control mb-2" type="password" ng-model="newUser.confirmPassword" ng-change="validatePassword()" ng-model-options="{debounce:1000}"
+          <input class="form-control mb-2" type="password" ng-model="user.confirmPassword" ng-change="validatePassword()" ng-model-options="{debounce:1000}"
                  placeholder="Confirm password..." ng-required="true">
           <div>
             <span id="error_tooltip">{{signupNotification}}</span>

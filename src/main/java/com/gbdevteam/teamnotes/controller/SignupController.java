@@ -5,9 +5,12 @@ import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
-
 import java.util.UUID;
 
 @RestController
@@ -22,16 +25,17 @@ public class SignupController {
 
     @PostMapping
     @PreAuthorize("permitAll()")
-    public UUID save(@RequestBody User user){
+    public UUID save(@RequestBody User user) {
         log.info(user.getEmail());
-        return userService.create(user);
+        UUID uuid = userService.create(user);
+        auth(user);
+
+        return uuid;
     }
 
-//    @GetMapping
-//    @ResponseBody
-//    public String getEmail(@PathVariable String email){
-//        if(userService.findByEmail(email) == null)
-//        return "email is already exists";
-//        return "";
-//    }
+    private void auth(User user) {
+        UserDetails userDetails = userService.loadUserByUsername(user.getEmail());
+        Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+    }
 }

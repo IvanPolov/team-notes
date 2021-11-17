@@ -38,13 +38,11 @@ public class NoteController {
         noteService.create(note);
     }
 
-    //example, not implemented
     @PutMapping
     public void update(@RequestBody Note note){
         noteService.update(note);
     }
 
-    //example, not implemented
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteById(@PathVariable UUID id){
