@@ -1,4 +1,4 @@
-angular.module('app', []).controller('indexController', function ($scope, $http) {
+angular.module('app', []).controller('indexController', function ($rootScope, $scope, $http) {
     const contextPath = 'http://localhost:8180/team-notes/api/v1';
 
     $scope.invitedUser = null;
