@@ -3,31 +3,30 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
 
     $scope.newUser = null;
 
-    $scope.signup = function (){
+    $scope.signup = function (signupForm) {
         console.log('signup function started')
-        $http.post(contextPath + '/signup',$scope.newUser)
-            .then(function (resp){
-                if(resp.data) {
-                    $scope.signupNotification = 'registration is successful'
-                    document.querySelector('#closeUserButton').click()
-                }else $scope.signupNotification = 'email already exists'
-            })
+        if (signupForm.$valid) {
+            $http.post(contextPath + '/signup', $scope.user)
+                .then(function (resp) {
+                    if (resp.data) {
+                        $scope.user = resp.data.user
+                        $scope.signupNotification = 'registration is successful'
+                        document.querySelector('#closeUserButton').click()
+
+                        location.replace('index.html')
+                    } else $scope.signupNotification = 'User with this email already exists. Please signing.'
+                })
+        }
+        ;
     };
 
-    $scope.validatePassword = function (){
-        if($scope.newUser.password !== $scope.newUser.confirmPassword){
-            $scope.signupNotification = "Passwords don't match"
+    $scope.validatePassword = function () {
+        if ($scope.user.password !== $scope.user.confirmPassword) {
+            $scope.signupNotification = "Passwords don't match! "
             return false;
-        }
-        else {
-            $scope.signupNotification = '';
+        } else {
+            $scope.signupNotification = 'OK! Passwords matched';
             return true;
         }
     };
-    // $scope.validateEmail = function (){
-    //     $http.get(contextPath + '/signup',$scope.newUser.email)
-    //         .then(function (resp){
-    //                 $scope.signupNotification = resp.data;
-    //         })
-    // };
 });
