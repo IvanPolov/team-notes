@@ -12,15 +12,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserService implements GenericService<User> , UserDetailsService {
+public class UserService implements GenericService<User>, UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
@@ -28,7 +29,6 @@ public class UserService implements GenericService<User> , UserDetailsService {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 
     public List<User> findAllByBoardId(UUID boardId) {
@@ -43,13 +43,13 @@ public class UserService implements GenericService<User> , UserDetailsService {
         return userRepository.findById(id);
     }
 
-    public User findByEmail(String email){
+    public User findByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
     @Override
     public UUID create(User user) {
-        if(findByEmail(user.getEmail()) != null)
+        if (findByEmail(user.getEmail()) != null)
             return null;
         else {
             log.info(user.getEmail());
@@ -80,7 +80,7 @@ public class UserService implements GenericService<User> , UserDetailsService {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
 
-    public User save(User user){
+    public User save(User user) {
         return userRepository.save(user);
     }
 
