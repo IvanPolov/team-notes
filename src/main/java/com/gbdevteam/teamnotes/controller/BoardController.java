@@ -1,7 +1,9 @@
 package com.gbdevteam.teamnotes.controller;
 
+import com.gbdevteam.teamnotes.dto.BoardRoleDTO;
 import com.gbdevteam.teamnotes.model.Board;
 import com.gbdevteam.teamnotes.model.Note;
+import com.gbdevteam.teamnotes.service.BoardRoleService;
 import com.gbdevteam.teamnotes.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,5 +61,10 @@ public class BoardController {
     @GetMapping("/{boardId}/addUser/{userId}")
     public void addUser(@PathVariable UUID boardId, @PathVariable UUID userId){
         boardService.addUser(boardId,userId);
+    }
+
+    @DeleteMapping("/{boardId}/removeUser/{userId}")
+    public void removeUser(@PathVariable UUID boardId, @PathVariable UUID userId){
+        boardService.removeUser(boardId,userId);
     }
 }

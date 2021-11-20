@@ -10,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -46,10 +47,14 @@ public class Board implements Serializable {
     @JoinTable(name = "boards_users",
             joinColumns = @JoinColumn(name = "board_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
 
     public void setUser(User user) {
         users.add(user);
+    }
+
+    public void removeUser(UUID userId) {
+        users.remove(users.stream().filter(u -> u.getId().equals(userId)).findFirst().get());
     }
 
     public Board(String name, String description, UUID ownerId) {

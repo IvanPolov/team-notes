@@ -70,11 +70,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 .then(function (resp) {
                     console.log('find user data')
                     console.log(resp.data)
-                    if (email === resp.data.email) {
+                    if (email === resp.data.email && !$scope.Users.find(x => x.email === resp.data.email)) {
                         $scope.foundUser = resp.data;
                         $scope.isFounded = true;
-                    }else
+                    }else {
                         $scope.isFounded = false;
+                        console.log('email not found or already added')
+                    }
                     // $scope.addUser();
                 })
         }else $scope.isFounded = false;
@@ -96,12 +98,23 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.get(contextPath + '/board/' + $scope.currentBoard.id + '/addUser/' + $scope.foundUser.id)
             .then(function () {
                 console.log('add user func resp')
+                $scope.invitedUser.email = null;
                 console.log($scope.foundUser)
                 $scope.Users.push($scope.foundUser);
+                $scope.isFounded = false;
+            })
+    }
+    //remove user from the board
+    $scope.removeUser = function (user) {
+        $http.delete(contextPath + '/board/' + $scope.currentBoard.id + '/removeUser/' + user.id)
+            .then(function () {
+                $scope.Users.splice($scope.Users.indexOf(user),1);
             })
     }
 
-    $scope.getUser();
+    if(!$scope.user) {
+        $scope.getUser();
+    }
     $scope.getBoardUsers = function () {
 
         // GET http://localhost:8180/api/v1/user/board/{{boardId}}
@@ -110,6 +123,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 $scope.Users = resp.data;
                 console.log('users of board')
                 console.log($scope.Users)
+                $scope.getRoles();
             })
     }
     $scope.fillBoardWithNotes = function (currentBoard) {
@@ -164,4 +178,31 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             })
 
     };
+
+    //find all roles of the board
+    $scope.getRoles = function (){
+        console.log('get roles function')
+        // GET http://localhost/api/v1/board-roles/{{boardId}}
+        $http.get(contextPath+'/board-roles/'+$scope.currentBoard.id)
+            .then(function (resp){
+            $scope.Roles = resp.data
+            console.log($scope.Roles)
+            $scope.linkRoleToUser($scope.user?.id)
+            $scope.getBoardRoleTypes()
+        })
+    }
+    //link the role to the user
+    $scope.linkRoleToUser = function (userId){
+        $scope.userRole = $scope.Roles.find(r => r.userId === userId).role;
+        console.log($scope.userRole)
+    }
+
+    //types of board roles
+    $scope.getBoardRoleTypes = function (){
+        $http.get(contextPath+'/board-roles/types')
+            .then(function (resp){
+            $scope.RoleTypes = resp.data;
+            console.log($scope.RoleTypes)
+        });
+    }
 });

@@ -13,9 +13,24 @@
     <script src="index.js"></script>
     <script type="text/javascript" src="front.js"></script>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 </head>
 
 <body class="d-flex flex-column" ng-controller="indexController">
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </symbol>
+    <symbol id="remove-user" fill="currentColor" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
+    </symbol>
+</svg>
 <div class="header bg-dark unselectable d-flex align-items-center flex-wrap">
         <div class="main_header text-light m-2 text-center align-middle">Team Notes</div>
         <div class="vl"></div>
@@ -79,8 +94,8 @@
                 <div ng-repeat="u in Users">
                     <span>{{u.email}}</span>
                 </div>
-                <button type="button" class="button-simple-style m-2" data-bs-toggle="modal" data-bs-target="#addUser">
-                    Invite
+                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#addUser">
+                    <i class="bi bi-person-lines-fill fa-2x"></i>
                 </button>
             </div>
             <div class="d-flex align-items-center" style="width: 100%">
@@ -223,22 +238,55 @@
 </div>
 <div id="addUser" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <form novalidate id="addUserForm" ng-submit="addUser()">
+        <form novalidate name="addUserForm" id="addUserForm" ng-submit="addUser()">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Invite users</h5>
+                    <h5 class="modal-title">Manage users</h5>
                     <button type="button" class="btn p-2" data-bs-dismiss="modal" aria-label="Close">
                         <i class="far fa-window-close fa-lg"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input class="form-control mb-2" type="email" ng-model="invitedUser.email" ng-change="findUser(invitedUser.email)" ng-model-options="{debounce:500}"
-                               placeholder="User email..." ng-required="true">
-                    <div ng-show="isFounded">
-                        <div>{{foundUser.email}} is found</div>
-                        <button id="inviteUserButton" class="btn btn-primary" type="submit"
-                                ng-disabled="addUserForm.$invalidEmail">Invite
-                        </button>
+                    <h6 class="">Invite users</h6>
+                    <div class="d-flex align-items-center mb-2">
+                            <input id="userEmail" class="form-control me-2" type="email" ng-model="invitedUser.email" ng-change="findUser(invitedUser.email)" ng-model-options="{debounce:500}"
+                                   placeholder="User email..." ng-required="true">
+                        <div>
+                            <button id="inviteUserButton" class="btn btn-primary" type="submit"
+                                    ng-disabled="!isFounded || !addUserForm.$valid">Invite
+                            </button>
+                        </div>
+                    </div>
+
+                    <div ng-show="isFounded" class="alert alert-success d-flex align-items-center role">
+                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                        <div class="me-1">{{foundUser.email}} is found</div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6>Active users</h6>
+                        </div>
+                        <div class="right_label">
+                            <h6>Rights</h6>
+                        </div>
+                    </div>
+                    <div class="board_user d-flex justify-content-between align-items-center mb-1" ng-repeat="u in Users">
+                        <div class="d-flex align-items-center">
+                            <span class="mr-10">{{u.email}}</span>
+                        </div>
+                        <div class="d-flex align-items-center" ng-hide="u.email == user.email">
+                            <button type="button" class="btn p-2" aria-label="remove" ng-click="removeUser(u)">
+                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#remove-user"/></svg>
+                            </button>
+                            <select class="form-select float-right" aria-label="Default select example">
+                                <option value="1" selected>Reader</option>
+                                <option value="2">Writer</option>
+                                <option value="3">Manager</option>
+                            </select>
+                            <label>
+                                <select ng-options="rt in RoleTypes" class="form-select float-right" ng-model=""></select>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

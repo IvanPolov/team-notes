@@ -10,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
@@ -33,24 +34,24 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         log.info("Dao Authentication Provider");
-        http.csrf().disable()//csrf disabled for using h2-console
-//        http.httpBasic()
-//                .and()
+        http.csrf().ignoringAntMatchers("/h2-console/**");//csrf disabled for using h2-console
+        http.httpBasic()
+                .and()
                 .headers().disable()//for h2-console frame, disable in production
-//                .csrf().csrfTokenRepository(csrfTokenRepository()).and()
+                .csrf().csrfTokenRepository(csrfTokenRepository()).and()
                 .authorizeRequests()
                 .antMatchers("/*.js").permitAll()
                 .antMatchers("/*.css").permitAll()
                 .antMatchers("/promo.html").permitAll()
                 .antMatchers("/h2-console/*").permitAll()
-                .antMatchers(HttpMethod.POST,"/api/v1/signup").permitAll()
+                .antMatchers("/api/v1/signup/**").permitAll()
                 .anyRequest().authenticated().and()
                 .formLogin()
                 .and()
                 .logout()
                 .logoutSuccessUrl("/promo.html")
-//                .and()
-//                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+                .and()
+                .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
                 ;
     }
 

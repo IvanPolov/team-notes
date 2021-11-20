@@ -128,7 +128,7 @@ input, textarea {
     color: whitesmoke;
 }
 .btn:hover{
-    color: rgb(50, 50, 150) ;
+    color: rgb(0, 255, 123);
 }
 .button-simple-style {
     background: rgba(20, 20, 20, 0.8) none;
@@ -182,4 +182,28 @@ input, textarea {
 }
 .ng-disable{
    visibility: hidden;
+}
+.form-select{
+    width: 110px;
+    display: inline;
+}
+.right_label{
+    width: 110px;
+}
+.form-error input.ng-invalid {
+    border-color:red;
+}
+.error-messages {
+    color:red;
+}
+.valid-form{
+    /*border-color: green;*/
+}
+.invalid-form{
+    border-color: red;
+}
+.check{
+    color: green;
+    font-size: 25px;
+    margin-left: 10px;
 }
