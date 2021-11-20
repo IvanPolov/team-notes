@@ -52,15 +52,26 @@
                     <input class="form-control mb-2" type="password" ng-model="user.confirmPassword"
                            ng-change="validatePassword()" ng-model-options="{debounce:1000}"
                            placeholder="Confirm password..." ng-required="true">
-                    <div>
-                        <span id="error_tooltip">{{signupNotification}}</span>
+
+                    <div class="alert alert-info" role="alert" ng-show="errNotif">{{signupNotification}}</div>
+                    <div ng-if="listErrors.length>0">
+                        <div ng-repeat="error in listErrors track by $index">
+                            <p class="alert alert-info" role="alert">
+                                {{error}}
+                            </p>
+                        </div>
+
                     </div>
+
                     <button id="signupButton" class="btn btn-primary" type="submit"
-                            ng-disabled="signupForm.$pristine || signupForm.$invalid || !validatePassword()">Sign up
+                            ng-disabled="signupForm.$pristine || signupForm.$invalid || !validatePassword()">
+                        Sign up
                     </button>
+
                 </div>
                 <div class="modal-footer">
-                    <button id="closeUserButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                    <button id="closeUserButton" type="button" class="btn btn-secondary"
+                            data-bs-dismiss="modal">Close
                     </button>
                 </div>
             </div>

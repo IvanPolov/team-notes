@@ -1,10 +1,13 @@
 package com.gbdevteam.teamnotes.controller;
 
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
+import com.gbdevteam.teamnotes.exceptions.CustomGlobalExceptionHandler;
+import com.gbdevteam.teamnotes.exceptions.ErrorHandledMessage;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +19,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,6 +29,7 @@ import java.util.stream.Collectors;
 @PreAuthorize("isAuthenticated()")
 @Slf4j
 @RequestMapping
+@ControllerAdvice
 public class SignupController {
 
     protected final AuthenticationManager authenticationManager;
@@ -32,11 +38,9 @@ public class SignupController {
 
     @PostMapping("/api/v1/signup")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<?> save(@Validated @RequestBody UserRegAuthDto userRegAuthDto) throws Exception {
+
+    public ResponseEntity<?> save(@Validated @RequestBody UserRegAuthDto userRegAuthDto)  throws Exception {
         log.info(userRegAuthDto.getEmail());
-        if (userService.findByEmail(userRegAuthDto.getEmail()) != null) {
-            throw new Exception("Email all ready exist");//TODO handle and send message about this error on front
-        }
         User user = new User(userRegAuthDto);
         userService.create(user);
         user = userService.findByEmail(userRegAuthDto.getEmail());
