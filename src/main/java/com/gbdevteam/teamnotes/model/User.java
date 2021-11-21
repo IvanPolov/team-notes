@@ -1,12 +1,10 @@
 package com.gbdevteam.teamnotes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.*;
 
@@ -47,12 +45,6 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
-    public User(UserRegAuthDto userRegAuthDto) {
-        this.email = userRegAuthDto.getEmail();
-        this.username = userRegAuthDto.getUsername();
-        this.isVerified = userRegAuthDto.getIsVerified();
-        this.password = userRegAuthDto.getPassword();
-    }
 
     public User(String email, String username, Boolean isVerified, String password, List<Role> roles) {
         this.email = email;

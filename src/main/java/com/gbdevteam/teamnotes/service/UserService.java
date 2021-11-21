@@ -1,18 +1,24 @@
 package com.gbdevteam.teamnotes.service;
 
+import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import com.gbdevteam.teamnotes.model.Role;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,7 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class UserService implements GenericService<User>, UserDetailsService {
-
+    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final RoleService roleService;
 
@@ -49,16 +55,9 @@ public class UserService implements GenericService<User>, UserDetailsService {
 
     @Override
     public UUID create(User user) {
-        if (findByEmail(user.getEmail()) != null)
-            return null;
-        else {
-            log.info(user.getEmail());
-            List<Role> roles = new ArrayList<>();
-            roles.add(roleService.findByName("USER"));
-            user.setRoles(roles);
-            user.setPassword(passwordEncoder().encode(user.getPassword()));
-            return userRepository.save(user).getId();
-        }
+        user.setRoles(List.of(roleService.findByName("USER")));
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
+        return userRepository.save(user).getId();
     }
 
     @Override
@@ -84,5 +83,15 @@ public class UserService implements GenericService<User>, UserDetailsService {
         return userRepository.save(user);
     }
 
+
+    public User addNewUser(UserRegAuthDto userRegAuthDto) {
+        User user = new User();
+        modelMapper.map(userRegAuthDto, user);
+        create(user);
+        UserDetails userDetails = loadUserByUsername(user.getEmail());
+        Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+        return user;
+    }
 
 }

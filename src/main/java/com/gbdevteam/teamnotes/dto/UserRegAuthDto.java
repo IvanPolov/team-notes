@@ -19,8 +19,6 @@ public class UserRegAuthDto {
     @NotBlank(message = "Email must not be blank")
     private String email;
 
-    private Boolean isVerified;
-
     @NotNull
     @Size(min = 5, max = 15, message = "Password must be between 5 to 15 characters")
     private String password;

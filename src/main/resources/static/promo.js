@@ -20,10 +20,10 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                         $scope.errorMessage = '';
                         $scope.user = null;
                         $scope.submitted = false;
-                        // $scope.user = resp.data.user
+                         // $scope.user = resp.data.user
                         // $scope.signupNotification = 'registration is successful'
                         document.querySelector('#closeUserButton').click()
-                        // location.replace('index.html')
+                        location.replace('index.html')
                 },
                 function error(resp){
                     if(resp.status === 409){
