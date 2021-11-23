@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.controller;
 
+import com.gbdevteam.teamnotes.dto.NoteDTO;
 import com.gbdevteam.teamnotes.model.Note;
 import com.gbdevteam.teamnotes.service.NoteService;
 import lombok.RequiredArgsConstructor;
@@ -21,25 +22,22 @@ public class NoteController {
     private final NoteService noteService;
 
     @GetMapping
-    public List<Note> findAll(){
+    public List<NoteDTO> findAll(){
         return noteService.findAll(UUID.randomUUID());
     }
 
     @GetMapping("/{id}")
-    public Optional<Note> getOneNotedById(@PathVariable UUID id) throws Throwable {
-        noteService.findById(id).orElseThrow(() ->
-                new NoSuchElementException(
-                        "Note with id:" + id + "doesn't exist"));
+    public NoteDTO getOneNotedById(@PathVariable UUID id){
         return noteService.findById(id);
     }
 
     @PostMapping
-    public void create(@RequestBody Note note){
+    public void create(@RequestBody NoteDTO note){
         noteService.create(note);
     }
 
     @PutMapping
-    public void update(@RequestBody Note note){
+    public void update(@RequestBody NoteDTO note){
         noteService.update(note);
     }
 

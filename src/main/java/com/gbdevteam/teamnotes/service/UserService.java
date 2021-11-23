@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.service;
 
+import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import com.gbdevteam.teamnotes.model.Role;
 import com.gbdevteam.teamnotes.model.User;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class UserService implements GenericService<User>, UserDetailsService {
+public class UserService implements UserDetailsService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final RoleService roleService;
@@ -37,32 +38,33 @@ public class UserService implements GenericService<User>, UserDetailsService {
     }
 
 
-    public List<User> findAllByBoardId(UUID boardId) {
-        List<User> users = new ArrayList<>(userRepository.findAllByBoards_Id(boardId));
-        User owner = userRepository.findByMyBoards_Id(boardId);
+    public List<UserDTO> findAllByBoardId(UUID boardId) {
+        List<UserDTO> users = userRepository.findAllByBoards_Id(boardId).stream().map(this::convertToDTO).collect(Collectors.toList());
+        UserDTO owner = convertToDTO(userRepository.findByMyBoards_Id(boardId));
         users.add(owner);
         return users;
     }
 
-    @Override
-    public Optional<User> findById(UUID id) {
-        return userRepository.findById(id);
+    public UserDTO findById(UUID id) {
+        return convertToDTO(findUserById(id));
+    }
+
+    public User findUserById(UUID id){
+        return userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("user with that id not found"));
     }
 
     public User findByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
-    @Override
     public UUID create(User user) {
         user.setRoles(List.of(roleService.findByName("USER")));
         user.setPassword(passwordEncoder().encode(user.getPassword()));
         return userRepository.save(user).getId();
     }
 
-    @Override
-    public void update(User user) {
-        userRepository.save(user);
+    public void update(UserDTO user) {
+        userRepository.save(convertToEntity(user));
     }
 
     public void deleteById(UUID id) {
@@ -84,14 +86,20 @@ public class UserService implements GenericService<User>, UserDetailsService {
     }
 
 
-    public User addNewUser(UserRegAuthDto userRegAuthDto) {
+    public UserDTO addNewUser(UserRegAuthDto userRegAuthDto) {
         User user = new User();
         modelMapper.map(userRegAuthDto, user);
         create(user);
         UserDetails userDetails = loadUserByUsername(user.getEmail());
         Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
-        return user;
+        return convertToDTO(user);
     }
 
+    private UserDTO convertToDTO(User user){
+        return modelMapper.map(user, UserDTO.class);
+    }
+    private User convertToEntity(UserDTO userDTO){
+        return modelMapper.map(userDTO, User.class);
+    }
 }

@@ -1,5 +1,7 @@
 package com.gbdevteam.teamnotes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,9 +24,11 @@ public class BoardRole {
     private UUID id;
 
     @Column(name = "board_id", nullable = false)
+    @JsonIgnoreProperties("boardRoles")
     private UUID boardId;
 
-    @ManyToOne (optional = false)
+    @ManyToOne (optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("boardRoles")
     @JoinColumn(name = "board_id", insertable = false, updatable = false)
     private Board board;
 
@@ -32,6 +36,7 @@ public class BoardRole {
     private UUID userId;
 
     @ManyToOne(optional = false)
+    @JsonIgnore
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 

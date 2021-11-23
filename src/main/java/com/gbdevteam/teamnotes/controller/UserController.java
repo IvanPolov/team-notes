@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.controller;
 
+import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.service.BoardService;
 import com.gbdevteam.teamnotes.service.UserService;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/board/{boardId}")
-    public List<User> findAllByBoardId(@PathVariable UUID boardId){
+    public List<UserDTO> findAllByBoardId(@PathVariable UUID boardId){
         return userService.findAllByBoardId(boardId);
     }
 }

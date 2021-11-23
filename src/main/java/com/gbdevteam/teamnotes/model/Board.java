@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @Data
 @Entity
 @NoArgsConstructor
-public class Board implements Serializable {
+public class Board {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -41,7 +42,7 @@ public class Board implements Serializable {
     private UUID ownerId;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("books")
+    @JsonIgnoreProperties("boards")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinTable(name = "boards_users",
@@ -52,6 +53,12 @@ public class Board implements Serializable {
     public void setUser(User user) {
         users.add(user);
     }
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "board")
+    @JsonIgnoreProperties("board")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    public Set<BoardRole> boardRoles;
 
     public void removeUser(UUID userId) {
         users.remove(users.stream().filter(u -> u.getId().equals(userId)).findFirst().get());
