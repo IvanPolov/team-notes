@@ -6,6 +6,16 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.isFounded = false;
     $scope.Users = [];
 
+    $scope.Colors = [
+        {colorHex:'#e06666',description: 'red'},
+        {colorHex:'#f6b26b',description: 'orange'},
+        {colorHex:'#ffd966',description: 'yellow'},
+        {colorHex:'#93c47d',description: 'green'},
+        {colorHex:'#76a5af',description: 'cyan'},
+        {colorHex:'#6d9eeb',description: 'blue'},
+        {colorHex:'#8e7cc3',description: 'purple'},
+        {colorHex:'#c27ba0',description: 'magenta'}];
+
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
             console.log('acronym: ' + sentence + 'size: ' + size);
@@ -146,8 +156,8 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 console.log($scope.Boards);
             });
     }
-    $scope.updateBoard = function () {
-        $http.put(contextPath + '/board', this.board)
+    $scope.updateBoard = function (board) {
+        $http.put(contextPath + '/board', board)
             .then(function (resp) {
                 $scope.getBoards();
             })
@@ -204,5 +214,11 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             $scope.RoleTypes = resp.data;
             console.log($scope.RoleTypes)
         });
+    }
+
+    $scope.setColor = function (objectC, color){
+        console.log(objectC)
+        console.log(color)
+        objectC.color = color
     }
 });

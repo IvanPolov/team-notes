@@ -100,7 +100,7 @@
             </div>
             <div class="d-flex align-items-center" style="width: 100%">
                 <h4>Notes</h4>
-                <button type="button" class="button-simple-style m-2" data-bs-toggle="modal" data-bs-target="#addNote">
+                <button type="button" class="button-simple-style m-2" data-bs-toggle="modal" data-bs-target="#addNote" ng-click="newNote = {}">
                     Create
                 </button>
             </div>
@@ -113,7 +113,7 @@
             <div class="d-flex align-content-start flex-wrap">
                 <div id="boards-from-database" ng-repeat="board in Boards">
                     <div class="board rounded mb-3 m-2">
-                        <form name="boardForm" novalidate ng-submit="updateBoard(b)" ng-init="updatingBoard = {b}">
+                        <form name="boardForm" novalidate ng-submit="updateBoard(board)" ng-init="updatingBoard = {board}">
                             <div class="margin-top border-bottom input_group bg-primary bg-opacity-5 text-white rounded-15 p-1">
                                 <input class="pl-5 input-header" ng-model="board.name" ng-init="board.name" title="{{board.name}}"
                                        type="text" required/>
@@ -155,19 +155,28 @@
                 <div class="notes-from-database" ng-repeat="n in Notes">
                     <div class="note rounded mb-3 m-2">
                         <form name="noteForm" novalidate ng-submit="updateNote(n)" ng-init="updatingNote = {n}">
-                            <div class="margin-top border-bottom input_group bg-primary text-white rounded-15 p-1">
+                            <div class="margin-top border-bottom input_group text-white rounded-15 d-flex align-items-center" ng-style="{'background-color':n.color}">
                                 <input class="pl-5 input-header" ng-model="n.header" ng-init="n.header" type="text"/>
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle" type="button" id="{{'opt'+ n.id}}" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-paint-bucket fa-lg"></i>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="{{'opt'+ n.id}}">
+                                        <li ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}"><button class="btn w-100 m-0 p-0" ng-click="setColor(n, c.colorHex)">
+                                            {{c.description}}</button></li>
+                                    </ul>
+                                </div>
                                 <button type="button" class="btn p-2" aria-label="Delete" ng-click="deleteNote(n.id)">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </div>
-                            <div class="m-1">
-                                <textarea class="form-control" ng-model="n.content" ng-init="n.content"
+                            <div class="m-1 d-flex flex-wrap">
+                                <textarea class="form-control note-text" ng-model="n.content" ng-init="n.content"
+                                          onmouseenter="auto_grow(this)" onmouseleave="auto_shrink(this)"
                                           required></textarea>
                             </div>
 
-                            <div class="margin-bottom m-1 font-weight-light small">created at: {{n.createDate}}</div>
-                            <div class="margin-bottom m-1 font-weight-light small">updated at: {{n.lastModifiedDate}}
+                            <div class="margin-bottom m-1 font-weight-light small"><i class="bi bi-cloud-plus mx-1 fa-lg"></i>{{n.createDate}}<i class="bi bi-arrow-clockwise mx-1 fa-lg"></i>{{n.lastModifiedDate}}
                             </div>
                             <button class="btn m-1" type="submit"
                                     ng-style="{'visibility': noteForm.$pristine|| noteForm.$invalid || (note.header == '{{board.header}}' && board.content == '{{board.content}}')
@@ -185,7 +194,7 @@
 <!--modal window for adding board-->
 <div id="addBoard" class="modal hide" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <form id="formBoard" novalidate ng-submit="saveBoard()">
+        <form id="formBoard" name="boardForm" novalidate ng-submit="saveBoard()">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create new board</h5>
@@ -195,7 +204,7 @@
                 </div>
                 <div class="modal-body">
                     <input class="form-control mb-2" type="text" ng-model="newBoard.name"
-                           placeholder="board header...">
+                           placeholder="board header..." required>
                     <textarea oninput="auto_grow(this)" placeholder="board description..."
                               class="form-control" type="text" ng-model="newBoard.description"></textarea>
                 </div>
@@ -203,7 +212,7 @@
                     <button id="closeCreateBoardButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         Close
                     </button>
-                    <button id="createBoardButton" class="btn m-1" type="submit"
+                    <button id="createBoardButton" class="btn btn-primary m-1" type="submit" ng-disabled="boardForm.$invalid"
                             onsubmit="showStuff('boards_block',false);showStuff('notes_block',true)">Create
                     </button>
                 </div>
@@ -213,9 +222,9 @@
 </div>
 <div id="addNote" class="modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-        <form novalidate ng-submit="saveNote()">
+        <form novalidate name="noteForm" ng-submit="saveNote()" ng-init="newNote = {}">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" ng-style="{'background-color':newNote.color}">
                     <h5 class="modal-title">Create new note</h5>
                     <button type="button" class="close btn p-2" data-bs-dismiss="modal" aria-label="Close">
                         <i class="far fa-window-close fa-lg"></i>
@@ -223,14 +232,18 @@
                 </div>
                 <div class="modal-body">
                     <input class="form-control mb-2" type="text" ng-model="newNote.header"
-                           placeholder="Note header...">
+                           placeholder="Note header..." required>
                     <textarea oninput="auto_grow(this)" placeholder="type your thoughts..."
-                              class="form-control" type="text" ng-model="newNote.content"></textarea>
+                              class="form-control" type="text" ng-model="newNote.content" required></textarea>
+                    <div>
+                        <button class="btn color-button mt-2 me-1" type="button" ng-repeat="c in Colors" ng-model="newNote.color" ng-style="{'background-color':c.colorHex}" ng-click="setColor(newNote,c.colorHex)">
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button id="closeNoteButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                     </button>
-                    <button id="createNoteButton" class="btn btn-primary" type="submit">Create</button>
+                    <button id="createNoteButton" class="btn btn-primary" type="submit" ng-disabled="noteForm.$invalid">Create</button>
                 </div>
             </div>
         </form>

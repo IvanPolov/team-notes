@@ -23,6 +23,11 @@ public class NoteDTO {
     private String content;
     private UUID boardId;
     private User creator;
+    private String color;
+
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date createDate;
+
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date lastModifiedDate;
 }

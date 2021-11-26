@@ -54,6 +54,7 @@ public class BoardService implements GenericService<BoardDTO> {
     }
 
     public void deleteById(UUID id) {
+//        noteService.deleteAll(id);
         boardRepository.deleteById(id);
     }
 

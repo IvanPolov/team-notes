@@ -18,7 +18,7 @@ import java.util.UUID;
 @Data
 @Entity
 @NoArgsConstructor
-public class Note implements Serializable {
+public class Note {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -45,12 +45,11 @@ public class Note implements Serializable {
     @ManyToOne
     private User creator;
 
-    @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
-    private Date createDate;
+    private String color;
 
+    @CreationTimestamp
+    private Date createDate;
     @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date lastModifiedDate;
 
     public Note(String header, String content, UUID boardId){

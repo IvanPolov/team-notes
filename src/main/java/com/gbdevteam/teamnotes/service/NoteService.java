@@ -49,6 +49,10 @@ public class NoteService implements GenericService<NoteDTO> {
         noteRepository.deleteById(id);
     }
 
+    public void deleteAll(UUID boardId){
+        noteRepository.deleteByBoardId(boardId);
+    }
+
     private NoteDTO convertToDTO(Note note){
         return modelMapper.map(note, NoteDTO.class);
     }

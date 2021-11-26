@@ -18,5 +18,5 @@ public class BoardRoleDTO {
     @NotNull
     private UUID userId;
     @NotNull
-    BoardRoleEnum role;
+    private BoardRoleEnum role;
 }

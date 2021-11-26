@@ -29,7 +29,7 @@ public class Board {
     private String name;
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "board")
     @JsonManagedReference
     private List<Note> notes;
 
@@ -42,13 +42,16 @@ public class Board {
     private UUID ownerId;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("boards")
+    @JsonIgnoreProperties(value = "boards",allowSetters = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinTable(name = "boards_users",
             joinColumns = @JoinColumn(name = "board_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
+
+    @OneToMany
+    private Set<Color> colors = new HashSet<>();
 
     public void setUser(User user) {
         users.add(user);
@@ -58,7 +61,7 @@ public class Board {
     @JsonIgnoreProperties("board")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    public Set<BoardRole> boardRoles;
+    private Set<BoardRole> boardRoles = new HashSet<>();
 
     public void removeUser(UUID userId) {
         users.remove(users.stream().filter(u -> u.getId().equals(userId)).findFirst().get());

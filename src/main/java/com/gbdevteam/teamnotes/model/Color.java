@@ -4,23 +4,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
-@Entity
 @Data
-@Table(name = "roles")
+@Entity
 @NoArgsConstructor
-public class Role {
+public class Color {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String colorHex;
 
     private String description;
 
-    public Role(String name, String description){
-        this.name = name;
-        this.description = description;
-    }
+    @ManyToOne
+    private Board board;
 }

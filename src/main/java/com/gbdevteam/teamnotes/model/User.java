@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,7 +13,7 @@ import java.util.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable {
+public class User {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(

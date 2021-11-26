@@ -42,8 +42,8 @@ public class BoardController {
     }
 
     @PutMapping
-    public void update(@RequestBody BoardDTO board){
-       boardService.update(board);
+    public void update(@RequestBody BoardDTO boardDTO){
+       boardService.update(boardDTO);
     }
 
     @DeleteMapping("/{id}")

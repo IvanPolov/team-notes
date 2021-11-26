@@ -1,7 +1,10 @@
 function auto_grow(element) {
-    element.style.height = "5px";
-    element.style.height = (element.scrollHeight) + "px";
+    element.style.height = element.scrollHeight + "px";
 }
+function auto_shrink(element) {
+    element.style.height = '100px';
+}
+
 
 function showStuff(className, show) {
     console.log(className);

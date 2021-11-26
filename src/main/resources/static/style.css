@@ -207,3 +207,19 @@ input, textarea {
     font-size: 25px;
     margin-left: 10px;
 }
+.dropdown-menu{
+    box-shadow: 1px 1px 4px 4px rgba(0, 89, 162, 0.73);
+}
+.dropdown{
+    display: block;
+}
+.note-text{
+    /*word-wrap:break-word;*/
+    height: 100px;
+    min-height: 100px;
+    max-height: 300px;
+}
+.color-button{
+    height: 40px;
+    width: 40px;
+}

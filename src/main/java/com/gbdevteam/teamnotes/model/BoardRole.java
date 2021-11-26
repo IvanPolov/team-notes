@@ -27,8 +27,8 @@ public class BoardRole {
     @JsonIgnoreProperties("boardRoles")
     private UUID boardId;
 
-    @ManyToOne (optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("boardRoles")
+    @ManyToOne (optional = false, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = "boardRoles",allowSetters = true)
     @JoinColumn(name = "board_id", insertable = false, updatable = false)
     private Board board;
 
