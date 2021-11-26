@@ -1,6 +1,5 @@
 package com.gbdevteam.teamnotes.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
@@ -10,11 +9,7 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Entity
@@ -54,14 +49,15 @@ public class Board {
         users.add(user);
     }
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy = "board")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "board")
     @JsonIgnoreProperties("board")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     public Set<BoardRole> boardRoles;
 
     public void removeUser(UUID userId) {
-        users.remove(users.stream().filter(u -> u.getId().equals(userId)).findFirst().get());
+        Optional<User> user = users.stream().filter(u -> u.getId().equals(userId)).findFirst();
+        user.ifPresent(value -> users.remove(value));
     }
 
     public Board(String name, String description, UUID ownerId) {
