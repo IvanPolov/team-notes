@@ -2,10 +2,8 @@ package com.gbdevteam.teamnotes.service;
 
 
 import com.gbdevteam.teamnotes.dto.NoteDTO;
-import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.model.Note;
 
-import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

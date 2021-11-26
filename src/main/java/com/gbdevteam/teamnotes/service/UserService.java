@@ -2,6 +2,7 @@ package com.gbdevteam.teamnotes.service;
 
 import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
+import com.gbdevteam.teamnotes.exception.TeamNotesEntityNotFoundException;
 import com.gbdevteam.teamnotes.model.Role;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.UserRepository;
@@ -49,12 +50,18 @@ public class UserService implements UserDetailsService {
         return convertToDTO(findUserById(id));
     }
 
-    public User findUserById(UUID id){
+    public User findUserById(UUID id) {
         return userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("user with that id not found"));
     }
 
     public User findByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(email);
+        if (user == null) {
+            throw new TeamNotesEntityNotFoundException(email + " not found.");
+            
+        } else {
+            return user;
+        }
     }
 
     public UUID create(User user) {
@@ -91,15 +98,16 @@ public class UserService implements UserDetailsService {
         modelMapper.map(userRegAuthDto, user);
         create(user);
         UserDetails userDetails = loadUserByUsername(user.getEmail());
-        Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),userDetails.getPassword(),userDetails.getAuthorities());
+        Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
         return convertToDTO(user);
     }
 
-    private UserDTO convertToDTO(User user){
+    private UserDTO convertToDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
     }
-    private User convertToEntity(UserDTO userDTO){
+
+    private User convertToEntity(UserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
     }
 }
