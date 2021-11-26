@@ -46,7 +46,7 @@ public class BoardService implements GenericService<BoardDTO> {
     }
 
     public void update(BoardDTO board) {
-        boardRepository.save(convertToEntity(board));
+        update(convertToEntity(board));
     }
 
     public void update(Board board) {

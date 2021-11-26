@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.controller;
 
+import com.gbdevteam.teamnotes.controller.util.ValidatorEmail;
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,23 +14,30 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+
 
 @RestController
 @SessionScope
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 @Slf4j
-@RequestMapping("/api/v1/signup")
-public class SignupController {
 
-    final UserService userService;
+@RequestMapping("/api/v1/signup")
+@Validated
+public class SignupController {
+    private final UserService userService;
+    private final ValidatorEmail validatorEmail;
 
     @PostMapping
     @PreAuthorize("permitAll()")
-    public ResponseEntity<?> save(@Validated @RequestBody UserRegAuthDto userRegAuthDto, BindingResult result) {
+    public ResponseEntity<Object> save(@Valid @RequestBody UserRegAuthDto userRegAuthDto, BindingResult result) {
 
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors().stream()
@@ -38,22 +46,30 @@ public class SignupController {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         } else {
             if (userService.findByEmail(userRegAuthDto.getEmail()) != null) {
+
                 return new ResponseEntity<>(
                         Collections.singletonList("Email already exists"),
                         HttpStatus.CONFLICT);
             } else {
-                return new ResponseEntity<>(userService.addNewUser(userRegAuthDto),HttpStatus.CREATED);
+                return new ResponseEntity<>(userService.addNewUser(userRegAuthDto), HttpStatus.CREATED);
             }
         }
     }
 
     @GetMapping
-    public ResponseEntity<Object> validateEmail(@Validated @RequestParam String email) {
-        if (userService.findByEmail(email) != null) {
+    public ResponseEntity<Object> validateEmail(
+            @Pattern(regexp = ValidatorEmail.PATTERN_EMAIL)
+            @RequestParam("email")
+            @NotBlank
+                    String email) {
+        log.info(email);
+        if (userService.findByEmail(email) != null ) {
+            log.info(email + " CONFLICT!" + " Email already exists");
             return new ResponseEntity<>(
                     Collections.singletonList("Email already exists"),
                     HttpStatus.CONFLICT);
         } else {
+            log.info(email + " is OK!");
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
