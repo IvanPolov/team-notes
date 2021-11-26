@@ -1,14 +1,9 @@
 package com.gbdevteam.teamnotes.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gbdevteam.teamnotes.model.Board;
-import com.gbdevteam.teamnotes.model.Role;
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
+import com.gbdevteam.teamnotes.model.Board;
+import lombok.*;
+
 import java.util.Set;
 import java.util.UUID;
 

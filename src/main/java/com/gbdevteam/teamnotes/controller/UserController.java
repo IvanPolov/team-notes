@@ -1,14 +1,17 @@
 package com.gbdevteam.teamnotes.controller;
 
+import com.gbdevteam.teamnotes.controller.util.ValidatorEmail;
 import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.service.BoardService;
 import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
+import javax.validation.constraints.Pattern;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -17,31 +20,33 @@ import java.util.UUID;
 @SessionScope
 @RequiredArgsConstructor
 @Slf4j
+@Validated
 @RequestMapping("/api/v1/user")
 public class UserController {
 
     final UserService userService;
     final BoardService boardService;
+    private final ValidatorEmail validatorEmail;
 
     @GetMapping
-    public User getUser(Principal principal){
-        return getUserByPrincipal(principal);
-    }
-
-    private User getUserByPrincipal(Principal principal) {
-        String email = principal.getName();
-        User user = userService.findByEmail(email);
-        log.info("user: " + user.getUsername());
-        return user;
+    public User getUser(Principal principal) {
+        log.info("user: " + principal.getName());
+        return userService.findByEmail(principal.getName());
     }
 
     @GetMapping({"/{email}"})
-    public User findByEmail(@PathVariable String email) {
-       return userService.findByEmail(email);
+    public User findByEmail(
+            @PathVariable("email")
+            @Pattern(regexp = ValidatorEmail.PATTERN_EMAIL)
+                    String email) {
+        if (validatorEmail.matchByPattern(email, ValidatorEmail.PATTERN_EMAIL)) {
+            return userService.findByEmail(email);
+        }
+        return null;
     }
 
     @GetMapping("/board/{boardId}")
-    public List<UserDTO> findAllByBoardId(@PathVariable UUID boardId){
+    public List<UserDTO> findAllByBoardId(@PathVariable("boardId") UUID boardId) {
         return userService.findAllByBoardId(boardId);
     }
 }

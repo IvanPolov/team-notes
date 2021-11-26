@@ -58,6 +58,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findUserByEmail(email);
         if (user == null) {
             throw new TeamNotesEntityNotFoundException(email + " not found.");
+            
         } else {
             return user;
         }
