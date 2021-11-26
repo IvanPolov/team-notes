@@ -14,5 +14,5 @@ public class BoardRoleDTO {
 
     private UUID boardId;
     private UUID userId;
-    BoardRoleEnum role;
+    private BoardRoleEnum role;
 }

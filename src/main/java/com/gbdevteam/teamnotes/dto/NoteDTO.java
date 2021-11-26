@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gbdevteam.teamnotes.model.User;
 import lombok.*;
 import java.util.Date;

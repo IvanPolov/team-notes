@@ -56,12 +56,12 @@ public class UserService implements UserDetailsService {
 
     public User findByEmail(String email) {
         User user = userRepository.findUserByEmail(email);
-        if (user == null) {
-            throw new TeamNotesEntityNotFoundException(email + " not found.");
-            
-        } else {
+//        if (user == null) {
+//            throw new TeamNotesEntityNotFoundException(email + " not found.");
+//
+//        } else {
             return user;
-        }
+//        }
     }
 
     public UUID create(User user) {
