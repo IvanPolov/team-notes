@@ -1,12 +1,10 @@
 package com.gbdevteam.teamnotes.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.*;
 
 @Data
@@ -26,7 +24,7 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    private Boolean isVerified;
+    private Boolean isVerified = false;
 
     private String password;
 
@@ -46,6 +44,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
+    private UUID confirmUUID;
 
     public User(String email, String username, Boolean isVerified, String password, List<Role> roles) {
         this.email = email;
@@ -60,4 +59,5 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
 }

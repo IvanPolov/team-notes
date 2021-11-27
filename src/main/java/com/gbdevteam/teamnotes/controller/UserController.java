@@ -1,6 +1,6 @@
 package com.gbdevteam.teamnotes.controller;
 
-import com.gbdevteam.teamnotes.controller.util.ValidatorEmail;
+import com.gbdevteam.teamnotes.controller.validators.ValidatorEmail;
 import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.service.BoardService;
