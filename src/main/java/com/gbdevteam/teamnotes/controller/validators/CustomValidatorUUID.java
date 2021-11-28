@@ -1,4 +1,4 @@
-package com.gbdevteam.teamnotes.controller.util;
+package com.gbdevteam.teamnotes.controller.validators;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,7 @@
 package com.gbdevteam.teamnotes.controller;
 
-import com.gbdevteam.teamnotes.controller.util.ValidatorEmail;
+import com.gbdevteam.teamnotes.controller.validators.ValidUUID;
+import com.gbdevteam.teamnotes.controller.validators.ValidatorEmail;
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -36,33 +41,26 @@ public class SignupController {
 
     @PostMapping
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Object> save(@Valid @RequestBody UserRegAuthDto userRegAuthDto, BindingResult result) {
+    public ResponseEntity<Object> save(@Valid @RequestBody UserRegAuthDto userRegAuthDto, BindingResult result) throws MessagingException {
+
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList());
-            return new ResponseEntity<>(errors, HttpStatus.OK);
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         } else {
             if (userService.findByEmail(userRegAuthDto.getEmail()) != null) {
 
                 return new ResponseEntity<>(
                         Collections.singletonList("Email already exists"),
                         HttpStatus.CONFLICT);
-            } else
-//            if(!userRegAuthDto.getPassword().equals(userRegAuthDto.getConfirmPassword())){
-//                return new ResponseEntity<>(
-//                        Collections.singletonList("Passwords don't match"),
-//                        HttpStatus.PRECONDITION_FAILED);
-//            }
-//            else {
-            {
+            } else {
                 return new ResponseEntity<>(userService.addNewUser(userRegAuthDto), HttpStatus.CREATED);
             }
         }
     }
-
+    @PreAuthorize("permitAll()")
     @GetMapping
-    @ResponseBody
     public ResponseEntity<Object> validateEmail(
             @Pattern(regexp = ValidatorEmail.PATTERN_EMAIL)
             @RequestParam("email")
@@ -79,5 +77,24 @@ public class SignupController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
+    @PreAuthorize("permitAll()")
+    @GetMapping("/confirm/")
+    public void confirmNewUserEmail(
+            @RequestParam("email")
+            @Pattern(regexp = ValidatorEmail.PATTERN_EMAIL)
+                    String email,
+            @RequestParam("uuId")
+            @ValidUUID
+                    UUID uuId) throws IOException {
+        if (userService.verifyNewUserEmail(email, uuId)){
+            log.info("New User was confirmed by email!");
+//            response.sendRedirect("/success-confirm");
+
+        } else{
+            log.error("Bad link to verify new user!");
+//            response.sendRedirect("/error-confirm");
+        }
+    }
+
 
 }

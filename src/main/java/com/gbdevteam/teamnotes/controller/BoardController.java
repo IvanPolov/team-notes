@@ -1,6 +1,6 @@
 package com.gbdevteam.teamnotes.controller;
 
-import com.gbdevteam.teamnotes.controller.util.ValidUUID;
+import com.gbdevteam.teamnotes.controller.validators.ValidUUID;
 import com.gbdevteam.teamnotes.dto.BoardDTO;
 import com.gbdevteam.teamnotes.dto.NoteDTO;
 import com.gbdevteam.teamnotes.service.BoardService;

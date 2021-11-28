@@ -20,10 +20,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+
+import javax.mail.MessagingException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +33,7 @@ public class UserService implements UserDetailsService {
     private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final RoleService roleService;
+    private final EmailSender emailSender;
 
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -94,14 +94,21 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public UserDTO addNewUser(UserRegAuthDto userRegAuthDto) {
+    public UserDTO addNewUser(UserRegAuthDto userRegAuthDto) throws MessagingException {
         User user = new User();
         modelMapper.map(userRegAuthDto, user);
         create(user);
         UserDetails userDetails = loadUserByUsername(user.getEmail());
         Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+        generateConfirmUUID(user);
+        emailSender.sendEmail(user.getEmail(), user.getConfirmUUID());
         return convertToDTO(user);
+    }
+
+    private void generateConfirmUUID(User user) {
+        user.setConfirmUUID(UUID.randomUUID());
+        log.error(String.valueOf(UUID.randomUUID()));
     }
 
     private UserDTO convertToDTO(User user) {
@@ -110,5 +117,26 @@ public class UserService implements UserDetailsService {
 
     private User convertToEntity(UserDTO userDTO) {
         return modelMapper.map(userDTO, User.class);
+    }
+
+    public boolean verifyNewUserEmail(String email, UUID uuId) {
+        User newUser = findByEmail(email);
+        if (Boolean.FALSE.equals(newUser.getIsVerified())) {
+            log.info("\n");
+            log.info("\n******************** Confirming a new User with a verification key **********************");
+            log.info("Field IsVerified =" + newUser.getIsVerified());
+            if (newUser.getConfirmUUID() != null) {
+                log.info("******************************************");
+                log.info("Field ConfirmUUID =" + newUser.getConfirmUUID());
+                if (newUser.getConfirmUUID().compareTo(uuId) == 0) {
+                    log.info("******************************************");
+                    log.info("Compare uuids result = " + (newUser.getConfirmUUID().compareTo(uuId) == 0 ? "uuId's are equivalent" : "uuId's are not equivalent "));
+                    findByEmail(email).setIsVerified(true);
+                    findByEmail(email).setConfirmUUID(null);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

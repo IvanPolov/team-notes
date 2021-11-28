@@ -24,7 +24,7 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    private Boolean isVerified;
+    private Boolean isVerified = false;
 
     private String password;
 
@@ -44,6 +44,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
+    private UUID confirmUUID;
 
     public User(String email, String username, Boolean isVerified, String password, List<Role> roles) {
         this.email = email;
@@ -58,4 +59,5 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
 }
