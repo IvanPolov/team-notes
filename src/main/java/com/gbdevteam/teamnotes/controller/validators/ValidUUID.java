@@ -1,4 +1,4 @@
-package com.gbdevteam.teamnotes.controller.util;
+package com.gbdevteam.teamnotes.controller.validators;
 
 import java.lang.annotation.*;
 import javax.validation.*;
