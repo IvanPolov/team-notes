@@ -8,10 +8,11 @@ public enum BoardRoleEnum {
 
     private final String description;
 
-    BoardRoleEnum(String description){
+    BoardRoleEnum(String description) {
         this.description = description;
     }
-    public String getDescription(){
+
+    public String getDescription() {
         return description;
     }
 }

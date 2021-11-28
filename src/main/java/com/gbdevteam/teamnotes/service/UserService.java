@@ -2,7 +2,6 @@ package com.gbdevteam.teamnotes.service;
 
 import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
-import com.gbdevteam.teamnotes.exception.TeamNotesEntityNotFoundException;
 import com.gbdevteam.teamnotes.model.Role;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.UserRepository;
@@ -21,8 +20,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,7 +61,7 @@ public class UserService implements UserDetailsService {
 //            throw new TeamNotesEntityNotFoundException(email + " not found.");
 //
 //        } else {
-            return user;
+        return user;
 //        }
     }
 

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-
 @RestController
 @SessionScope
 @RequiredArgsConstructor
@@ -38,32 +37,39 @@ public class SignupController {
     @PostMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<Object> save(@Valid @RequestBody UserRegAuthDto userRegAuthDto, BindingResult result) {
-
         if (result.hasErrors()) {
             List<String> errors = result.getAllErrors().stream()
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .collect(Collectors.toList());
-            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(errors, HttpStatus.OK);
         } else {
             if (userService.findByEmail(userRegAuthDto.getEmail()) != null) {
 
                 return new ResponseEntity<>(
                         Collections.singletonList("Email already exists"),
                         HttpStatus.CONFLICT);
-            } else {
+            } else
+//            if(!userRegAuthDto.getPassword().equals(userRegAuthDto.getConfirmPassword())){
+//                return new ResponseEntity<>(
+//                        Collections.singletonList("Passwords don't match"),
+//                        HttpStatus.PRECONDITION_FAILED);
+//            }
+//            else {
+            {
                 return new ResponseEntity<>(userService.addNewUser(userRegAuthDto), HttpStatus.CREATED);
             }
         }
     }
 
     @GetMapping
+    @ResponseBody
     public ResponseEntity<Object> validateEmail(
             @Pattern(regexp = ValidatorEmail.PATTERN_EMAIL)
             @RequestParam("email")
             @NotBlank
                     String email) {
         log.info(email);
-        if (userService.findByEmail(email) != null ) {
+        if (userService.findByEmail(email) != null) {
             log.info(email + " CONFLICT!" + " Email already exists");
             return new ResponseEntity<>(
                     Collections.singletonList("Email already exists"),

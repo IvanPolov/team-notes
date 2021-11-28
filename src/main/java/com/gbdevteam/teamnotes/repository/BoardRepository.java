@@ -11,5 +11,6 @@ import java.util.UUID;
 public interface BoardRepository extends JpaRepository<Board, UUID> {
 
     List<Board> findAllByUsers_Id(UUID userId);
+
     List<Board> findAllByOwnerId(UUID ownerId);
 }

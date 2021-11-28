@@ -2,7 +2,9 @@ package com.gbdevteam.teamnotes.dto;
 
 
 import com.gbdevteam.teamnotes.model.Board;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 import java.util.UUID;

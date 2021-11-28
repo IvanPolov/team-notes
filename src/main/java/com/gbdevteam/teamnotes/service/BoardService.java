@@ -3,7 +3,9 @@ package com.gbdevteam.teamnotes.service;
 import com.gbdevteam.teamnotes.dto.BoardDTO;
 import com.gbdevteam.teamnotes.dto.BoardRoleDTO;
 import com.gbdevteam.teamnotes.dto.NoteDTO;
-import com.gbdevteam.teamnotes.model.*;
+import com.gbdevteam.teamnotes.model.Board;
+import com.gbdevteam.teamnotes.model.BoardRoleEnum;
+import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -11,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,7 +46,7 @@ public class BoardService implements GenericService<BoardDTO> {
 
     public UUID create(BoardDTO boardDTO) {
         Board dbBoard = boardRepository.save(convertToEntity(boardDTO));
-        boardRoleService.create(new BoardRoleDTO(dbBoard.getId(),dbBoard.getOwnerId(), BoardRoleEnum.OWNER));
+        boardRoleService.create(new BoardRoleDTO(dbBoard.getId(), dbBoard.getOwnerId(), BoardRoleEnum.OWNER));
         return dbBoard.getId();
     }
 
@@ -65,31 +70,32 @@ public class BoardService implements GenericService<BoardDTO> {
     public void addUser(UUID boardId, UUID userId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException("Board service exception. Board not found."));
         board.setUser(userService.findUserById(userId));
-        boardRoleService.create(new BoardRoleDTO(boardId,userId, BoardRoleEnum.READER));
+        boardRoleService.create(new BoardRoleDTO(boardId, userId, BoardRoleEnum.READER));
         update(board);
     }
 
-    public void removeUser(UUID boardId, UUID userId){
+    public void removeUser(UUID boardId, UUID userId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException("Board service exception. Board not found."));
         board.removeUser(userId);
-        boardRoleService.deleteByBoardIdAndUserId(boardId,userId);
+        boardRoleService.deleteByBoardIdAndUserId(boardId, userId);
         update(board);
     }
 
-    private BoardDTO convertToDTO(Board board){
-        return modelMapper.map(board,BoardDTO.class);
+    private BoardDTO convertToDTO(Board board) {
+        return modelMapper.map(board, BoardDTO.class);
     }
-    private Board convertToEntity(BoardDTO boardDTO){
+
+    private Board convertToEntity(BoardDTO boardDTO) {
         return modelMapper.map(boardDTO, Board.class);
     }
 
     @PostConstruct
     public void init() {
-       userService.save(new User("test@mail.com", "test", true,userService.passwordEncoder().encode("12345"), Arrays.asList(roleService.findByName("USER"))));
-       userService.save(new User("test2@mail.com", "test2", true, userService.passwordEncoder().encode("12345"), Arrays.asList(roleService.findByName("USER"))));
-       this.create(new BoardDTO("my board 1", "custom description", userService.findByEmail("test@mail.com").getId()));
-       this.create(new BoardDTO("my board 2", "random text", userService.findByEmail("test@mail.com").getId()));
-       this.create(new BoardDTO("my board 3", "my amazing board description", userService.findByEmail("test2@mail.com").getId()));
+        userService.save(new User("test@mail.com", "test", true, userService.passwordEncoder().encode("12345"), Arrays.asList(roleService.findByName("USER"))));
+        userService.save(new User("test2@mail.com", "test2", true, userService.passwordEncoder().encode("12345"), Arrays.asList(roleService.findByName("USER"))));
+        this.create(new BoardDTO("my board 1", "custom description", userService.findByEmail("test@mail.com").getId()));
+        this.create(new BoardDTO("my board 2", "random text", userService.findByEmail("test@mail.com").getId()));
+        this.create(new BoardDTO("my board 3", "my amazing board description", userService.findByEmail("test2@mail.com").getId()));
 
     }
 }

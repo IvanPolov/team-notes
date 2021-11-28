@@ -7,14 +7,14 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.Users = [];
 
     $scope.Colors = [
-        {colorHex:'#e06666',description: 'red'},
-        {colorHex:'#f6b26b',description: 'orange'},
-        {colorHex:'#ffd966',description: 'yellow'},
-        {colorHex:'#93c47d',description: 'green'},
-        {colorHex:'#76a5af',description: 'cyan'},
-        {colorHex:'#6d9eeb',description: 'blue'},
-        {colorHex:'#8e7cc3',description: 'purple'},
-        {colorHex:'#c27ba0',description: 'magenta'}];
+        {colorHex: '#e06666', description: 'red'},
+        {colorHex: '#f6b26b', description: 'orange'},
+        {colorHex: '#ffd966', description: 'yellow'},
+        {colorHex: '#93c47d', description: 'green'},
+        {colorHex: '#76a5af', description: 'cyan'},
+        {colorHex: '#6d9eeb', description: 'blue'},
+        {colorHex: '#8e7cc3', description: 'purple'},
+        {colorHex: '#c27ba0', description: 'magenta'}];
 
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
@@ -74,7 +74,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
 
     //get user by email
     $scope.findUser = function (email) {
-        if(email != null && email !== $scope.user.email) {
+        if (email != null && email !== $scope.user.email) {
             console.log(email);
             $http.get(contextPath + '/user/' + email)
                 .then(function (resp) {
@@ -83,13 +83,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                     if (email === resp.data.email && !$scope.Users.find(x => x.email === resp.data.email)) {
                         $scope.foundUser = resp.data;
                         $scope.isFounded = true;
-                    }else {
+                    } else {
                         $scope.isFounded = false;
                         console.log('email not found or already added')
                     }
                     // $scope.addUser();
                 })
-        }else $scope.isFounded = false;
+        } else $scope.isFounded = false;
     }
 
     //get current session user
@@ -118,11 +118,11 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.removeUser = function (user) {
         $http.delete(contextPath + '/board/' + $scope.currentBoard.id + '/removeUser/' + user.id)
             .then(function () {
-                $scope.Users.splice($scope.Users.indexOf(user),1);
+                $scope.Users.splice($scope.Users.indexOf(user), 1);
             })
     }
 
-    if(!$scope.user) {
+    if (!$scope.user) {
         $scope.getUser();
     }
     $scope.getBoardUsers = function () {
@@ -190,35 +190,46 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     };
 
     //find all roles of the board
-    $scope.getRoles = function (){
+    $scope.getRoles = function () {
         console.log('get roles function')
         // GET http://localhost/api/v1/board-roles/{{boardId}}
-        $http.get(contextPath+'/board-roles/'+$scope.currentBoard.id)
-            .then(function (resp){
-            $scope.Roles = resp.data
-            console.log($scope.Roles)
-            $scope.linkRoleToUser($scope.user?.id)
-            $scope.getBoardRoleTypes()
-        })
+        $http.get(contextPath + '/board-roles/' + $scope.currentBoard.id)
+            .then(function (resp) {
+                $scope.Roles = resp.data
+                console.log($scope.Roles)
+                $scope.linkRoleToUser($scope.user?.id)
+                $scope.getBoardRoleTypes()
+            })
     }
     //link the role to the user
-    $scope.linkRoleToUser = function (userId){
+    $scope.linkRoleToUser = function (userId) {
         $scope.userRole = $scope.Roles.find(r => r.userId === userId).role;
         console.log($scope.userRole)
     }
 
     //types of board roles
-    $scope.getBoardRoleTypes = function (){
-        $http.get(contextPath+'/board-roles/types')
-            .then(function (resp){
-            $scope.RoleTypes = resp.data;
-            console.log($scope.RoleTypes)
-        });
+    $scope.getBoardRoleTypes = function () {
+        $http.get(contextPath + '/board-roles/types')
+            .then(function (resp) {
+                $scope.RoleTypes = resp.data;
+                console.log($scope.RoleTypes)
+            });
     }
 
-    $scope.setColor = function (objectC, color){
+    $scope.setColor = function (objectC, color) {
         console.log(objectC)
         console.log(color)
         objectC.color = color
+    }
+
+    $scope.isAllowed = function (mode) {
+        switch (mode) {
+            case 0: {
+                return $scope.userRole !== 'READER'
+            }
+            case 1: {
+                return $scope.userRole === 'OWNER'
+            }
+        }
     }
 });

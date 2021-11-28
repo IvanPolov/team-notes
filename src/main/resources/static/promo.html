@@ -2,99 +2,137 @@
 <html lang="en" ng-app="app">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/7ffeb8118c.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" rel="stylesheet">
+    <script crossorigin="anonymous" src="https://kit.fontawesome.com/7ffeb8118c.js"></script>
+    <script crossorigin="anonymous"
             integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-            crossorigin="anonymous">
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js">
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-messages.js">
     </script>
     <script src="promo.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link href="style.css" rel="stylesheet">
     <title>Team Notes</title>
 
 </head>
 <style>
-    .alert{
+    .alert {
         width: 90%;
     }
-    .form-control{
+
+    .form-control {
         width: 90%;
     }
 </style>
+<script type="text/javascript">
+    window.onload = function () {
+        document.getElementById("hideAll").style.display = "none";
+    }
+</script>
 <body ng-controller="promoController">
-<div class="header bg-dark unselectable d-flex align-items-center flex-wrap">
-    <div class="main_header text-light m-2 text-center align-middle">Team Notes</div>
-    <!--    -->
-    <div class="vl"></div>
-    <div class="d-flex flex-grow-1 justify-content-end" style="margin-right: 2px">
-        <button id="signupFormButton" type="button" class="button-simple-style m-2" data-bs-toggle="modal"
-                data-bs-target="#signup" title="Sign up">
-            <span>Sign up</span>
-            <i class="fas fa-user-plus fa-lg"></i>
-        </button>
+<div id="hideAll" style="display: block">&nbsp;</div>
+<div class="d-flex flex-column promo-container">
+    <div class="header bg-dark unselectable d-flex align-items-center flex-wrap">
+        <div class="main_header text-light m-2 text-center align-middle">Team Notes</div>
+        <!--    -->
+        <div class="vl"></div>
+        <div class="d-flex flex-grow-1 justify-content-end" style="margin-right: 2px">
+            <button class="button-simple-style m-2" data-bs-target="#signup" data-bs-toggle="modal"
+                    id="signupFormButton"
+                    title="Sign up" type="button">
+                <span>Sign up</span>
+                <i class="fas fa-user-plus fa-lg"></i>
+            </button>
 
-        <a class="button-simple-style m-2" href="/team-notes/login">
-            <span>Log in</span></a>
+            <a class="button-simple-style m-2" href="/team-notes/login">
+                <span>Log in</span></a>
+        </div>
     </div>
+    <div class="promo-signup d-flex align-items-end">
+        <img alt="Work together" class="promo-image" src="/team-notes/image/hands.jpg">
+        <button class="btn-primary mb-1 signup-over-image" data-bs-target="#signup" data-bs-toggle="modal"
+                title="Sign up" type="button">
+            <span>Sign up for free</span>
+        </button>
+        <div>
+
+        </div>
+    </div>
+    <div class="content-hr flex-grow-1 bg-dark"></div>
 </div>
-<div id="signup" class="modal" tabindex="-1" role="dialog">
+<div class="modal" id="signup" role="dialog" tabindex="-1">
     <div class="modal-dialog" role="document">
-        <form novalidate name="signupForm" id="signupForm" ng-submit="signup(signupForm)">
+        <form id="signupForm" name="signupForm" ng-submit="signup(signupForm)" novalidate>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Sign up form</h5>
-                    <button type="button" class="btn p-2" data-bs-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="btn p-2" data-bs-dismiss="modal" type="button">
                         <i class="far fa-window-close fa-lg"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <label for="validationServer01" class="form-label">Email</label>
+                    <label class="form-label" for="validationServer01">Email</label>
                     <div class="d-flex">
-                        <input id="validationServer01" class="form-control mb-2 w-80" name="email" type="email" ng-model="user.email"
-                               placeholder="Your email..." ng-required="true" ng-change="validateEmail(signupForm)"
-                               ng-model-options="{debounce:1000}" required ng-class="signupForm.email.$valid && isEmailValid && !signupForm.email.$pristine ? 'valid-form':'invalid-form'">
+                        <input class="form-control mb-2 w-80" id="validationServer01" name="email"
+                               ng-change="validateEmail(signupForm)"
+                               ng-class="signupForm.email.$valid && isEmailValid && !signupForm.email.$pristine ? 'valid-form':'invalid-form'"
+                               ng-model="user.email" ng-model-options="{debounce:1000}" ng-required="true"
+                               placeholder="Your email..." required
+                               type="email">
                         <span class="check" ng-show="signupForm.email.$valid && isEmailValid">✓</span>
                     </div>
-                    <div ng-show="!isEmailValid && signupForm.email.$error && !signupForm.email.$pristine" class="alert alert-warning d-flex align-items-center role w-80">
+                    <div class="alert alert-warning d-flex align-items-center role w-80"
+                         ng-show="!isEmailValid && signupForm.email.$error && !signupForm.email.$pristine">
                         {{errorMessage}}
                     </div>
-                    <label for="validationServer02" class="form-label">Username</label>
+                    <label class="form-label" for="validationServer02">Username</label>
                     <div class="d-flex">
-                        <input id="validationServer02" class="form-control mb-2 w-80" name="username" type="text" ng-model="user.username"
-                               placeholder="Your username..." ng-required="true" ng-minlength="5" ng-class="signupForm.username.$valid && signupForm.username.$dirty ? 'valid-form':'invalid-form'">
+                        <input class="form-control mb-2 w-80" id="validationServer02" name="username"
+                               ng-class="signupForm.username.$valid && signupForm.username.$dirty ? 'valid-form':'invalid-form'"
+                               ng-minlength="5"
+                               ng-model="user.username" ng-required="true" placeholder="Your username..."
+                               type="text">
                         <span class="check" ng-show="signupForm.username.$valid">✓</span>
                     </div>
-                    <div ng-show="signupForm.username.$invalid && signupForm.username.$dirty" class="alert alert-warning d-flex align-items-center role w-80">
+                    <div class="alert alert-warning d-flex align-items-center role w-80"
+                         ng-show="signupForm.username.$invalid && signupForm.username.$dirty">
                         <div>Username must be at least 5 characters</div>
                     </div>
-                    <label for="validationServer03" class="form-label">Password</label>
-                    <div class="d-flex"><input id="validationServer03" class="form-control mb-2" ng-minlength="5" name="password" type="password" ng-model="user.password"
-                                               placeholder="Your password..." ng-required="true">
+                    <label class="form-label" for="validationServer03">Password</label>
+                    <div class="d-flex"><input class="form-control mb-2" id="validationServer03"
+                                               name="password"
+                                               ng-minlength="5" ng-model="user.password" ng-required="true"
+                                               placeholder="Your password..." type="password">
                         <span class="check" ng-show="signupForm.password.$valid">✓</span>
                     </div>
-                    <div ng-show="signupForm.password.$invalid && signupForm.password.$dirty" class="alert alert-warning d-flex align-items-center role w-80">
+                    <div class="alert alert-warning d-flex align-items-center role w-80"
+                         ng-show="signupForm.password.$invalid && signupForm.password.$dirty">
                         <div>Password must be at least 5 characters</div>
                     </div>
-                    <label for="validationServer04" class="form-label">Confirm password</label>
+                    <label class="form-label" for="validationServer04">Confirm password</label>
                     <div class="d-flex">
-                        <input id="validationServer04" class="form-control mb-2" name="confirm_password" ng-minlength="5" type="password" ng-model="user.confirmPassword"
-                               ng-change="validatePassword()" ng-model-options="{debounce:1000}"
-                               placeholder="Confirm password..." ng-required="true">
-                        <span class="check" ng-show="signupForm.confirm_password.$valid">✓</span>
+                        <input class="form-control mb-2" id="validationServer04" name="confirm_password"
+                               ng-change="validatePassword()" ng-minlength="5"
+                               ng-model="user.confirmPassword"
+                               ng-model-options="{debounce:1000, allowInvalid: true}" ng-required="true"
+                               placeholder="Confirm password..." type="password">
+                        <span class="check" ng-show="signupForm.confirm_password.$valid && isPasswordValid">✓</span>
                     </div>
-                    <div ng-show="signupForm.confirm_password.$invalid && signupForm.confirm_password.$dirty && !isPasswordValid" class="alert alert-warning d-flex align-items-center role w-80">
+                    <div class="alert alert-warning d-flex align-items-center role w-80"
+                         ng-show="!isPasswordValid && signupForm.confirm_password.$dirty">
                         <div>{{signupNotification}}</div>
                     </div>
-                    <button id="signupButton" class="btn btn-primary" type="submit"
-                            ng-disabled="signupForm.$pristine || signupForm.$invalid || !isPasswordValid || !isEmailValid">Sign up
+                    <button class="btn btn-primary" id="signupButton"
+                            ng-disabled="signupForm.$pristine || signupForm.$invalid || !isPasswordValid || !isEmailValid"
+                            type="submit">
+                        Sign up
                     </button>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeUserButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" id="closeUserButton"
+                            type="button">Close
                     </button>
                 </div>
             </div>

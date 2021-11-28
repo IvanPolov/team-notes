@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.asm.Advice;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -27,8 +26,8 @@ public class BoardRole {
     @JsonIgnoreProperties("boardRoles")
     private UUID boardId;
 
-    @ManyToOne (optional = false, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = "boardRoles",allowSetters = true)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = "boardRoles", allowSetters = true)
     @JoinColumn(name = "board_id", insertable = false, updatable = false)
     private Board board;
 

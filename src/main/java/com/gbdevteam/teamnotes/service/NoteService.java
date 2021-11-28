@@ -3,13 +3,12 @@ package com.gbdevteam.teamnotes.service;
 
 import com.gbdevteam.teamnotes.dto.NoteDTO;
 import com.gbdevteam.teamnotes.model.Note;
-
 import com.gbdevteam.teamnotes.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -21,8 +20,10 @@ public class NoteService implements GenericService<NoteDTO> {
     private final ModelMapper modelMapper;
 
     private final NoteRepository noteRepository;
+    private final ColorService colorService;
+    private final UserService userService;
 
-    public List<NoteDTO> findAll(UUID boardId){
+    public List<NoteDTO> findAll(UUID boardId) {
         return noteRepository.findAllByBoardId(boardId).stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
@@ -33,8 +34,8 @@ public class NoteService implements GenericService<NoteDTO> {
     }
 
     @Override
-    public UUID create(NoteDTO note) {
-        return noteRepository.save(convertToEntity(note)).getId();
+    public UUID create(NoteDTO noteDTO) {
+        return noteRepository.save(convertToEntity(noteDTO)).getId();
     }
 
     @Override
@@ -46,14 +47,15 @@ public class NoteService implements GenericService<NoteDTO> {
         noteRepository.deleteById(id);
     }
 
-    public void deleteAll(UUID boardId){
+    public void deleteAll(UUID boardId) {
         noteRepository.deleteByBoardId(boardId);
     }
 
-    private NoteDTO convertToDTO(Note note){
+    private NoteDTO convertToDTO(Note note) {
         return modelMapper.map(note, NoteDTO.class);
     }
-    private Note convertToEntity(NoteDTO noteDTO){
+
+    private Note convertToEntity(NoteDTO noteDTO) {
         return modelMapper.map(noteDTO, Note.class);
     }
 }

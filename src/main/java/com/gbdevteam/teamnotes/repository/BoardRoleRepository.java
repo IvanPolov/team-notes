@@ -10,6 +10,8 @@ import java.util.UUID;
 @Repository
 public interface BoardRoleRepository extends JpaRepository<BoardRole, UUID> {
     List<BoardRole> findAllByBoardId(UUID boardId);
-    BoardRole findByBoardIdAndUserId(UUID boardId,UUID userId);
-    void deleteByBoardIdAndUserId(UUID boardId,UUID userId);
+
+    BoardRole findByBoardIdAndUserId(UUID boardId, UUID userId);
+
+    void deleteByBoardIdAndUserId(UUID boardId, UUID userId);
 }

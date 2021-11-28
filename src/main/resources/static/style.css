@@ -116,10 +116,12 @@ input, textarea {
     outline: inherit;
     text-decoration: none;
 }
-.button-simple-style span, .button-no-style span{
+
+.button-simple-style span, .button-no-style span {
     padding: 5px;
 }
-.button-simple-style i, .button-no-style i{
+
+.button-simple-style i, .button-no-style i {
     padding-right: 5px;
 }
 
@@ -127,14 +129,15 @@ input, textarea {
     background: rgb(50, 50, 50) none;
     color: whitesmoke;
 }
-.btn:hover{
+
+.btn:hover {
     color: rgb(0, 255, 123);
 }
+
 .button-simple-style {
-    background: rgba(20, 20, 20, 0.8) none;
+    background: linear-gradient(90deg, #212529 0%, rgb(79, 67, 90) 40%, #212529 100%);
     display: block;
     border: none;
-    border-radius: 3px;
     color: white;
     padding: 3px;
     font: inherit;
@@ -144,7 +147,7 @@ input, textarea {
 }
 
 .button-simple-style:hover {
-    background: rgb(80, 80, 100) none;
+    background: linear-gradient(90deg, #212529 0%, rgb(154, 88, 184) 40%, #212529 100%);
     color: white;
 }
 
@@ -178,48 +181,153 @@ input, textarea {
 .header {
     box-shadow: 0 2px 7px 0 rgb(27 2 104);
     order: 0;
-    z-index: 2;
+    height: 5vh;
+    position: relative;
+    z-index: 10;
 }
-.ng-disable{
-   visibility: hidden;
+
+.ng-disable {
+    visibility: hidden;
 }
-.form-select{
+
+.form-select {
     width: 110px;
     display: inline;
 }
-.right_label{
+
+.right_label {
     width: 110px;
 }
+
 .form-error input.ng-invalid {
-    border-color:red;
-}
-.error-messages {
-    color:red;
-}
-.valid-form{
-    /*border-color: green;*/
-}
-.invalid-form{
     border-color: red;
 }
-.check{
+
+.error-messages {
+    color: red;
+}
+
+.valid-form {
+    /*border-color: green;*/
+}
+
+.invalid-form {
+    border-color: red;
+}
+
+.check {
     color: green;
     font-size: 25px;
     margin-left: 10px;
 }
-.dropdown-menu{
+
+.dropdown-menu {
     box-shadow: 1px 1px 4px 4px rgba(0, 89, 162, 0.73);
 }
-.dropdown{
+
+.dropdown {
     display: block;
 }
-.note-text{
+
+.note-text {
     /*word-wrap:break-word;*/
     height: 100px;
     min-height: 100px;
     max-height: 300px;
+    overflow-y: scroll;
 }
-.color-button{
+
+.color-button {
     height: 40px;
     width: 40px;
+}
+
+textarea::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+    /*background-color: #abc7ec;*/
+    background: rgb(177, 122, 181);
+    background: linear-gradient(rgb(177, 122, 181) 0%, rgb(129, 198, 148) 55%, rgb(134, 201, 224) 100%);
+}
+
+.board-header {
+    background: #454a83;
+    background: linear-gradient(90deg, rgb(127, 93, 133) 0%, rgb(99, 131, 105) 40%, rgb(113, 152, 169) 100%);
+}
+
+.promo-content {
+    width: 100%;
+}
+
+.demo_wrap {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    background: #5C97FF;
+    overflow: hidden;
+}
+
+.demo_wrap h1 {
+    height: auto;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+/* You could use :after - it doesn't really matter */
+.demo_wrap:before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.4;
+    background-image: url(/team-notes/image/promo.jpg);
+    background-repeat: no-repeat;
+    background-position: 50% 0;
+    background-size: cover;
+}
+
+.promo-signup {
+    width: 100%;
+    position: relative;
+}
+
+.promo-image {
+    width: 100%;
+    height: auto;
+}
+
+.signup-over-image {
+    position: absolute;
+    padding: 15px;
+    font-weight: bold;
+    font-size: large;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+
+.promo-container {
+    height: 100vh;
+}
+
+#hideAll {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #2b2b2b;
+    z-index: 99;
+
 }

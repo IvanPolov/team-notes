@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,6 +34,14 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         log.info("Dao Authentication Provider");
         http.csrf().ignoringAntMatchers("/h2-console/**");//csrf disabled for using h2-console
+
+        //XSS Safe
+//        http
+//                .headers()
+//                .xssProtection()
+//                .and()
+//                .contentSecurityPolicy("script-src 'self'");
+
         http.httpBasic()
                 .and()
                 .headers().disable()//for h2-console frame, disable in production
@@ -42,6 +49,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/*.js").permitAll()
                 .antMatchers("/*.css").permitAll()
+                .antMatchers("/image/**").permitAll()
                 .antMatchers("/promo.html").permitAll()
                 .antMatchers("/h2-console/*").permitAll()
                 .antMatchers("/api/v1/signup/**").permitAll()
@@ -52,7 +60,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/promo.html")
                 .and()
                 .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
-                ;
+        ;
     }
 
     @Bean

@@ -20,58 +20,59 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                         $scope.errorMessage = '';
                         $scope.user = null;
                         $scope.submitted = false;
-                         // $scope.user = resp.data.user
+                        // $scope.user = resp.data.user
                         // $scope.signupNotification = 'registration is successful'
                         document.querySelector('#closeUserButton').click()
                         location.replace('index.html')
-                },
-                function error(resp){
-                    if(resp.status === 409){
-                        $scope.errorMessage = resp.data.message;
-                    }
-                    else {
-                        $scope.errorMessage = 'Error adding user!';
-                    }
-                    $scope.message = '';
-                });
+                    },
+                    function error(resp) {
+                        if (resp.status === 409) {
+                            $scope.errorMessage = resp.data.message;
+                        } else {
+                            $scope.errorMessage = 'Error adding user!';
+                        }
+                        $scope.message = '';
+                    });
         }
     };
 
-    $scope.validateEmail = function (signupForm){
+    $scope.validateEmail = function (signupForm) {
         console.log('validate email')
         if (signupForm.email.$valid) {
-            $http.get(contextPath + '/signup/', {params: {email:$scope.user.email, httpOptions}})
+            $http.get(contextPath + '/signup/', {params: {email: $scope.user.email, httpOptions}})
                 .then(function success(resp) {
-                            $scope.message = 'Seems good!';
-                            $scope.errorMessage = '';
-                            $scope.isEmailValid = true;
-                            console.log('is email valid?')
-                            console.log($scope.isEmailValid)
+                        $scope.message = 'Seems good!';
+                        $scope.errorMessage = '';
+                        console.log(resp.data)
+                        $scope.isEmailValid = true;
+                        console.log('is email valid?')
+                        console.log($scope.isEmailValid)
                     },
-                    function error(resp){
+                    function error(resp) {
                         $scope.isEmailValid = false;
                         console.log('error: is email valid?')
+                        console.log(resp.data)
                         console.log($scope.isEmailValid)
-                        if(resp.status === 409){
+                        if (resp.status === 409) {
                             $scope.errorMessage = resp.data[0];
-                            console.log ($scope.errorMessage)
-                        }
-                        else {
-                            $scope.errorMessage = 'Error adding user!';
+                            console.log($scope.errorMessage)
+                        } else {
+                            $scope.errorMessage = resp.data.error;
                         }
                         $scope.message = '';
                     });
         }
     }
 
-    $scope.validatePassword = function (){
-        if($scope.user.password !== $scope.user.confirmPassword){
+    $scope.validatePassword = function () {
+        if ($scope.user.password !== $scope.user.confirmPassword) {
+            console.log($scope.user)
             $scope.signupNotification = "Passwords don't match"
             $scope.isPasswordValid = false;
             return false;
-        }
-        else {
+        } else {
             $scope.isPasswordValid = true;
+            console.log('passwords match')
             $scope.signupNotification = '';
             return true;
         }

@@ -27,7 +27,7 @@ public class CustomValidatorUUID implements ConstraintValidator<ValidUUID, UUID>
                 .matches()) {
             ctx.disableDefaultConstraintViolation();
             ctx.buildConstraintViolationWithTemplate(
-                            "{UUID is not Valid}")
+                    "{UUID is not Valid}")
                     .addPropertyNode("UUID").addConstraintViolation();
             return false;
         }
