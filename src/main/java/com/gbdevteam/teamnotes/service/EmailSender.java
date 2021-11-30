@@ -9,25 +9,29 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
+
+
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class EmailSender {
 
-    private final JavaMailSender emailSender;
+    private final JavaMailSender javaMailSender;
 
+    public void sendEmail(String emailTo, UUID link) throws MessagingException, UnsupportedEncodingException {
 
-    public void sendEmail(String emailTo, UUID link) throws MessagingException {
-
-        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+        helper.setFrom("Team-Notes", "Team Notes");
         helper.setTo(emailTo);
-        helper.setSubject("Registration on Team Notes service");
+        helper.setSubject("Please confirm your email address.");
+
 
         StringBuilder letter = new StringBuilder();
-        letter.append("<h3>Registration for the Team Notes service is almost complete/</h3>");
+        letter.append("<h3>Registration for the Team Notes service is almost complete.</h3>");
         letter.append("<br>Please confirm your registration with Team Notes Service!");
         letter.append("<br>Click on this <a href=' ");
         letter.append("http://localhost:8180/team-notes/api/v1/signup/confirm/?email=" + emailTo + "&uuId=" + link);
@@ -39,6 +43,6 @@ public class EmailSender {
         String htmlMsg = letter.toString();
         log.info(htmlMsg);
         message.setContent(htmlMsg, "text/html");
-        this.emailSender.send(message);
+        this.javaMailSender.send(message);
     }
 }
