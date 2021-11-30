@@ -1,17 +1,16 @@
 package com.gbdevteam.teamnotes.controller;
 
-import com.gbdevteam.teamnotes.controller.validators.ValidatorEmail;
 import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.service.BoardService;
 import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
-import javax.validation.constraints.Pattern;
 import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +25,6 @@ public class UserController {
 
     final UserService userService;
     final BoardService boardService;
-    private final ValidatorEmail validatorEmail;
 
     @GetMapping
     public User getUser(Principal principal) {
@@ -35,11 +33,8 @@ public class UserController {
     }
 
     @GetMapping({"/{email}"})
-    public User findByEmail(
-            @PathVariable("email")
-            @Pattern(regexp = ValidatorEmail.PATTERN_EMAIL)
-                    String email) {
-        if (validatorEmail.matchByPattern(email, ValidatorEmail.PATTERN_EMAIL)) {
+    public User findByEmail(@PathVariable("email") String email) {
+        if (EmailValidator.getInstance().isValid(email)){
             return userService.findByEmail(email);
         }
         return null;

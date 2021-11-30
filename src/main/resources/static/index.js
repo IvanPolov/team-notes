@@ -99,6 +99,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 $scope.user = resp.data
                 console.log($scope.user.id)
                 $scope.getBoards();
+                $scope.isVerified = resp.data.isVerified;
             })
     }
     //add user to board
