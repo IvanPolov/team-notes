@@ -36,7 +36,7 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
 
     $scope.validateEmail = function (signupForm) {
         console.log('validate email')
-        if (true) { //signupForm.email.$valid
+        if (signupForm.email.$valid) { //
             $http.get(contextPath + '/signup/', {params: {email: $scope.user.email, httpOptions}})
                 .then(function success(resp) {
                         $scope.message = 'Seems good!';
