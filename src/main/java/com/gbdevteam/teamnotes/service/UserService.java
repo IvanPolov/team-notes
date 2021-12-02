@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -94,7 +95,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public UserDTO addNewUser(UserRegAuthDto userRegAuthDto) throws MessagingException {
+    public UserDTO addNewUser(UserRegAuthDto userRegAuthDto) throws MessagingException, UnsupportedEncodingException {
         User user = new User();
         modelMapper.map(userRegAuthDto, user);
         create(user);
