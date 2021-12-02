@@ -98,7 +98,7 @@ public class SignupController {
         if (userService.verifyNewUserEmail(email, uuId)) {
             log.info("New User was confirmed by email!");
 
-            response.sendRedirect("/team-notes/index.html");
+            response.sendRedirect("/team-notes/login");
             return "";
 
         } else {
