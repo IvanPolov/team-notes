@@ -2,14 +2,17 @@ package com.gbdevteam.teamnotes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.*;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 public class User {
     @Id
@@ -36,6 +39,7 @@ public class User {
 
     @ManyToMany(mappedBy = "users")
     @JsonIgnoreProperties("users")
+    @ToString.Exclude
     private Set<Board> boards;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -46,12 +50,16 @@ public class User {
 
     private UUID confirmUUID;
 
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Date dateRegistration;
+
     public User(String email, String username, Boolean isVerified, String password, List<Role> roles) {
         this.email = email;
         this.username = username;
         this.isVerified = isVerified;
         this.password = password;
         this.roles = roles;
+        this.setDateRegistration(new Date());
     }
 
     public User(String email, String username, String password) {
@@ -60,4 +68,16 @@ public class User {
         this.password = password;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

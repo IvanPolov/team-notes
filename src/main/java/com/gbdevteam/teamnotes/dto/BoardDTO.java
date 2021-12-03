@@ -1,9 +1,5 @@
 package com.gbdevteam.teamnotes.dto;
 
-import com.gbdevteam.teamnotes.model.BoardRole;
-import com.gbdevteam.teamnotes.model.Color;
-import com.gbdevteam.teamnotes.model.Note;
-import com.gbdevteam.teamnotes.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

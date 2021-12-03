@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.hateoas.EntityModel;
 
 @RestController
 @SessionScope
@@ -94,7 +93,7 @@ public class SignupController {
                     String email,
             @RequestParam("uuId")
             @ValidUUID
-                    UUID uuId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+                    UUID uuId, HttpServletResponse response) throws IOException {
         if (userService.verifyNewUserEmail(email, uuId)) {
             log.info("New User was confirmed by email!");
 

@@ -20,7 +20,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @Validated
-
 public class BoardController {
     private final BoardService boardService;
 
@@ -31,12 +30,12 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
-    public BoardDTO getOneBoardById(@PathVariable("id") UUID id) throws NoSuchElementException {
+    public BoardDTO getOneBoardById(@PathVariable("id") @ValidUUID UUID id) throws NoSuchElementException {
         return boardService.findById(id);
     }
 
     @GetMapping("/{id}/notes")
-    public List<NoteDTO> getNotesByBoardId(@PathVariable("id") UUID id) {
+    public List<NoteDTO> getNotesByBoardId(@PathVariable("id") @ValidUUID  UUID id) {
         return boardService.findNotes(id);
     }
 
