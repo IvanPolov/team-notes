@@ -69,6 +69,7 @@ public class UserService implements UserDetailsService {
     public UUID create(User user) {
         user.setRoles(List.of(roleService.findByName("USER")));
         user.setPassword(passwordEncoder().encode(user.getPassword()));
+        user.setDateRegistration(new Date());
         return userRepository.save(user).getId();
     }
 
@@ -110,6 +111,10 @@ public class UserService implements UserDetailsService {
     private void generateConfirmUUID(User user) {
         user.setConfirmUUID(UUID.randomUUID());
         log.error(String.valueOf(UUID.randomUUID()));
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     private UserDTO convertToDTO(User user) {
