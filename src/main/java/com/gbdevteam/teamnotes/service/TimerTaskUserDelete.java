@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.service;
 
+import com.gbdevteam.teamnotes.model.User;
 import lombok.Data;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,11 +13,12 @@ import java.util.Date;
 public class TimerTaskUserDelete {
     private final UserService userService;
 
-    @Scheduled(fixedRate = 10000) // For debugging this interval is one in 10 seconds
+    @Scheduled(fixedRate = 1000L)
+    // 2592000000L - this interval is slightly more than once every 30 days.  For debugging set: 60000L - this interval is one minute.
     @Async
     public void refreshListUsers() {
         Date currentDate = new Date();
         userService.getAllUsers().stream().filter(user -> !user.getIsVerified()).filter(user ->
-                currentDate.getTime() - user.getDateRegistration().getTime() >= 60000).forEach(user -> userService.deleteById(user.getId()));// For debugging  this interval is one minute
+                currentDate.getTime() - user.getDateRegistration().getTime() >= 20000L).forEach(user -> userService.deleteById(user.getId())); //For debugging set: 60000L - this interval is one minute.
     }
 }

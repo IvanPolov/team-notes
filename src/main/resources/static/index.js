@@ -85,6 +85,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                         $scope.isFounded = true;
                     }else {
                         $scope.isFounded = false;
+
                         console.log('email not found or already added')
                     }
                     // $scope.addUser();

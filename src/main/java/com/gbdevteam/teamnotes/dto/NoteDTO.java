@@ -3,6 +3,8 @@ package com.gbdevteam.teamnotes.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gbdevteam.teamnotes.model.User;
 import lombok.*;
+
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ public class NoteDTO {
     private String header;
     private String content;
     private UUID boardId;
+    @NotBlank
     private User creator;
     private String color;
 

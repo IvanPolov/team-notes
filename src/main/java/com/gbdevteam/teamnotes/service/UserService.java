@@ -145,4 +145,15 @@ public class UserService implements UserDetailsService {
         }
         return false;
     }
+
+    public boolean isExpiredUnverifiedUser(User user) {
+        if (Boolean.FALSE.equals(user.getIsVerified())) {
+            Date currentDate = new Date();
+            if (currentDate.getTime() - user.getDateRegistration().getTime() >= 30000L) {
+                deleteById(user.getId());
+                return true;
+            }
+        }
+        return false;
+    }
 }
