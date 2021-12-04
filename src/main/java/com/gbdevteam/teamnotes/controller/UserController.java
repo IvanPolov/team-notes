@@ -8,7 +8,7 @@ import com.gbdevteam.teamnotes.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
@@ -18,7 +18,6 @@ import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
-import java.util.TimerTask;
 import java.util.UUID;
 
 @RestController
@@ -33,10 +32,13 @@ public class UserController {
     final BoardService boardService;
 
     @GetMapping
-    public User getUser(Principal principal, HttpServletResponse response) throws IOException {
+    public User getUser(@NotNull Principal principal, HttpServletResponse response) throws IOException {
         log.info("user: " + principal.getName());
         if (userService.findByEmail(principal.getName()) == null) {
-            response.sendRedirect("/team-notes/index.html");
+            response.sendRedirect("/team-notes/promo.html");
+        } else if (userService.isExpiredUnverifiedUser(userService.findByEmail(principal.getName()))) {
+            userService.deleteById(userService.findByEmail(principal.getName()).getId());
+            response.sendRedirect("/team-notes/login");
         }
         return userService.findByEmail(principal.getName());
     }

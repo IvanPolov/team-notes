@@ -10,20 +10,29 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
     $scope.newUser = null;
     $scope.isEmailValid = false;
     $scope.isPasswordValid = false;
+    $scope.isEmailSended = false;
 
     $scope.signup = function (signupForm) {
         console.log('signup function started')
         if (signupForm.$valid) {
             $http.post(contextPath + '/signup', $scope.user, httpOptions)
                 .then(function success(resp) {
-                        $scope.message = 'User added!';
+                        $scope.message = resp.data.detail;
+                        $scope.isEmailSended = true;
                         $scope.errorMessage = '';
                         $scope.user = null;
                         $scope.submitted = false;
                         // $scope.user = resp.data.user
                         // $scope.signupNotification = 'registration is successful'
                         document.querySelector('#closeUserButton').click()
-                        location.replace('index.html')
+                        setTimeout(
+                            () => {
+                                location.replace('index.html');
+                            },
+                            4 * 1000
+                        );
+
+
                     },
                     function error(resp) {
                         $scope.errorTitle = resp.title;
@@ -39,7 +48,8 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
         if (signupForm.email.$valid) { //
             $http.get(contextPath + '/signup/', {params: {email: $scope.user.email, httpOptions}})
                 .then(function success(resp) {
-                        $scope.message = 'Seems good!';
+                        $scope.message = 'resp.data.detail';
+
                         $scope.errorMessage = '';
                         $scope.isEmailValid = true;
                         console.log('is email valid?')
