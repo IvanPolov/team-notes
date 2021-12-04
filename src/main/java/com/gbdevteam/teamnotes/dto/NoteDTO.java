@@ -16,7 +16,6 @@ public class NoteDTO {
     private String header;
     private String content;
     private UUID boardId;
-    @NotBlank
     private User creator;
     private String color;
 

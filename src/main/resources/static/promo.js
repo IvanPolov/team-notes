@@ -29,7 +29,7 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                             () => {
                                 location.replace('index.html');
                             },
-                            3 * 1000
+                            4 * 1000
                         );
 
 
