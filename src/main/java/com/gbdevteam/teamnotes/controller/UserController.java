@@ -9,10 +9,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.annotation.SessionScope;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
@@ -32,16 +35,29 @@ public class UserController {
     final BoardService boardService;
 
     @GetMapping
-    public User getUser(@NotNull Principal principal, HttpServletResponse response) throws IOException {
+    public User getUser(@NotNull Principal principal) {
         log.info("user: " + principal.getName());
-        if (userService.findByEmail(principal.getName()) == null) {
-            response.sendRedirect("/team-notes/promo.html");
-        } else if (userService.isExpiredUnverifiedUser(userService.findByEmail(principal.getName()))) {
-            userService.deleteById(userService.findByEmail(principal.getName()).getId());
-            response.sendRedirect("/team-notes/login");
-        }
         return userService.findByEmail(principal.getName());
     }
+
+    @GetMapping("/check")
+    public ResponseEntity<Object> check(@NotNull Principal principal, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String u = principal.getName();
+
+        if (Boolean.FALSE.equals(userService.findByEmail(u).getIsVerified())) {
+            boolean expiredUnverifiedUser = userService.isExpiredUnverifiedUser(userService.findByEmail(u));
+            if (expiredUnverifiedUser) {
+                userService.deleteById(userService.findByEmail(u).getId());
+                request.getSession().invalidate();
+                response.sendRedirect("/login");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                return new ResponseEntity<>(userService.findByEmail(u), HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(userService.findByEmail(u), HttpStatus.OK);
+    }
+
 
     @GetMapping({"/{email}"})
     public User findByEmail(@PathVariable("email") String email) {

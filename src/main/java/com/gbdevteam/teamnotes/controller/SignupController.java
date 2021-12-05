@@ -60,7 +60,7 @@ public class SignupController {
                         .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
                         .body(Problem.create()
                                 .withTitle("Email Sent")
-                                .withDetail("You have successfully registered. But we have sent an email to your email address to confirm your registration. \n" +
+                                .withDetail("We have sent an email to your email address to confirm your registration. \n" +
                                         "        Please check your email and verify your account within 30 days, otherwise your account will be deleted."));
             }
         }
