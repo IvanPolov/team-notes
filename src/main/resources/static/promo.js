@@ -11,6 +11,9 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
     $scope.isEmailValid = false;
     $scope.isPasswordValid = false;
     $scope.isEmailSended = false;
+    $scope.signupSuccessModal = new bootstrap.Modal(document.getElementById('signupSuccessModal'), {
+        keyboard: false
+    })
 
     $scope.signup = function (signupForm) {
         console.log('signup function started')
@@ -25,22 +28,26 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                         // $scope.user = resp.data.user
                         // $scope.signupNotification = 'registration is successful'
                         document.querySelector('#closeUserButton').click()
-                        setTimeout(
-                            () => {
-                                location.replace('index.html');
-                            },
-                            4 * 1000
-                        );
-
-
+                        $scope.signupSuccessModal.show()
+                        // setTimeout(
+                        //     () => {
+                        //         location.replace('index.html');
+                        //     },
+                        //     7 * 1000
+                        // );
                     },
                     function error(resp) {
                         $scope.errorTitle = resp.title;
                         $scope.errorMessage = resp.detail;
-
                         $scope.message = '';
                     });
         }
+    };
+
+    $scope.enterIntoService = function () {
+        $scope.signupSuccessModal.dispose()        ;
+        location.replace('index.html');
+
     };
 
     $scope.validateEmail = function (signupForm) {

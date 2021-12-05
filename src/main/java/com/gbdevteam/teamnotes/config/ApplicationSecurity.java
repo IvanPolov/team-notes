@@ -50,8 +50,10 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout()
                 .logoutSuccessUrl("/promo.html")
+                .deleteCookies("JSESSIONID")
                 .and()
                 .addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class)
+
                 ;
     }
 
