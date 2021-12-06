@@ -18,10 +18,11 @@
 
 </head>
 <style>
-    .alert{
+    .alert {
         width: 90%;
     }
-    .form-control{
+
+    .form-control {
         width: 90%;
     }
 </style>
@@ -54,52 +55,96 @@
                 <div class="modal-body">
                     <label for="validationServer01" class="form-label">Email</label>
                     <div class="d-flex">
-                        <input id="validationServer01" class="form-control mb-2 w-80" name="email" type="email" ng-model="user.email"
+                        <input id="validationServer01" class="form-control mb-2 w-80" name="email" type="email"
+                               ng-model="user.email"
                                placeholder="Your email..." ng-required="true" ng-change="validateEmail(signupForm)"
-                               ng-model-options="{debounce:1000}" required ng-class="signupForm.email.$valid && isEmailValid && !signupForm.email.$pristine ? 'valid-form':'invalid-form'">
+                               ng-model-options="{debounce:1000}" required
+                               ng-class="signupForm.email.$valid && isEmailValid && !signupForm.email.$pristine ? 'valid-form':'invalid-form'">
                         <span class="check" ng-show="signupForm.email.$valid && isEmailValid">✓</span>
                     </div>
-                    <div ng-show="!isEmailValid && signupForm.email.$error && !signupForm.email.$pristine" class="alert alert-warning d-flex align-items-center role w-80">
+                    <div ng-show="!isEmailValid && signupForm.email.$error && !signupForm.email.$pristine"
+                         class="alert alert-warning d-flex align-items-center role w-80">
                         {{errorMessage}}
                     </div>
                     <label for="validationServer02" class="form-label">Username</label>
                     <div class="d-flex">
-                        <input id="validationServer02" class="form-control mb-2 w-80" name="username" type="text" ng-model="user.username"
-                               placeholder="Your username..." ng-required="true" ng-minlength="5" ng-class="signupForm.username.$valid && signupForm.username.$dirty ? 'valid-form':'invalid-form'">
+                        <input id="validationServer02" class="form-control mb-2 w-80" name="username" type="text"
+                               ng-model="user.username"
+                               placeholder="Your username..." ng-required="true" ng-minlength="5"
+                               ng-class="signupForm.username.$valid && signupForm.username.$dirty ? 'valid-form':'invalid-form'">
                         <span class="check" ng-show="signupForm.username.$valid">✓</span>
                     </div>
-                    <div ng-show="signupForm.username.$invalid && signupForm.username.$dirty" class="alert alert-warning d-flex align-items-center role w-80">
+                    <div ng-show="signupForm.username.$invalid && signupForm.username.$dirty"
+                         class="alert alert-warning d-flex align-items-center role w-80">
                         <div>Username must be at least 5 characters</div>
                     </div>
                     <label for="validationServer03" class="form-label">Password</label>
-                    <div class="d-flex"><input id="validationServer03" class="form-control mb-2" ng-minlength="5" name="password" type="password" ng-model="user.password"
+                    <div class="d-flex"><input id="validationServer03" class="form-control mb-2" ng-minlength="5"
+                                               name="password" type="password" ng-model="user.password"
                                                placeholder="Your password..." ng-required="true">
                         <span class="check" ng-show="signupForm.password.$valid">✓</span>
                     </div>
-                    <div ng-show="signupForm.password.$invalid && signupForm.password.$dirty" class="alert alert-warning d-flex align-items-center role w-80">
+                    <div ng-show="signupForm.password.$invalid && signupForm.password.$dirty"
+                         class="alert alert-warning d-flex align-items-center role w-80">
                         <div>Password must be at least 5 characters</div>
                     </div>
                     <label for="validationServer04" class="form-label">Confirm password</label>
                     <div class="d-flex">
-                        <input id="validationServer04" class="form-control mb-2" name="confirm_password" ng-minlength="5" type="password" ng-model="user.confirmPassword"
+                        <input id="validationServer04" class="form-control mb-2" name="confirm_password"
+                               ng-minlength="5" type="password" ng-model="user.confirmPassword"
                                ng-change="validatePassword()" ng-model-options="{debounce:1000}"
                                placeholder="Confirm password..." ng-required="true">
                         <span class="check" ng-show="signupForm.confirm_password.$valid">✓</span>
                     </div>
-                    <div ng-show="signupForm.confirm_password.$invalid && signupForm.confirm_password.$dirty && !isPasswordValid" class="alert alert-warning d-flex align-items-center role w-80">
+                    <div ng-show="signupForm.confirm_password.$invalid && signupForm.confirm_password.$dirty && !isPasswordValid"
+                         class="alert alert-warning d-flex align-items-center role w-80">
                         <div>{{signupNotification}}</div>
                     </div>
                     <button id="signupButton" class="btn btn-primary" type="submit"
-                            ng-disabled="signupForm.$pristine || signupForm.$invalid || !isPasswordValid || !isEmailValid">Sign up
+                            ng-disabled="signupForm.$pristine || signupForm.$invalid || !isPasswordValid || !isEmailValid">
+                        Sign up
                     </button>
                 </div>
                 <div class="modal-footer">
                     <button id="closeUserButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
                     </button>
                 </div>
+
             </div>
         </form>
     </div>
 </div>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </symbol>
+</svg>
+<!-- Модальное окно -->
+<div class="modal fade" id="signupSuccessModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4> You have successfully registered!</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    {{message}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="enterIntoService()"> Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>

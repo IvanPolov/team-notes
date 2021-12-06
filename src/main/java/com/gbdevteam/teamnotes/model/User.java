@@ -8,6 +8,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.*;
 
+import static javax.persistence.CascadeType.ALL;
+
 @Getter
 @Setter
 @ToString
@@ -31,7 +33,7 @@ public class User {
 
     private String password;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade=ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnoreProperties("owner")

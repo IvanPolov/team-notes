@@ -57,12 +57,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByEmail(String email) {
-        User user = userRepository.findUserByEmail(email);
-//        if (user == null) {
-//            throw new TeamNotesEntityNotFoundException(email + " not found.");
-//
-//        } else {
-        return user;
+        return userRepository.findUserByEmail(email);
 //        }
     }
 
@@ -142,6 +137,14 @@ public class UserService implements UserDetailsService {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public boolean isExpiredUnverifiedUser(User user) {
+        if (Boolean.FALSE.equals(user.getIsVerified())) {
+            Date currentDate = new Date();
+            return currentDate.getTime() - user.getDateRegistration().getTime() >= 20000L;
         }
         return false;
     }

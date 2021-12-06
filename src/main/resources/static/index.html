@@ -56,7 +56,7 @@
         </ul>
     </div>
     <!--create board button-->
-    <button  id="addBoardButton" type="button" class="button-simple-style m-2" data-bs-toggle="modal"
+    <button id="addBoardButton" type="button" class="button-simple-style m-2" data-bs-toggle="modal"
             data-bs-target="#addBoard" title="Create a new board"
             onclick="showStuff('boards_block',true);showStuff('notes_block',false)">
         <span>Create</span>
@@ -64,9 +64,6 @@
     </button>
     <!--    -->
     <div class="vl"></div>
-    <div class="d-flex flex-grow-1 justify-content-center align-items-center" style="margin-right: 20px">
-        <span class="text-white"   ng-show="user.isVerified === false" ><i>Your email is not confirmed! <br>If you don't confirmed email within 24 hours, your account will be blocked.</i></span>
-    </div>
     <div class="vl"></div>
     <div class="d-flex flex-grow-1 justify-content-end align-items-center" style="margin-right: 2px">
         <span class="text-white">{{user.username}}</span>
@@ -89,6 +86,12 @@
 
     <!--        </a>-->
     <!--    </div>-->
+</div>
+<div ng-show="user.isVerified === false" class="alert alert-warning d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
+        <use xlink:href="#exclamation-triangle-fill"/>
+    </svg>
+    <div>Your email is not confirmed! If you don't confirmed email within 30 days, your account will be blocked.</div>
 </div>
 <!-- container for notes or boards -->
 <div class="notes d-flex bg-easy">

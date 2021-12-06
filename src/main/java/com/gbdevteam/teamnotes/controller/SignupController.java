@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 @Validated
 public class SignupController {
     private final UserService userService;
+
     @PostMapping
     public ResponseEntity<Object> save(@Valid @RequestBody UserRegAuthDto userRegAuthDto, BindingResult result) throws MessagingException, UnsupportedEncodingException {
 
@@ -47,6 +48,7 @@ public class SignupController {
                     .collect(Collectors.toList());
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         } else {
+
             if (userService.findByEmail(userRegAuthDto.getEmail()) != null) {
 
                 return new ResponseEntity<>(
@@ -54,7 +56,12 @@ public class SignupController {
                         HttpStatus.CONFLICT);
             } else {
                 userService.addNewUser(userRegAuthDto);
-                return new ResponseEntity<>( HttpStatus.CREATED);
+                return ResponseEntity.status(HttpStatus.CREATED)
+                        .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
+                        .body(Problem.create()
+                                .withTitle("Email Sent")
+                                .withDetail("We have sent an email to your email address to confirm your registration. \n" +
+                                        "        Please check your email and verify your account within 30 days, otherwise your account will be deleted."));
             }
         }
     }
@@ -67,10 +74,10 @@ public class SignupController {
         HttpStatus httpStatus = HttpStatus.OK;
 
         if (!EmailValidator.getInstance().isValid(email)) {
-            stringBuilder.append("Email: " + email + " - is not correct. ");
+            stringBuilder.append("Email: ").append(email).append(" - is not correct. ");
             httpStatus = HttpStatus.BAD_REQUEST;
         } else if (userService.findByEmail(email) != null) {
-            stringBuilder.append("User with email: " + email + " already signup on service. ");
+            stringBuilder.append("User with email: ").append(email).append(" already signup on service. ");
             httpStatus = HttpStatus.CONFLICT;
         }
 
@@ -88,21 +95,23 @@ public class SignupController {
     }
 
     @GetMapping("/confirm/")
-    public String confirmNewUserEmail(
+    public ResponseEntity<String> confirmNewUserEmail(
             @RequestParam("email")
                     String email,
             @RequestParam("uuId")
             @ValidUUID
-                    UUID uuId, HttpServletResponse response) throws IOException {
+                    UUID uuId) {
         if (userService.verifyNewUserEmail(email, uuId)) {
             log.info("New User was confirmed by email!");
-
-            response.sendRedirect("/team-notes/login");
-            return "";
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Thank you! Your account was confirmed by email!");
 
         } else {
             log.error("Bad link to verify new user!");
-            return "Ooops. Your Link is not valid.";
+            return ResponseEntity.badRequest()
+                    .body("Ooops. Your Link is not valid.");
+
+
         }
     }
 
