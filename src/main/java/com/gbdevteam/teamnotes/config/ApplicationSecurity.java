@@ -45,6 +45,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
                 .antMatchers("/promo.html").permitAll()
                 .antMatchers("/h2-console/*").permitAll()
                 .antMatchers("/api/v1/signup/**").permitAll()
+                .antMatchers("/api/v1/login/**").permitAll()
                 .anyRequest().authenticated().and()
                 .formLogin()
                 .and()

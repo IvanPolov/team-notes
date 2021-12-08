@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.service;
 
+import com.gbdevteam.teamnotes.dto.UserAuthDto;
 import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import com.gbdevteam.teamnotes.model.Role;
@@ -101,6 +102,24 @@ public class UserService implements UserDetailsService {
         generateConfirmUUID(user);
         emailSender.sendEmail(user.getEmail(), user.getConfirmUUID());
         return convertToDTO(user);
+    }
+
+    @Transactional
+    public boolean login(UserAuthDto userAuthDto) {
+        log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Login >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        User user = findByEmail(userAuthDto.getEmail());
+        if (user != null) {
+            log.info("User is :" + user.toString());
+            boolean isPasswordOk = passwordEncoder().matches(userAuthDto.getPassword().subSequence(0, userAuthDto.getPassword().length()), user.getPassword());
+            log.info("Result of password check: " + isPasswordOk);
+            if (isPasswordOk) {
+                UserDetails userDetails = loadUserByUsername(user.getEmail());
+                Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void generateConfirmUUID(User user) {
