@@ -5,15 +5,15 @@
 <head>
     <title>Team Notes</title>
     <meta charset="utf-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <script src="https://kit.fontawesome.com/7ffeb8118c.js" crossorigin="anonymous"></script>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" rel="stylesheet">
+    <script crossorigin="anonymous" src="https://kit.fontawesome.com/7ffeb8118c.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 
     <script src="index.js"></script>
-    <script type="text/javascript" src="front.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <script src="front.js" type="text/javascript"></script>
+    <link href="style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
 <body ng-if="isFounded || isFounded==null" class="d-flex flex-column" ng-controller="indexController">
@@ -21,10 +21,10 @@
     <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
     </symbol>
-    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+    <symbol fill="currentColor" id="info-fill" viewBox="0 0 16 16">
         <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
     </symbol>
-    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <symbol fill="currentColor" id="exclamation-triangle-fill" viewBox="0 0 16 16">
         <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
     </symbol>
     <symbol id="remove-user" fill="currentColor" viewBox="0 0 16 16">
@@ -36,7 +36,7 @@
     <div class="main_header text-light m-2 text-center align-middle">Team Notes</div>
     <div class="vl"></div>
     <div class="dropdown d-flex items-align-center m-2">
-        <button class="button-no-style dropdown-button dropdown-toggle" type="button" id="dropdownMenuButton1"
+        <button class="button-simple-style dropdown-button dropdown-toggle" type="button" id="dropdownMenuButton1"
                 data-bs-toggle="dropdown" aria-expanded="false">
             Boards
         </button>
@@ -49,27 +49,27 @@
             </li>
 
             <li ng-repeat="board in Boards"><a class="link_button m-2"
-                                               type="button"
+                                               ng-click="fillBoardWithNotes(board)"
                                                onclick="showStuff('boards_block',false);showStuff('notes_block',true)"
-                                               ng-click="fillBoardWithNotes(board)" title="{{board.name}}">{{board.name}}</a>
+                                               title="{{board.name}}"
+                                               type="button">{{board.name}}</a>
             </li>
         </ul>
     </div>
     <!--create board button-->
-    <button id="addBoardButton" type="button" class="button-simple-style m-2" data-bs-toggle="modal"
-            data-bs-target="#addBoard" title="Create a new board"
-            onclick="showStuff('boards_block',true);showStuff('notes_block',false)">
+    <button class="button-simple-style m-2" data-bs-target="#addBoard" data-bs-toggle="modal" id="addBoardButton"
+            onclick="showStuff('boards_block',true);showStuff('notes_block',false)" title="Create a new board"
+            type="button">
         <span>Create</span>
-        <i class="fas fa-plus-square fa-lg"></i>
+        <i class="bi bi-plus-square fa-lg"></i>
     </button>
     <!--    -->
-    <div class="vl"></div>
     <div class="vl"></div>
     <div class="d-flex flex-grow-1 justify-content-end align-items-center" style="margin-right: 2px">
         <span class="text-white">{{user.username}}</span>
         <a class="button-simple-style m-2" href="/team-notes/logout">
             <span>Sign out</span>
-            <i class="fas fa-sign-out-alt fa-lg"></i>
+            <i class="bi bi-box-arrow-right fa-lg"></i>
         </a>
     </div>
 </div>
@@ -87,31 +87,45 @@
     <!--        </a>-->
     <!--    </div>-->
 </div>
-<div ng-show="user.isVerified === false" class="alert alert-warning d-flex align-items-center" role="alert">
-    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-        <use xlink:href="#exclamation-triangle-fill"/>
-    </svg>
-    <div>Your email is not confirmed! If you don't confirmed email within 30 days, your account will be blocked.</div>
-</div>
 <!-- container for notes or boards -->
 <div class="notes d-flex bg-easy">
     <div class="container">
+
+        <div ng-show="user.isVerified === false" class="alert alert-warning d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
+                <use xlink:href="#exclamation-triangle-fill"/>
+            </svg>
+            <div>Your email is not confirmed! If you don't confirmed email within 30 days, your account will be blocked.</div>
+        </div>
         <div class="notes_block row">
-            <div class="bg-secondary text-light p-1 d-flex justify-content-between align-items-center">
-                <h4>{{currentBoard.name}}</h4>
+            <div class="board-header text-light p-1 d-flex justify-content-between align-items-center">
+                <h4 class="ms-2">{{currentBoard.name}}</h4>
                 <div ng-repeat="u in Users">
                     <span>{{u.email}}</span>
                 </div>
-                <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#addUser">
-                    <i class="bi bi-person-lines-fill fa-2x"></i>
+                <button class="btn text-white" data-bs-target="#addUser" data-bs-toggle="modal" type="button">
+                    <i class="bi bi-person-lines-fill fa-lg"></i>
                 </button>
             </div>
-            <div class="d-flex align-items-center" style="width: 100%">
-                <h4>Notes</h4>
-                <button type="button" class="button-simple-style m-2" data-bs-toggle="modal" data-bs-target="#addNote"
-                        ng-click="newNote = {}">
-                    Create
+            <div class="d-flex align-items-center w-100%">
+                <span class="me-1 fs-4">Notes</span>
+                <button class="btn" data-bs-target="#addNote" data-bs-toggle="modal" ng-click="newNote = {priority:3}"
+                        ng-show="isAllowed(0)"
+                        type="button">
+                    <i class="bi bi-plus-square fa-2x fw-bold"></i>
                 </button>
+                <div class="dropdown ms-auto">
+                    <button aria-expanded="false" class="btn"
+                            data-bs-toggle="dropdown"
+                            id="sorting" type="button">
+                        sort by
+                        <i class="bi bi-filter-square fa-lg"></i>
+                    </button>
+                    <ul aria-labelledby="sorting" class="dropdown-menu">
+                        <li ng-repeat="property in SortProperties"><button class="btn w-100 m-0 p-0" ng-click='sortNotes(property)'>
+                            {{property}}<span class="sort-order ms-1" ng-show="property === propertyName" ng-class="{reverse: reverse}"></span></button></li>
+                    </ul>
+                </div>
             </div>
 
 
@@ -122,34 +136,36 @@
             <div class="d-flex align-content-start flex-wrap">
                 <div id="boards-from-database" ng-repeat="board in Boards">
                     <div class="board rounded mb-3 m-2">
-                        <form name="boardForm" novalidate ng-submit="updateBoard(board)"
-                              ng-init="updatingBoard = {board}">
-                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-5 text-white rounded-15 p-1">
-                                <input class="pl-5 input-header" ng-model="board.name" ng-init="board.name"
-                                       title="{{board.name}}"
-                                       type="text" required/>
-                                <button type="button" class="btn p-2" aria-label="Edit"
-                                        ng-click="editBoard(board.id)">
-                                    <!--                                        <i class="fas fa-edit"></i>-->
-                                </button>
-                                <button type="button" class="btn p-2" aria-label="Delete"
-                                        ng-click="deleteBoard(board.id)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                        <form name="boardForm" ng-init="updatingBoard = {board}" ng-submit="updateBoard(board)"
+                              novalidate>
+                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-5 text-white rounded-15 p-1 d-flex align-items-center">
+                                <input class="pl-5 input-header" ng-init="board.name" ng-model="board.name"
+                                       required
+                                       title="{{board.name}}" type="text"/>
+                                <div class="d-flex align-items-center ms-auto">
+                                    <button aria-label="Edit" class="btn p-2" ng-click="editBoard(board.id)"
+                                            type="button">
+                                        <!--                                        <i class="fas fa-edit"></i>-->
+                                    </button>
+                                    <button aria-label="Delete" class="btn p-2" ng-click="deleteBoard(board.id)"
+                                            type="button">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="m-1">
-                                <textarea class="form-control" ng-model="board.description" ng-init="board.description"
+                                <textarea class="form-control" ng-init="board.description" ng-model="board.description"
                                           required></textarea>
                             </div>
                             <div class="d-flex align-items-center">
-                                <button class="btn m-1" type="button"
+                                <button class="btn m-1" ng-click="fillBoardWithNotes(board)"
                                         onclick="showStuff('boards_block',false);showStuff('notes_block',true)"
-                                        ng-click="fillBoardWithNotes(board)">Select
+                                        type="button">Select
                                     <i class="fas fa-hand-pointer fa-lg"></i>
                                 </button>
-                                <button class="btn m-1" type="submit"
-                                        ng-style="{'visibility': boardForm.$pristine|| boardForm.$invalid || (board.name == '{{board.name}}' && board.description == '{{board.description}}')
-                                        ? 'hidden' : 'visible'}">Update
+                                <button class="btn m-1" ng-style="{'display': boardForm.$pristine|| boardForm.$invalid || (board.name == '{{board.name}}' && board.description == '{{board.description}}')
+                                        ? 'none' : 'block'}"
+                                        type="submit">Update
                                     <i class="far fa-check-square fa-lg"></i>
                                 </button>
                             </div>
@@ -162,43 +178,72 @@
         <!--end -- board from database-->
         <!--      notes from database          -->
         <div class="notes_block row">
-            <div class="d-flex align-content-start flex-wrap">
-                <div class="notes-from-database" ng-repeat="n in Notes">
-                    <div class="note rounded mb-3 m-2">
-                        <form name="noteForm" novalidate ng-submit="updateNote(n)" ng-init="updatingNote = {n}">
+            <div class="d-flex align-content-start flex-wrap d-flex justify-content-center">
+                <div class="notes-from-database" ng-repeat="n in Notes | orderBy:propertyName:reverse">
+                    <div class="note rounded mb-3 m-2 pb-1">
+                        <form name="noteForm" ng-init="updatingNote = {n}" ng-submit="updateNote(n)" novalidate>
                             <div class="margin-top border-bottom input_group text-white rounded-15 d-flex align-items-center"
                                  ng-style="{'background-color':n.color}">
-                                <input class="pl-5 input-header" ng-model="n.header" ng-init="n.header" type="text"/>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle" type="button" id="{{'opt'+ n.id}}"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-paint-bucket fa-lg"></i>
+                                <input class="input-header py-2" ng-init="n.header" ng-model="n.header" readonly
+                                       type="text"/>
+                                <div class="d-flex align-items-center ms-auto" ng-show="isAllowed(0)">
+                                    <button aria-label="Edit" class="btn p-2" data-bs-target="#addNote" data-bs-toggle="modal" ng-click="setNote(n)"
+                                            ng-show="isAllowed(0)"
+                                            type="button">
+                                        <i class="fas fa-edit"></i>
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="{{'opt'+ n.id}}">
-                                        <li ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}">
-                                            <button class="btn w-100 m-0 p-0" ng-click="setColor(n, c.colorHex)">
-                                                {{c.description}}
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <button type="button" class="btn p-2" aria-label="Delete" ng-click="deleteNote(n.id)">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                            </div>
-                            <div class="m-1 d-flex flex-wrap">
-                                <textarea class="form-control note-text" ng-model="n.content" ng-init="n.content"
-                                          onmouseenter="auto_grow(this)" onmouseleave="auto_shrink(this)"
-                                          required></textarea>
-                            </div>
+                                    <button aria-label="Favorite" class="btn p-2" ng-click="n.isFavorite = !n.isFavorite; updateNote(n)"
+                                            type="button">
+                                        <i class="bi" ng-class="{'bi-star':!n.isFavorite,'bi-star-fill':n.isFavorite}"></i>
+                                    </button>
+<!--                                    <div class="me-1 priority-buttons-block">-->
+<!--                                        <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp(n)"-->
+<!--                                                type="button">-->
+<!--                                            <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>-->
+<!--                                        </button>-->
+<!--                                        <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown(n)"-->
+<!--                                                type="button">-->
+<!--                                            <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                    <span class="priority-value text-dark fw-bold fs-4" name="priority" ng-model="newNote.priority">{{n.priority}}</span>-->
+<!--                                    <div class="dropdown ms-2">-->
+<!--                                        <button aria-expanded="false" class="btn p-0"-->
+<!--                                                data-bs-toggle="dropdown"-->
+<!--                                                id="{{'opt'+ n.id}}" type="button">-->
+<!--                                            <i class="bi bi-paint-bucket fa-lg"></i>-->
+<!--                                        </button>-->
+<!--                                        <ul aria-labelledby="{{'opt'+ n.id}}" class="dropdown-menu">-->
+<!--                                            <li ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}">-->
+<!--                                                <button class="btn w-100 m-0 p-0" ng-click="setColor(n, c.colorHex)">-->
+<!--                                                    {{c.description}}-->
+<!--                                                </button>-->
 
-                            <div class="margin-bottom m-1 font-weight-light small"><i
+<!--                                            </li>-->
+<!--                                        </ul>-->
+<!--                                    </div>-->
+                                    <button aria-label="Delete" class="btn p-2" ng-click="deleteNote(n.id)"
+                                            type="button">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="m-1 d-flex">
+                                <textarea class="form-control note-text" ng-init="n.content" ng-model="n.content"
+                                          readonly onmouseenter="auto_grow(this)"
+                                          onmouseleave="auto_shrink(this)" required></textarea>
+                            </div>
+                            <div class="d-flex flex-wrap" id="{{'checklist-'+n.id}}">
+
+                            </div>
+                            <div class="margin-bottom m-2 font-weight-light small"><i
                                     class="bi bi-cloud-plus mx-1 fa-lg"></i>{{n.createDate}}<i
                                     class="bi bi-arrow-clockwise mx-1 fa-lg"></i>{{n.lastModifiedDate}}
                             </div>
-                            <button class="btn m-1" type="submit"
-                                    ng-style="{'visibility': noteForm.$pristine|| noteForm.$invalid || (note.header == '{{board.header}}' && board.content == '{{board.content}}')
-                                        ? 'hidden' : 'visible'}">Update
+                            <button class="btn m-1" ng-style="{'display': (noteForm.$pristine|| noteForm.$invalid || (n.header == '{{n.header}}' && n.content == '{{n.content}}')) && isPriorityValid('{{n.priority}}', n)
+                                        ? 'none' : 'block'}"
+                                    type="submit">Update
                                 <i class="far fa-check-square fa-lg"></i>
                             </button>
                         </form>
@@ -210,93 +255,119 @@
     </div>
 </div>
 <!--modal window for adding board-->
-<div id="addBoard" class="modal hide" tabindex="-1" role="dialog">
+<div class="modal hide" id="addBoard" role="dialog" tabindex="-1">
     <div class="modal-dialog" role="document">
-        <form id="formBoard" name="boardForm" novalidate ng-submit="saveBoard()">
+        <form id="formBoard" name="boardForm" ng-submit="saveBoard()" novalidate>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Create new board</h5>
-                    <button type="button" class="close btn p-2" data-bs-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="close btn p-2" data-bs-dismiss="modal" type="button">
                         <i class="far fa-window-close fa-lg"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input class="form-control mb-2" type="text" ng-model="newBoard.name"
-                           placeholder="board header..." required>
-                    <textarea oninput="auto_grow(this)" placeholder="board description..."
-                              class="form-control" type="text" ng-model="newBoard.description"></textarea>
+                    <input class="form-control mb-2" ng-model="newBoard.name" placeholder="board header..."
+                           required type="text">
+                    <textarea class="form-control" ng-model="newBoard.description"
+                              oninput="auto_grow(this)" placeholder="board description..." type="text"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeCreateBoardButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" id="closeCreateBoardButton" type="button">
                         Close
                     </button>
-                    <button id="createBoardButton" class="btn btn-primary m-1" type="submit"
-                            ng-disabled="boardForm.$invalid"
-                            onsubmit="showStuff('boards_block',false);showStuff('notes_block',true)">Create
+                    <button class="btn btn-primary m-1" id="createBoardButton" ng-disabled="boardForm.$invalid"
+                            onsubmit="showStuff('boards_block',false);showStuff('notes_block',true)"
+                            type="submit">Create
                     </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div id="addNote" class="modal" tabindex="-1" role="dialog">
+<div class="modal" id="addNote" role="dialog" tabindex="-1">
     <div class="modal-dialog" role="document">
-        <form novalidate name="noteForm" ng-submit="saveNote()" ng-init="newNote = {}">
+        <form name="noteForm" ng-submit="saveNote()" novalidate>
             <div class="modal-content">
-                <div class="modal-header" ng-style="{'background-color':newNote.color}">
-                    <h5 class="modal-title">Create new note</h5>
-                    <button type="button" class="close btn p-2" data-bs-dismiss="modal" aria-label="Close">
+                <div class="modal-header d-flex align-items-center" ng-style="{'background-color':newNote.color}">
+                    <input class="form-control" ng-model="newNote.header" placeholder="Note header..."
+                           required type="text">
+                    <button aria-label="Close" class="close btn px-2" data-bs-dismiss="modal" type="button">
                         <i class="far fa-window-close fa-lg"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input class="form-control mb-2" type="text" ng-model="newNote.header"
-                           placeholder="Note header..." required>
-                    <textarea oninput="auto_grow(this)" placeholder="type your thoughts..."
-                              class="form-control" type="text" ng-model="newNote.content" required></textarea>
-                    <div>
-                        <button class="btn color-button mt-2 me-1" type="button" ng-repeat="c in Colors"
-                                ng-model="newNote.color" ng-style="{'background-color':c.colorHex}"
-                                ng-click="setColor(newNote,c.colorHex)">
+                    <h6 class="modal-title">Text</h6>
+                    <textarea class="form-control note-text" ng-model="newNote.content"
+                              oninput="auto_grow(this)" placeholder="type your thoughts..." required
+                              type="text"></textarea>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-paint-bucket fa-2x mt-1"></i>
+                        <button class="btn color-button mt-2 me-1" ng-click="setColor(newNote,c.colorHex)"
+                                ng-model="newNote.color"
+                                ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}"
+                                type="button">
                         </button>
                     </div>
+                    <div class="d-flex align-items-center">
+                    <div class="priority d-flex align-items-center">
+                        <span class="modal-title me-1 fw-bold fs-6">Priority: </span>
+                        <div class="me-1 priority-buttons-block">
+                            <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp(newNote)"
+                                    type="button">
+                                <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>
+                            </button>
+                            <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown(newNote)"
+                                    type="button">
+                                <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                        <div class="priority-value text-dark fw-bold fs-5" >
+                            {{newNote.priority}}</div>
+                    </div>
+                    <button aria-label="Checklist" class="btn p-2" ng-click="addChecklist('checklist-'+ n.id)"
+                            type="button">
+                        Add checklist<i class="bi bi-list-check fa-lg ms-1"></i>
+                    </button>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeNoteButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" id="closeNoteButton" type="button">Close
                     </button>
-                    <button id="createNoteButton" class="btn btn-primary" type="submit" ng-disabled="noteForm.$invalid">
-                        Create
+                    <button class="btn btn-primary" id="createNoteButton" ng-disabled="noteForm.$invalid" type="submit">
+                        Confirm
                     </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<div id="addUser" class="modal" tabindex="-1" role="dialog">
+<div class="modal" id="addUser" role="dialog" tabindex="-1">
     <div class="modal-dialog" role="document">
-        <form novalidate name="addUserForm" id="addUserForm" ng-submit="addUser()">
+        <form id="addUserForm" name="addUserForm" ng-submit="addUser()" novalidate>
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Manage users</h5>
-                    <button type="button" class="btn p-2" data-bs-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="btn p-2" data-bs-dismiss="modal" type="button">
                         <i class="far fa-window-close fa-lg"></i>
                     </button>
                 </div>
-                <div ng-show="user.isVerified === true" class="modal-body">
+                <div class="modal-body">
                     <h6 class="">Invite users</h6>
                     <div class="d-flex align-items-center mb-2">
-                        <input id="userEmail" class="form-control me-2" type="email" ng-model="invitedUser.email"
-                               ng-change="findUser(invitedUser.email)" ng-model-options="{debounce:500}"
-                               placeholder="User email..." ng-required="true">
+                        <input class="form-control me-2" id="userEmail" ng-change="findUser(invitedUser.email)"
+                               ng-model="invitedUser.email"
+                               ng-model-options="{debounce:500}" ng-required="true"
+                               placeholder="User email..." type="email">
                         <div>
-                            <button id="inviteUserButton" class="btn btn-primary" type="submit"
-                                    ng-disabled="!isFounded || !addUserForm.$valid">Invite
+                            <button class="btn btn-primary" id="inviteUserButton"
+                                    ng-disabled="!isFounded || !addUserForm.$valid"
+                                    type="submit">Invite
                             </button>
                         </div>
                     </div>
 
-                    <div ng-show="isFounded" class="alert alert-success d-flex align-items-center role">
-                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+                    <div class="alert alert-success d-flex align-items-center role" ng-show="isFounded">
+                        <svg aria-label="Success:" class="bi flex-shrink-0 me-2" height="24" role="img" width="24">
                             <use xlink:href="#check-circle-fill"/>
                         </svg>
                         <div class="me-1">{{foundUser.email}} is found</div>
@@ -315,14 +386,14 @@
                             <span class="mr-10">{{u.email}}</span>
                         </div>
                         <div class="d-flex align-items-center" ng-hide="u.email == user.email">
-                            <button type="button" class="btn p-2" aria-label="remove" ng-click="removeUser(u)">
-                                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
-                                     aria-label="Success:">
+                            <button aria-label="remove" class="btn p-2" ng-click="removeUser(u)" type="button">
+                                <svg aria-label="Success:" class="bi flex-shrink-0 me-2" height="24" role="img"
+                                     width="24">
                                     <use xlink:href="#remove-user"/>
                                 </svg>
                             </button>
-                            <select class="form-select float-right" aria-label="Default select example">
-                                <option value="1" selected>Reader</option>
+                            <select aria-label="Default select example" class="form-select float-right">
+                                <option selected value="1">Reader</option>
                                 <option value="2">Writer</option>
                                 <option value="3">Manager</option>
                             </select>
@@ -333,16 +404,16 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="closeUserButton" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                    <button class="btn btn-secondary" data-bs-dismiss="modal" id="closeUserButton" type="button">Close
                     </button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+<script crossorigin="anonymous"
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-        crossorigin="anonymous">
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js">
 </script>
 </body>
 

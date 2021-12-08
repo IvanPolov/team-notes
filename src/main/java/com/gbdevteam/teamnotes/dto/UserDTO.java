@@ -2,7 +2,9 @@ package com.gbdevteam.teamnotes.dto;
 
 
 import com.gbdevteam.teamnotes.model.Board;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

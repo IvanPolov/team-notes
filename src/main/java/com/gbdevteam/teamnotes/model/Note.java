@@ -1,7 +1,6 @@
 package com.gbdevteam.teamnotes.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
@@ -30,7 +28,7 @@ public class Note {
     private String header;
 
     @Column(length = 600)
-    private String content;//second split String -> class Content
+    private String content;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -47,12 +45,16 @@ public class Note {
 
     private String color;
 
+    private int priority;
+
+    private Boolean isFavorite;
+
     @CreationTimestamp
     private Date createDate;
     @UpdateTimestamp
     private Date lastModifiedDate;
 
-    public Note(String header, String content, UUID boardId){
+    public Note(String header, String content, UUID boardId) {
         this.header = header;
         this.content = content;
         this.boardId = boardId;

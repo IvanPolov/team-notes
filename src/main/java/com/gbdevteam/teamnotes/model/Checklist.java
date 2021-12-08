@@ -4,22 +4,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Entity
 @Data
-@Table(name = "roles")
+@Entity
 @NoArgsConstructor
-public class Role {
+public class Checklist {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
-    private String description;
-
-    public Role(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+    @OneToMany
+    private List<ChecklistItem> items;
 }

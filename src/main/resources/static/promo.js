@@ -84,7 +84,7 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
 
     $scope.validateEmail = function (signupForm) {
         console.log('validate email')
-        if (signupForm.email.$valid) { //
+        if (signupForm.email.$valid) {
             $http.get(contextPath + '/signup/', {params: {email: $scope.user.email, httpOptions}})
                 .then(function success(resp) {
                         $scope.message = 'resp.data.detail';
@@ -97,6 +97,7 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                     function error(resp) {
                         $scope.isEmailValid = false;
                         console.log('error: is email valid?')
+                        console.log(resp.data)
                         console.log($scope.isEmailValid)
                         if (resp.statusText === "BadRequest" || resp.statusText === "Conflict") {
                             $scope.errorMessage = resp.data.detail;
@@ -118,4 +119,4 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
             return true;
         }
     };
-})
+});

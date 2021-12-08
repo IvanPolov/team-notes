@@ -62,7 +62,7 @@ public class BoardController {
 
     @DeleteMapping("/{boardId}/removeUser/{userId}")
     public void removeUser(
-            @PathVariable("boardId")UUID boardId, @PathVariable("userId") UUID userId) {
+            @PathVariable("boardId") UUID boardId, @PathVariable("userId") UUID userId) {
         boardService.removeUser(boardId, userId);
     }
 }

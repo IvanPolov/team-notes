@@ -2,7 +2,6 @@ server:
   port: 8180
   servlet:
     context-path: /team-notes
-
 spring:
   datasource:
     driver-class-name: org.h2.Driver
@@ -23,5 +22,5 @@ spring:
       settings:
         web-allow-others: false
 eml:
-  email: xlinaris@gmail.com
+  email: x.x.devteam@gmail.com
   password: xxxx

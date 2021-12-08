@@ -1,6 +1,8 @@
 package com.gbdevteam.teamnotes.controller;
 
 import com.gbdevteam.teamnotes.dto.NoteDTO;
+import com.gbdevteam.teamnotes.model.BoardRoleEnum;
+import com.gbdevteam.teamnotes.service.BoardRoleService;
 import com.gbdevteam.teamnotes.service.NoteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +23,7 @@ import java.util.UUID;
 
 public class NoteController {
     private final NoteService noteService;
+    private final BoardRoleService boardRoleService;
 
     @GetMapping
     public List<NoteDTO> findAll() {
@@ -32,19 +36,25 @@ public class NoteController {
     }
 
     @PostMapping
-    public void create(@Valid @RequestBody NoteDTO note) {
-        noteService.create(note);
+    public void create(@Valid @RequestBody NoteDTO note, Principal principal) {
+        if (!boardRoleService.checkRole(note.getBoardId(), principal.getName()).equals(BoardRoleEnum.READER)) {
+            noteService.create(note);
+        }
     }
 
     @PutMapping
-    public void update(@Valid @RequestBody NoteDTO note) {
-        noteService.update(note);
+    public void update(@Valid @RequestBody NoteDTO note, Principal principal) {
+        if (!boardRoleService.checkRole(note.getBoardId(), principal.getName()).equals(BoardRoleEnum.READER)) {
+            noteService.update(note);
+        }
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable("id") UUID id) {
-        noteService.deleteById(id);
+    public void deleteById(@PathVariable("id") UUID id, Principal principal) {
+        if (!boardRoleService.checkRole(noteService.findById(id).getBoardId(), principal.getName()).equals(BoardRoleEnum.READER)) {
+            noteService.deleteById(id);
+        }
     }
 
 }

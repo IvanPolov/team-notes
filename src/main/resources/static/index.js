@@ -1,31 +1,34 @@
-angular.module('app', []).controller('indexController', function ($rootScope, $scope, $http, $interval) {
-        const contextPath = 'http://localhost:8180/team-notes/api/v1';
+angular.module('app', []).controller('indexController', function ($rootScope, $scope, $http, $interval, $compile) {
+    const contextPath = 'http://localhost:8180/team-notes/api/v1';
 
-        $scope.invitedUser = null;
-        $scope.foundUser = null;
-        $scope.isFounded = false;
-        $scope.Users = [];
-        $scope.isVerified = false;
+    $scope.invitedUser = null;
+    $scope.foundUser = null;
+    $scope.isFounded = false;
+    $scope.Users = [];
 
-        $scope.Colors = [
-            {colorHex: '#e06666', description: 'red'},
-            {colorHex: '#f6b26b', description: 'orange'},
-            {colorHex: '#ffd966', description: 'yellow'},
-            {colorHex: '#93c47d', description: 'green'},
-            {colorHex: '#76a5af', description: 'cyan'},
-            {colorHex: '#6d9eeb', description: 'blue'},
-            {colorHex: '#8e7cc3', description: 'purple'},
-            {colorHex: '#c27ba0', description: 'magenta'}];
+    $scope.Colors = [
+        {colorHex: '#e06666', description: 'red'},
+        {colorHex: '#f6b26b', description: 'orange'},
+        {colorHex: '#ffd966', description: 'yellow'},
+        {colorHex: '#93c47d', description: 'green'},
+        {colorHex: '#76a5af', description: 'cyan'},
+        {colorHex: '#6d9eeb', description: 'blue'},
+        {colorHex: '#8e7cc3', description: 'purple'},
+        {colorHex: '#c27ba0', description: 'magenta'}];
 
-        $scope.acronym = function (sentence, size) {
-            if (sentence != null) {
-                console.log('acronym: ' + sentence + 'size: ' + size);
-                let acro = sentence.split(' ').map(x => x[0]).join('').slice(0, size).toUpperCase();
-                console.log(acro);
-                return acro;
-            }
-            return '';
+    $scope.SortProperties = ['priority','color','isFavorite','createDate','lastModifiedDate'];
+    $scope.propertyName = 'priority';
+    $scope.reverse = true;
+
+    $scope.acronym = function (sentence, size) {
+        if (sentence != null) {
+            console.log('acronym: ' + sentence + 'size: ' + size);
+            let acro = sentence.split(' ').map(x => x[0]).join('').slice(0, size).toUpperCase();
+            console.log(acro);
+            return acro;
         }
+        return '';
+    }
 
 
         $scope.saveNote = function () {
@@ -34,10 +37,14 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             $http.post(contextPath + '/note', $scope.newNote)
                 .then(function (resp) {
                     $scope.fillBoardWithNotes($scope.currentBoard);
-                    $scope.newNote = null;
+                    // $scope.newNote = null;
                     document.querySelector('#closeNoteButton').click();
                 })
 
+        }
+
+        $scope.setNote = function (note){
+            $scope.newNote = angular.copy(note)
         }
 
         $scope.updateNote = function (note) {
@@ -73,26 +80,25 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         // });
         // }
 
-        //get user by email
-        $scope.findUser = function (email) {
-            if (email != null && email !== $scope.user.email) {
-                console.log(email);
-                $http.get(contextPath + '/user/' + email)
-                    .then(function (resp) {
-                        console.log('find user data')
-                        console.log(resp.data)
-                        if (email === resp.data.email && !$scope.Users.find(x => x.email === resp.data.email)) {
-                            $scope.foundUser = resp.data;
-                            $scope.isFounded = true;
-                        } else {
-                            $scope.isFounded = false;
-
-                            console.log('email not found or already added')
-                        }
-                        // $scope.addUser();
-                    })
-            } else $scope.isFounded = false;
-        }
+    //get user by email
+    $scope.findUser = function (email) {
+        if (email != null && email !== $scope.user.email) {
+            console.log(email);
+            $http.get(contextPath + '/user/' + email)
+                .then(function (resp) {
+                    console.log('find user data')
+                    console.log(resp.data)
+                    if (email === resp.data.email && !$scope.Users.find(x => x.email === resp.data.email)) {
+                        $scope.foundUser = resp.data;
+                        $scope.isFounded = true;
+                    } else {
+                        $scope.isFounded = false;
+                        console.log('email not found or already added')
+                    }
+                    // $scope.addUser();
+                })
+        } else $scope.isFounded = false;
+    }
 
         //get current session user
         $scope.getUser = function () {
@@ -220,38 +226,84 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
 
         };
 
-//find all roles of the board
-        $scope.getRoles = function () {
-            console.log('get roles function')
-            // GET http://localhost/api/v1/board-roles/{{boardId}}
-            $http.get(contextPath + '/board-roles/' + $scope.currentBoard.id)
-                .then(function (resp) {
-                    $scope.Roles = resp.data
-                    console.log($scope.Roles)
-                    $scope.linkRoleToUser($scope.user?.id)
-                    $scope.getBoardRoleTypes()
-                })
-        }
-//link the role to the user
-        $scope.linkRoleToUser = function (userId) {
-            $scope.userRole = $scope.Roles.find(r => r.userId === userId).role;
-            console.log($scope.userRole)
-        }
+    //find all roles of the board
+    $scope.getRoles = function () {
+        console.log('get roles function')
+        // GET http://localhost/api/v1/board-roles/{{boardId}}
+        $http.get(contextPath + '/board-roles/' + $scope.currentBoard.id)
+            .then(function (resp) {
+                $scope.Roles = resp.data
+                console.log($scope.Roles)
+                $scope.linkRoleToUser($scope.user?.id)
+                $scope.getBoardRoleTypes()
+            })
+    }
+    //link the role to the user
+    $scope.linkRoleToUser = function (userId) {
+        $scope.userRole = $scope.Roles.find(r => r.userId === userId).role;
+        console.log($scope.userRole)
+    }
 
-//types of board roles
-        $scope.getBoardRoleTypes = function () {
-            $http.get(contextPath + '/board-roles/types')
-                .then(function (resp) {
-                    $scope.RoleTypes = resp.data;
-                    console.log($scope.RoleTypes)
-                });
-        }
+    //types of board roles
+    $scope.getBoardRoleTypes = function () {
+        $http.get(contextPath + '/board-roles/types')
+            .then(function (resp) {
+                $scope.RoleTypes = resp.data;
+                console.log($scope.RoleTypes)
+            });
+    }
 
-        $scope.setColor = function (objectC, color) {
-            console.log(objectC)
-            console.log(color)
-            objectC.color = color
+    $scope.setColor = function (objectC, color) {
+        console.log(objectC)
+        console.log(color)
+        objectC.color = color
+    }
+
+    $scope.isAllowed = function (mode) {
+        switch (mode) {
+            case 0: {
+                return $scope.userRole !== 'READER'
+            }
+            case 1: {
+                return $scope.userRole === 'OWNER'
+            }
         }
     }
-)
-;
+
+    $scope.priorityUp = function (note){
+        console.log(note)
+        if(!note.priority) note.priority = 0
+        note.priority++
+        if(note.priority > 9)
+            note.priority = 0
+    }
+    $scope.priorityDown = function (note){
+        note.priority--
+        if(note.priority < 0)
+            note.priority = 9
+    }
+    $scope.isPriorityValid = function (text, note){
+        let priority = note.priority
+        if(priority > -1 && priority < 10)
+        return priority === parseInt(text)
+        else return false
+    }
+
+    $scope.sortNotes = function (propertyName){
+        $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+        $scope.propertyName = propertyName;
+    }
+    $scope.colorComparator = function (v1,v2){
+        if (v1.type === 'string' || v2.type === 'string'){
+            return ($scope.Colors.findIndex(c=>c.colorHex === 'v1') < $scope.Colors.findIndex(c=>c.colorHex === 'v2')) ? -1 : 1;
+        }
+        return v1.value.localeCompare(v2.value);
+    }
+    $scope.addChecklist = function (id){
+        let checkListHtml ='<div><input class="input-header py-2" ng-readonly="!isAllowed(0)" type="text" placeholder="checklist name..."/>' +
+            '<span>{{n.header}}</span><input class="input-header py-2" ng-readonly="!isAllowed(0)" type="text" placeholder="checklist item..."/>' +
+            '</div>'
+        let temp = $compile(checkListHtml)($scope)
+        angular.element(document.getElementById(id)).append(temp)
+    }
+});

@@ -8,7 +8,7 @@ import javax.validation.*;
 @Target( {ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidUUID {
-    String message() default "{uuid.message}";
+    String message() default "UUID  not valid";
 
     Class<?>[] groups() default {};
 

@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +38,10 @@ public class BoardRoleController {
     }
 
     @PostMapping("/set")
-    public void setBoardUserRole(@Valid @RequestBody BoardRoleDTO boardRoleDTO) {
-        boardRoleService.create(boardRoleDTO);
+    public void setBoardUserRole(@Valid @RequestBody BoardRoleDTO boardRoleDTO, Principal principal) {
+        BoardRoleEnum boardRole = boardRoleService.checkRole(boardRoleDTO.getBoardId(), principal.getName());
+        if (boardRole.equals(BoardRoleEnum.OWNER) || boardRole.equals(BoardRoleEnum.MANAGER)) {
+            boardRoleService.create(boardRoleDTO);
+        }
     }
 }

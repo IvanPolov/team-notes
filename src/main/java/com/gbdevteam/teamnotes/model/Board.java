@@ -37,7 +37,7 @@ public class Board {
     private UUID ownerId;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = "boards",allowSetters = true)
+    @JsonIgnoreProperties(value = "boards", allowSetters = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @JoinTable(name = "boards_users",
@@ -47,26 +47,25 @@ public class Board {
 
     @OneToMany
     private Set<Color> colors = new HashSet<>();
-
-    public void setUser(User user) {
-        users.add(user);
-    }
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "board")
     @JsonIgnoreProperties("board")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<BoardRole> boardRoles = new HashSet<>();
 
-    public void removeUser(UUID userId) {
-        Optional<User> user = users.stream().filter(u -> u.getId().equals(userId)).findFirst();
-        user.ifPresent(value -> users.remove(value));
-    }
-
     public Board(String name, String description, UUID ownerId) {
         this.name = name;
         this.description = description;
         this.ownerId = ownerId;
+    }
+
+    public void setUser(User user) {
+        users.add(user);
+    }
+
+    public void removeUser(UUID userId) {
+        Optional<User> user = users.stream().filter(u -> u.getId().equals(userId)).findFirst();
+        user.ifPresent(value -> users.remove(value));
     }
 
 }

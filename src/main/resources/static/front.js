@@ -1,6 +1,7 @@
 function auto_grow(element) {
     element.style.height = element.scrollHeight + "px";
 }
+
 function auto_shrink(element) {
     element.style.height = '100px';
 }
@@ -33,7 +34,7 @@ function getRandomColor() {
 }
 
 window.onload = function () {
-    showStuff('boards_block',true);
+    showStuff('boards_block', true);
     // document.getElementById('addBoard').addEventListener('shown.bs.modal', function () {
     //     console.log('added event');
     //     document.getElementById('createBoardButton').focus();
