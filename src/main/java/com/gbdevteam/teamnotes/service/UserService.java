@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.service;
 
+import com.gbdevteam.teamnotes.dto.UserAuthDto;
 import com.gbdevteam.teamnotes.dto.UserDTO;
 import com.gbdevteam.teamnotes.dto.UserRegAuthDto;
 import com.gbdevteam.teamnotes.model.Role;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -54,18 +56,14 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByEmail(String email) {
-        User user = userRepository.findUserByEmail(email);
-//        if (user == null) {
-//            throw new TeamNotesEntityNotFoundException(email + " not found.");
-//
-//        } else {
-        return user;
+        return userRepository.findUserByEmail(email);
 //        }
     }
 
     public UUID create(User user) {
         user.setRoles(List.of(roleService.findByName("USER")));
         user.setPassword(passwordEncoder().encode(user.getPassword()));
+        user.setDateRegistration(new Date());
         return userRepository.save(user).getId();
     }
 
@@ -92,7 +90,7 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public UserDTO addNewUser(UserRegAuthDto userRegAuthDto) throws MessagingException {
+    public UserDTO addNewUser(UserRegAuthDto userRegAuthDto) throws MessagingException, UnsupportedEncodingException {
         User user = new User();
         modelMapper.map(userRegAuthDto, user);
         create(user);
@@ -104,9 +102,31 @@ public class UserService implements UserDetailsService {
         return convertToDTO(user);
     }
 
+    @Transactional
+    public boolean login(UserAuthDto userAuthDto) {
+        log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Login >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        User user = findByEmail(userAuthDto.getEmail());
+        if (user != null) {
+            log.info("User is :" + user.toString());
+            boolean isPasswordOk = passwordEncoder().matches(userAuthDto.getPassword().subSequence(0, userAuthDto.getPassword().length()), user.getPassword());
+            log.info("Result of password check: " + isPasswordOk);
+            if (isPasswordOk) {
+                UserDetails userDetails = loadUserByUsername(user.getEmail());
+                Authentication authenticatedUser = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void generateConfirmUUID(User user) {
         user.setConfirmUUID(UUID.randomUUID());
         log.error(String.valueOf(UUID.randomUUID()));
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     private UserDTO convertToDTO(User user) {
@@ -134,6 +154,14 @@ public class UserService implements UserDetailsService {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public boolean isExpiredUnverifiedUser(User user) {
+        if (Boolean.FALSE.equals(user.getIsVerified())) {
+            Date currentDate = new Date();
+            return currentDate.getTime() - user.getDateRegistration().getTime() >= 20000L;
         }
         return false;
     }

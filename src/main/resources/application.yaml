@@ -24,3 +24,6 @@ spring:
       enabled: true
       settings:
         web-allow-others: false
+eml:
+  email: xlinaris@gmail.com
+  password: xxxx

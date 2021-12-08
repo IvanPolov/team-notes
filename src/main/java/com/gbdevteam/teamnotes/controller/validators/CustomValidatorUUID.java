@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
-@Component
 @NoArgsConstructor
 @Slf4j
 public class CustomValidatorUUID implements ConstraintValidator<ValidUUID, UUID> {
@@ -26,9 +26,9 @@ public class CustomValidatorUUID implements ConstraintValidator<ValidUUID, UUID>
                 .matcher(uuid.toString())
                 .matches()) {
             ctx.disableDefaultConstraintViolation();
-            ctx.buildConstraintViolationWithTemplate(
-                    "{UUID is not Valid}")
-                    .addPropertyNode("UUID").addConstraintViolation();
+//            ctx.buildConstraintViolationWithTemplate(
+//                            "{UUID is not Valid}")
+//                    .addPropertyNode("UUID").addConstraintViolation();
             return false;
         }
         return true;

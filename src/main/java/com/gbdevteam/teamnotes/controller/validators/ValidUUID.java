@@ -1,12 +1,11 @@
 package com.gbdevteam.teamnotes.controller.validators;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
 import java.lang.annotation.*;
+import javax.validation.*;
 
 @Documented
 @Constraint(validatedBy = CustomValidatorUUID.class)
-@Target({ElementType.PARAMETER})
+@Target( {ElementType.PARAMETER, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidUUID {
     String message() default "UUID  not valid";

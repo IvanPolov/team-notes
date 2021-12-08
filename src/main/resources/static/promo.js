@@ -10,30 +10,76 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
     $scope.newUser = null;
     $scope.isEmailValid = false;
     $scope.isPasswordValid = false;
+    $scope.isEmailSended = false;
+    $scope.isErrorLogin = false;
+    $scope.signupSuccessModal = new bootstrap.Modal(document.getElementById('signupSuccessModal'), {
+        keyboard: false
+    })
+    $scope.loginModal = new bootstrap.Modal(document.getElementById('login'), {
+        keyboard: false
+    })
+
 
     $scope.signup = function (signupForm) {
         console.log('signup function started')
         if (signupForm.$valid) {
             $http.post(contextPath + '/signup', $scope.user, httpOptions)
                 .then(function success(resp) {
-                        $scope.message = 'User added!';
+                        $scope.message = resp.data.detail;
+                        $scope.isEmailSended = true;
                         $scope.errorMessage = '';
                         $scope.user = null;
                         $scope.submitted = false;
                         // $scope.user = resp.data.user
                         // $scope.signupNotification = 'registration is successful'
                         document.querySelector('#closeUserButton').click()
-                        location.replace('index.html')
+                        $scope.signupSuccessModal.show()
+                        // setTimeout(
+                        //     () => {
+                        //         location.replace('index.html');
+                        //     },
+                        //     7 * 1000
+                        // );
                     },
                     function error(resp) {
-                        if (resp.status === 409) {
-                            $scope.errorMessage = resp.data.message;
-                        } else {
-                            $scope.errorMessage = 'Error adding user!';
-                        }
+                        $scope.errorTitle = resp.title;
+                        $scope.errorMessage = resp.detail;
                         $scope.message = '';
                     });
         }
+    };
+
+    $scope.enterIntoService = function () {
+        $scope.signupSuccessModal.dispose();
+        location.replace('index.html');
+
+    };
+
+    $scope.login = function (email, password) {
+        var data = {
+            email: email,
+            password: password,
+        };
+        console.log('login function started')
+
+        $http.post(contextPath + '/login', data)
+            .then(function success(resp) {
+                    $scope.errorMessage = '';
+                    $scope.submitted = false;
+                    $scope.loginModal.dispose();
+                    location.replace('index.html');
+                },
+                function error(resp) {
+                    $scope.isErrorLogin = true;
+                    if (resp.status === 403) {
+                        $scope.errorMessage = resp.data.detail;
+                    } else {
+                        $scope.errorMessage = "You entered incorrect data";
+                    }
+                    console.log($scope.errorMessage)
+                    $scope.message = '';
+                });
+
     };
 
     $scope.validateEmail = function (signupForm) {
@@ -41,9 +87,9 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
         if (signupForm.email.$valid) {
             $http.get(contextPath + '/signup/', {params: {email: $scope.user.email, httpOptions}})
                 .then(function success(resp) {
-                        $scope.message = 'Seems good!';
+                        $scope.message = 'resp.data.detail';
+
                         $scope.errorMessage = '';
-                        console.log(resp.data)
                         $scope.isEmailValid = true;
                         console.log('is email valid?')
                         console.log($scope.isEmailValid)
@@ -53,26 +99,22 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                         console.log('error: is email valid?')
                         console.log(resp.data)
                         console.log($scope.isEmailValid)
-                        if (resp.status === 409) {
-                            $scope.errorMessage = resp.data[0];
-                            console.log($scope.errorMessage)
+                        if (resp.statusText === "BadRequest" || resp.statusText === "Conflict") {
+                            $scope.errorMessage = resp.data.detail;
                         } else {
-                            $scope.errorMessage = resp.data.error;
+                            $scope.errorMessage = resp.data.detail;
                         }
                         $scope.message = '';
                     });
         }
     }
-
     $scope.validatePassword = function () {
         if ($scope.user.password !== $scope.user.confirmPassword) {
-            console.log($scope.user)
             $scope.signupNotification = "Passwords don't match"
             $scope.isPasswordValid = false;
             return false;
         } else {
             $scope.isPasswordValid = true;
-            console.log('passwords match')
             $scope.signupNotification = '';
             return true;
         }

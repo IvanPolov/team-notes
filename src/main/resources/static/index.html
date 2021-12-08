@@ -16,9 +16,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
-<body class="d-flex flex-column" ng-controller="indexController">
-<svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
-    <symbol fill="currentColor" id="check-circle-fill" viewBox="0 0 16 16">
+<body ng-if="isFounded || isFounded==null" class="d-flex flex-column" ng-controller="indexController">
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
         <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
     </symbol>
     <symbol fill="currentColor" id="info-fill" viewBox="0 0 16 16">
@@ -27,25 +27,23 @@
     <symbol fill="currentColor" id="exclamation-triangle-fill" viewBox="0 0 16 16">
         <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
     </symbol>
-    <symbol fill="currentColor" id="remove-user" viewBox="0 0 16 16">
-        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"
-              fill-rule="evenodd"/>
+    <symbol id="remove-user" fill="currentColor" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+              d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
     </symbol>
 </svg>
 <div class="header bg-dark unselectable d-flex align-items-center flex-wrap">
     <div class="main_header text-light m-2 text-center align-middle">Team Notes</div>
     <div class="vl"></div>
     <div class="dropdown d-flex items-align-center m-2">
-        <button aria-expanded="false" class="button-simple-style dropdown-button dropdown-toggle"
-                data-bs-toggle="dropdown"
-                id="dropdownMenuButton1" type="button">
+        <button class="button-no-style dropdown-button dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">
             Boards
         </button>
-        <ul aria-labelledby="dropdownMenuButton1" class="dropdown-menu">
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
             <li>
-                <button class="button-no-style w-100"
-                        onclick="showStuff('boards_block',true);showStuff('notes_block',false)"
-                        type="button">Your Boards
+                <button class="button-no-style w-100" type="button"
+                        onclick="showStuff('boards_block',true);showStuff('notes_block',false)">Your Boards
                 </button>
                 <hr class="m-2">
             </li>
@@ -88,6 +86,12 @@
 
     <!--        </a>-->
     <!--    </div>-->
+</div>
+<div ng-show="user.isVerified === false" class="alert alert-warning d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
+        <use xlink:href="#exclamation-triangle-fill"/>
+    </svg>
+    <div>Your email is not confirmed! If you don't confirmed email within 30 days, your account will be blocked.</div>
 </div>
 <!-- container for notes or boards -->
 <div class="notes d-flex bg-easy">
