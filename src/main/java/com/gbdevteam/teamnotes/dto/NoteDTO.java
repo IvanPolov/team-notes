@@ -6,6 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.UUID;
 
@@ -19,6 +22,11 @@ public class NoteDTO {
     private UUID boardId;
     private User creator;
     private String color;
+    private Boolean isFavorite = false;
+    @NotNull
+    @Min(0)
+    @Max(9)
+    private int priority;
 
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date createDate;

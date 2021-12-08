@@ -1,8 +1,10 @@
+eml:
+  email: team.notes.devteam@gmail.com
+  password: TNDT#test
 server:
   port: 8180
   servlet:
     context-path: /team-notes
-
 spring:
   datasource:
     driver-class-name: org.h2.Driver

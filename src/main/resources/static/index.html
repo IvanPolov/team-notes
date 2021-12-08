@@ -109,6 +109,18 @@
                         type="button">
                     <i class="bi bi-plus-square fa-2x fw-bold"></i>
                 </button>
+                <div class="dropdown ms-auto">
+                    <button aria-expanded="false" class="btn"
+                            data-bs-toggle="dropdown"
+                            id="sorting" type="button">
+                        sort by
+                        <i class="bi bi-filter-square fa-lg"></i>
+                    </button>
+                    <ul aria-labelledby="sorting" class="dropdown-menu">
+                        <li ng-repeat="property in SortProperties"><button class="btn w-100 m-0 p-0" ng-click='sortNotes(property)'>
+                            {{property}}<span class="sort-order ms-1" ng-show="property === propertyName" ng-class="{reverse: reverse}"></span></button></li>
+                    </ul>
+                </div>
             </div>
 
 
@@ -121,18 +133,20 @@
                     <div class="board rounded mb-3 m-2">
                         <form name="boardForm" ng-init="updatingBoard = {board}" ng-submit="updateBoard(board)"
                               novalidate>
-                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-5 text-white rounded-15 p-1">
+                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-5 text-white rounded-15 p-1 d-flex align-items-center">
                                 <input class="pl-5 input-header" ng-init="board.name" ng-model="board.name"
                                        required
                                        title="{{board.name}}" type="text"/>
-                                <button aria-label="Edit" class="btn p-2" ng-click="editBoard(board.id)"
-                                        type="button">
-                                    <!--                                        <i class="fas fa-edit"></i>-->
-                                </button>
-                                <button aria-label="Delete" class="btn p-2" ng-click="deleteBoard(board.id)"
-                                        type="button">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                                <div class="d-flex align-items-center ms-auto">
+                                    <button aria-label="Edit" class="btn p-2" ng-click="editBoard(board.id)"
+                                            type="button">
+                                        <!--                                        <i class="fas fa-edit"></i>-->
+                                    </button>
+                                    <button aria-label="Delete" class="btn p-2" ng-click="deleteBoard(board.id)"
+                                            type="button">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
                             </div>
                             <div class="m-1">
                                 <textarea class="form-control" ng-init="board.description" ng-model="board.description"
@@ -160,7 +174,7 @@
         <!--      notes from database          -->
         <div class="notes_block row">
             <div class="d-flex align-content-start flex-wrap">
-                <div class="notes-from-database" ng-repeat="n in Notes">
+                <div class="notes-from-database" ng-repeat="n in Notes | orderBy:propertyName:reverse">
                     <div class="note rounded mb-3 m-2 pb-1">
                         <form name="noteForm" ng-init="updatingNote = {n}" ng-submit="updateNote(n)" novalidate>
                             <div class="margin-top border-bottom input_group text-white rounded-15 d-flex align-items-center"
@@ -168,8 +182,23 @@
                                 <input class="input-header py-2" ng-init="n.header" ng-model="n.header" ng-readonly="!isAllowed(0)"
                                        type="text"/>
                                 <div class="d-flex align-items-center" ng-show="isAllowed(0)">
-                                    <div class="dropdown">
-                                        <button aria-expanded="false" class="btn dropdown-toggle"
+                                    <button aria-label="Favorite" class="btn p-2" ng-click="n.isFavorite = !n.isFavorite; updateNote(n)"
+                                            type="button">
+                                        <i class="bi fa-lg" ng-class="{'bi-star':!n.isFavorite,'bi-star-fill':n.isFavorite}"></i>
+                                    </button>
+                                    <div class="me-1 priority-buttons-block">
+                                        <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp()"
+                                                type="button">
+                                            <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>
+                                        </button>
+                                        <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown()"
+                                                type="button">
+                                            <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>
+                                        </button>
+                                    </div>
+                                    <span class="priority-value text-dark fw-bold fs-4" name="priority">{{n.priority}}</span>
+                                    <div class="dropdown ms-2">
+                                        <button aria-expanded="false" class="btn p-0"
                                                 data-bs-toggle="dropdown"
                                                 id="{{'opt'+ n.id}}" type="button">
                                             <i class="bi bi-paint-bucket fa-lg"></i>
@@ -179,6 +208,7 @@
                                                 <button class="btn w-100 m-0 p-0" ng-click="setColor(n, c.colorHex)">
                                                     {{c.description}}
                                                 </button>
+
                                             </li>
                                         </ul>
                                     </div>
@@ -189,17 +219,23 @@
                                 </div>
 
                             </div>
-                            <div class="m-1 d-flex flex-wrap">
+                            <div class="m-1 d-flex">
                                 <textarea class="form-control note-text" ng-init="n.content" ng-model="n.content"
                                           ng-readonly="!isAllowed(0)" onmouseenter="auto_grow(this)"
                                           onmouseleave="auto_shrink(this)" required></textarea>
+                                <button aria-label="Checklist" class="btn p-2" ng-click="addChecklist('checklist-'+ n.id)"
+                                        type="button">
+                                    <i class="bi bi-list-check fa-lg"></i>
+                                </button>
                             </div>
+                            <div class="d-flex flex-wrap" id="{{'checklist-'+n.id}}">
 
+                            </div>
                             <div class="margin-bottom m-2 font-weight-light small"><i
                                     class="bi bi-cloud-plus mx-1 fa-lg"></i>{{n.createDate}}<i
                                     class="bi bi-arrow-clockwise mx-1 fa-lg"></i>{{n.lastModifiedDate}}
                             </div>
-                            <button class="btn m-1" ng-style="{'display': noteForm.$pristine|| noteForm.$invalid || (note.header == '{{board.header}}' && board.content == '{{board.content}}')
+                            <button class="btn m-1" ng-style="{'display': (noteForm.$pristine|| noteForm.$invalid || (n.header == '{{n.header}}' && n.content == '{{n.content}}')) && isPriorityValid('{{n.priority}}')
                                         ? 'none' : 'block'}"
                                     type="submit">Update
                                 <i class="far fa-check-square fa-lg"></i>

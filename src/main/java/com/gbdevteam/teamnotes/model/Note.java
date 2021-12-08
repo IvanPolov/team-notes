@@ -45,6 +45,10 @@ public class Note {
 
     private String color;
 
+    private int priority;
+
+    private Boolean isFavorite;
+
     @CreationTimestamp
     private Date createDate;
     @UpdateTimestamp

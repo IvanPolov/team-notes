@@ -1,4 +1,4 @@
-angular.module('app', []).controller('indexController', function ($rootScope, $scope, $http) {
+angular.module('app', []).controller('indexController', function ($rootScope, $scope, $http, $compile) {
     const contextPath = 'http://localhost:8180/team-notes/api/v1';
 
     $scope.invitedUser = null;
@@ -15,6 +15,10 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         {colorHex: '#6d9eeb', description: 'blue'},
         {colorHex: '#8e7cc3', description: 'purple'},
         {colorHex: '#c27ba0', description: 'magenta'}];
+
+    $scope.SortProperties = ['priority','color','favorite','createDate','lastModifiedDate'];
+    $scope.propertyName = 'priority';
+    $scope.reverse = true;
 
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
@@ -231,5 +235,40 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 return $scope.userRole === 'OWNER'
             }
         }
+    }
+
+    $scope.priorityUp = function (){
+        this.n.priority++
+        if(this.n.priority > 9)
+        this.n.priority = 0
+    }
+    $scope.priorityDown = function (){
+        this.n.priority--
+        if(this.n.priority < 0)
+            this.n.priority = 9
+    }
+    $scope.isPriorityValid = function (text){
+        let priority = this.n.priority
+        if(priority > -1 && priority < 10)
+        return priority === parseInt(text)
+        else return false
+    }
+
+    $scope.sortNotes = function (propertyName){
+        $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
+        $scope.propertyName = propertyName;
+    }
+    $scope.colorComparator = function (v1,v2){
+        if (v1.type === 'string' || v2.type === 'string'){
+            return ($scope.Colors.findIndex(c=>c.colorHex === 'v1') < $scope.Colors.findIndex(c=>c.colorHex === 'v2')) ? -1 : 1;
+        }
+        return v1.value.localeCompare(v2.value);
+    }
+    $scope.addChecklist = function (id){
+        let checkListHtml ='<div><input class="input-header py-2" ng-readonly="!isAllowed(0)" type="text" placeholder="checklist name..."/>' +
+            '<span>{{n.header}}</span><input class="input-header py-2" ng-readonly="!isAllowed(0)" type="text" placeholder="checklist item..."/>' +
+            '</div>'
+        let temp = $compile(checkListHtml)($scope)
+        angular.element(document.getElementById(id)).append(temp)
     }
 });
