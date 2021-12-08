@@ -11,9 +11,14 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
     $scope.isEmailValid = false;
     $scope.isPasswordValid = false;
     $scope.isEmailSended = false;
+    $scope.isErrorLogin = false;
     $scope.signupSuccessModal = new bootstrap.Modal(document.getElementById('signupSuccessModal'), {
         keyboard: false
     })
+    $scope.loginModal = new bootstrap.Modal(document.getElementById('login'), {
+        keyboard: false
+    })
+
 
     $scope.signup = function (signupForm) {
         console.log('signup function started')
@@ -45,8 +50,35 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
     };
 
     $scope.enterIntoService = function () {
-        $scope.signupSuccessModal.dispose()        ;
+        $scope.signupSuccessModal.dispose();
         location.replace('index.html');
+
+    };
+
+    $scope.login = function (email, password) {
+        var data = {
+            email: email,
+            password: password,
+        };
+        console.log('login function started')
+
+        $http.post(contextPath + '/login', data)
+            .then(function success(resp) {
+                    $scope.errorMessage = '';
+                    $scope.submitted = false;
+                    $scope.loginModal.dispose();
+                    location.replace('index.html');
+                },
+                function error(resp) {
+                    $scope.isErrorLogin = true;
+                    if (resp.status === 403) {
+                        $scope.errorMessage = resp.data.detail;
+                    } else {
+                        $scope.errorMessage = "You entered incorrect data";
+                    }
+                    console.log($scope.errorMessage)
+                    $scope.message = '';
+                });
 
     };
 
@@ -75,7 +107,6 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                     });
         }
     }
-
     $scope.validatePassword = function () {
         if ($scope.user.password !== $scope.user.confirmPassword) {
             $scope.signupNotification = "Passwords don't match"
@@ -87,4 +118,4 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
             return true;
         }
     };
-});
+})
