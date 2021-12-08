@@ -16,7 +16,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         {colorHex: '#8e7cc3', description: 'purple'},
         {colorHex: '#c27ba0', description: 'magenta'}];
 
-    $scope.SortProperties = ['priority','color','favorite','createDate','lastModifiedDate'];
+    $scope.SortProperties = ['priority','color','isFavorite','createDate','lastModifiedDate'];
     $scope.propertyName = 'priority';
     $scope.reverse = true;
 
@@ -37,10 +37,14 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             $http.post(contextPath + '/note', $scope.newNote)
                 .then(function (resp) {
                     $scope.fillBoardWithNotes($scope.currentBoard);
-                    $scope.newNote = null;
+                    // $scope.newNote = null;
                     document.querySelector('#closeNoteButton').click();
                 })
 
+        }
+
+        $scope.setNote = function (note){
+            $scope.newNote = angular.copy(note)
         }
 
         $scope.updateNote = function (note) {
@@ -266,18 +270,20 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }
     }
 
-    $scope.priorityUp = function (){
-        this.n.priority++
-        if(this.n.priority > 9)
-        this.n.priority = 0
+    $scope.priorityUp = function (note){
+        console.log(note)
+        if(!note.priority) note.priority = 0
+        note.priority++
+        if(note.priority > 9)
+            note.priority = 0
     }
-    $scope.priorityDown = function (){
-        this.n.priority--
-        if(this.n.priority < 0)
-            this.n.priority = 9
+    $scope.priorityDown = function (note){
+        note.priority--
+        if(note.priority < 0)
+            note.priority = 9
     }
-    $scope.isPriorityValid = function (text){
-        let priority = this.n.priority
+    $scope.isPriorityValid = function (text, note){
+        let priority = note.priority
         if(priority > -1 && priority < 10)
         return priority === parseInt(text)
         else return false

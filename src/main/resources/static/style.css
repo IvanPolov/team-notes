@@ -46,6 +46,7 @@ body {
 
 .input-header[type="text"] {
     padding-left: 15px;
+    flex: fit-content;
     font-weight: bold;
 }
 

@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @GetMapping("/board/{boardId}")
-    public List<UserDTO> findAllByBoardId(@NotBlank @ValidUUID @PathVariable("boardId") UUID boardId) {
+    public List<UserDTO> findAllByBoardId(@ValidUUID @PathVariable("boardId") UUID boardId) {
         return userService.findAllByBoardId(boardId);
     }
 }

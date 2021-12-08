@@ -36,7 +36,7 @@
     <div class="main_header text-light m-2 text-center align-middle">Team Notes</div>
     <div class="vl"></div>
     <div class="dropdown d-flex items-align-center m-2">
-        <button class="button-no-style dropdown-button dropdown-toggle" type="button" id="dropdownMenuButton1"
+        <button class="button-simple-style dropdown-button dropdown-toggle" type="button" id="dropdownMenuButton1"
                 data-bs-toggle="dropdown" aria-expanded="false">
             Boards
         </button>
@@ -87,15 +87,16 @@
     <!--        </a>-->
     <!--    </div>-->
 </div>
-<div ng-show="user.isVerified === false" class="alert alert-warning d-flex align-items-center" role="alert">
-    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
-        <use xlink:href="#exclamation-triangle-fill"/>
-    </svg>
-    <div>Your email is not confirmed! If you don't confirmed email within 30 days, your account will be blocked.</div>
-</div>
 <!-- container for notes or boards -->
 <div class="notes d-flex bg-easy">
     <div class="container">
+
+        <div ng-show="user.isVerified === false" class="alert alert-warning d-flex align-items-center" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
+                <use xlink:href="#exclamation-triangle-fill"/>
+            </svg>
+            <div>Your email is not confirmed! If you don't confirmed email within 30 days, your account will be blocked.</div>
+        </div>
         <div class="notes_block row">
             <div class="board-header text-light p-1 d-flex justify-content-between align-items-center">
                 <h4 class="ms-2">{{currentBoard.name}}</h4>
@@ -108,7 +109,7 @@
             </div>
             <div class="d-flex align-items-center w-100%">
                 <span class="me-1 fs-4">Notes</span>
-                <button class="btn" data-bs-target="#addNote" data-bs-toggle="modal" ng-click="newNote = {}"
+                <button class="btn" data-bs-target="#addNote" data-bs-toggle="modal" ng-click="newNote = {priority:3}"
                         ng-show="isAllowed(0)"
                         type="button">
                     <i class="bi bi-plus-square fa-2x fw-bold"></i>
@@ -177,45 +178,50 @@
         <!--end -- board from database-->
         <!--      notes from database          -->
         <div class="notes_block row">
-            <div class="d-flex align-content-start flex-wrap">
+            <div class="d-flex align-content-start flex-wrap d-flex justify-content-center">
                 <div class="notes-from-database" ng-repeat="n in Notes | orderBy:propertyName:reverse">
                     <div class="note rounded mb-3 m-2 pb-1">
                         <form name="noteForm" ng-init="updatingNote = {n}" ng-submit="updateNote(n)" novalidate>
                             <div class="margin-top border-bottom input_group text-white rounded-15 d-flex align-items-center"
                                  ng-style="{'background-color':n.color}">
-                                <input class="input-header py-2" ng-init="n.header" ng-model="n.header" ng-readonly="!isAllowed(0)"
+                                <input class="input-header py-2" ng-init="n.header" ng-model="n.header" readonly
                                        type="text"/>
-                                <div class="d-flex align-items-center" ng-show="isAllowed(0)">
+                                <div class="d-flex align-items-center ms-auto" ng-show="isAllowed(0)">
+                                    <button aria-label="Edit" class="btn p-2" data-bs-target="#addNote" data-bs-toggle="modal" ng-click="setNote(n)"
+                                            ng-show="isAllowed(0)"
+                                            type="button">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
                                     <button aria-label="Favorite" class="btn p-2" ng-click="n.isFavorite = !n.isFavorite; updateNote(n)"
                                             type="button">
-                                        <i class="bi fa-lg" ng-class="{'bi-star':!n.isFavorite,'bi-star-fill':n.isFavorite}"></i>
+                                        <i class="bi" ng-class="{'bi-star':!n.isFavorite,'bi-star-fill':n.isFavorite}"></i>
                                     </button>
-                                    <div class="me-1 priority-buttons-block">
-                                        <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp()"
-                                                type="button">
-                                            <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>
-                                        </button>
-                                        <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown()"
-                                                type="button">
-                                            <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>
-                                        </button>
-                                    </div>
-                                    <span class="priority-value text-dark fw-bold fs-4" name="priority">{{n.priority}}</span>
-                                    <div class="dropdown ms-2">
-                                        <button aria-expanded="false" class="btn p-0"
-                                                data-bs-toggle="dropdown"
-                                                id="{{'opt'+ n.id}}" type="button">
-                                            <i class="bi bi-paint-bucket fa-lg"></i>
-                                        </button>
-                                        <ul aria-labelledby="{{'opt'+ n.id}}" class="dropdown-menu">
-                                            <li ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}">
-                                                <button class="btn w-100 m-0 p-0" ng-click="setColor(n, c.colorHex)">
-                                                    {{c.description}}
-                                                </button>
+<!--                                    <div class="me-1 priority-buttons-block">-->
+<!--                                        <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp(n)"-->
+<!--                                                type="button">-->
+<!--                                            <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>-->
+<!--                                        </button>-->
+<!--                                        <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown(n)"-->
+<!--                                                type="button">-->
+<!--                                            <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+<!--                                    <span class="priority-value text-dark fw-bold fs-4" name="priority" ng-model="newNote.priority">{{n.priority}}</span>-->
+<!--                                    <div class="dropdown ms-2">-->
+<!--                                        <button aria-expanded="false" class="btn p-0"-->
+<!--                                                data-bs-toggle="dropdown"-->
+<!--                                                id="{{'opt'+ n.id}}" type="button">-->
+<!--                                            <i class="bi bi-paint-bucket fa-lg"></i>-->
+<!--                                        </button>-->
+<!--                                        <ul aria-labelledby="{{'opt'+ n.id}}" class="dropdown-menu">-->
+<!--                                            <li ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}">-->
+<!--                                                <button class="btn w-100 m-0 p-0" ng-click="setColor(n, c.colorHex)">-->
+<!--                                                    {{c.description}}-->
+<!--                                                </button>-->
 
-                                            </li>
-                                        </ul>
-                                    </div>
+<!--                                            </li>-->
+<!--                                        </ul>-->
+<!--                                    </div>-->
                                     <button aria-label="Delete" class="btn p-2" ng-click="deleteNote(n.id)"
                                             type="button">
                                         <i class="fas fa-trash-alt"></i>
@@ -225,12 +231,8 @@
                             </div>
                             <div class="m-1 d-flex">
                                 <textarea class="form-control note-text" ng-init="n.content" ng-model="n.content"
-                                          ng-readonly="!isAllowed(0)" onmouseenter="auto_grow(this)"
+                                          readonly onmouseenter="auto_grow(this)"
                                           onmouseleave="auto_shrink(this)" required></textarea>
-                                <button aria-label="Checklist" class="btn p-2" ng-click="addChecklist('checklist-'+ n.id)"
-                                        type="button">
-                                    <i class="bi bi-list-check fa-lg"></i>
-                                </button>
                             </div>
                             <div class="d-flex flex-wrap" id="{{'checklist-'+n.id}}">
 
@@ -239,7 +241,7 @@
                                     class="bi bi-cloud-plus mx-1 fa-lg"></i>{{n.createDate}}<i
                                     class="bi bi-arrow-clockwise mx-1 fa-lg"></i>{{n.lastModifiedDate}}
                             </div>
-                            <button class="btn m-1" ng-style="{'display': (noteForm.$pristine|| noteForm.$invalid || (n.header == '{{n.header}}' && n.content == '{{n.content}}')) && isPriorityValid('{{n.priority}}')
+                            <button class="btn m-1" ng-style="{'display': (noteForm.$pristine|| noteForm.$invalid || (n.header == '{{n.header}}' && n.content == '{{n.content}}')) && isPriorityValid('{{n.priority}}', n)
                                         ? 'none' : 'block'}"
                                     type="submit">Update
                                 <i class="far fa-check-square fa-lg"></i>
@@ -284,33 +286,55 @@
 </div>
 <div class="modal" id="addNote" role="dialog" tabindex="-1">
     <div class="modal-dialog" role="document">
-        <form name="noteForm" ng-init="newNote = {}" ng-submit="saveNote()" novalidate>
+        <form name="noteForm" ng-submit="saveNote()" novalidate>
             <div class="modal-content">
-                <div class="modal-header" ng-style="{'background-color':newNote.color}">
-                    <h5 class="modal-title">Create new note</h5>
-                    <button aria-label="Close" class="close btn p-2" data-bs-dismiss="modal" type="button">
+                <div class="modal-header d-flex align-items-center" ng-style="{'background-color':newNote.color}">
+                    <input class="form-control" ng-model="newNote.header" placeholder="Note header..."
+                           required type="text">
+                    <button aria-label="Close" class="close btn px-2" data-bs-dismiss="modal" type="button">
                         <i class="far fa-window-close fa-lg"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input class="form-control mb-2" ng-model="newNote.header" placeholder="Note header..."
-                           required type="text">
-                    <textarea class="form-control" ng-model="newNote.content"
+                    <h6 class="modal-title">Text</h6>
+                    <textarea class="form-control note-text" ng-model="newNote.content"
                               oninput="auto_grow(this)" placeholder="type your thoughts..." required
                               type="text"></textarea>
-                    <div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-paint-bucket fa-2x mt-1"></i>
                         <button class="btn color-button mt-2 me-1" ng-click="setColor(newNote,c.colorHex)"
                                 ng-model="newNote.color"
                                 ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}"
                                 type="button">
                         </button>
                     </div>
+                    <div class="d-flex align-items-center">
+                    <div class="priority d-flex align-items-center">
+                        <span class="modal-title me-1 fw-bold fs-6">Priority: </span>
+                        <div class="me-1 priority-buttons-block">
+                            <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp(newNote)"
+                                    type="button">
+                                <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>
+                            </button>
+                            <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown(newNote)"
+                                    type="button">
+                                <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                        <div class="priority-value text-dark fw-bold fs-5" >
+                            {{newNote.priority}}</div>
+                    </div>
+                    <button aria-label="Checklist" class="btn p-2" ng-click="addChecklist('checklist-'+ n.id)"
+                            type="button">
+                        Add checklist<i class="bi bi-list-check fa-lg ms-1"></i>
+                    </button>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal" id="closeNoteButton" type="button">Close
                     </button>
                     <button class="btn btn-primary" id="createNoteButton" ng-disabled="noteForm.$invalid" type="submit">
-                        Create
+                        Confirm
                     </button>
                 </div>
             </div>
