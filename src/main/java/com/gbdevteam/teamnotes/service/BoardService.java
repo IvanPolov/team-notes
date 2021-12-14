@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +27,7 @@ public class BoardService implements GenericService<BoardDTO> {
     private final RoleService roleService;
     private final BoardRoleService boardRoleService;
     private final ModelMapper modelMapper;
+    private final ChatRoomService chatRoomService;
 
     public List<BoardDTO> findAll(UUID userId) {
         List<BoardDTO> allBoards = boardRepository.findAllByOwnerId(userId).stream().map(this::convertToDTO).collect(Collectors.toList());
@@ -45,7 +43,11 @@ public class BoardService implements GenericService<BoardDTO> {
     }
 
     public UUID create(BoardDTO boardDTO) {
-        Board dbBoard = boardRepository.save(convertToEntity(boardDTO));
+        Board dbBoard = convertToEntity(boardDTO);
+        if (dbBoard.getChatMessages()==null) {  //In case if Collection is not initialized;
+            dbBoard.setChatMessages(new ArrayList<>());
+        }
+        boardRepository.save(dbBoard);
         boardRoleService.create(new BoardRoleDTO(dbBoard.getId(), dbBoard.getOwnerId(), BoardRoleEnum.OWNER));
         return dbBoard.getId();
     }

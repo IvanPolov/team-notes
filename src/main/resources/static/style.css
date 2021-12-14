@@ -9,10 +9,11 @@ html{
 }
 body {
     min-height: 100%;
+    background: rgb(225, 225, 225);
 }
 
 .notes {
-    min-height: 95vh;
+    min-height: 80vh;
 }
 
 .note:hover, .board:hover {
@@ -291,7 +292,7 @@ textarea::-webkit-scrollbar-thumb {
     height: 100%;
     z-index: 1;
     opacity: 0.4;
-    background-image: url(/team-notes/image/promo.jpg);
+    background-image: url('/team-notes/image/promo.jpg');
     background-repeat: no-repeat;
     background-position: 50% 0;
     background-size: cover;
