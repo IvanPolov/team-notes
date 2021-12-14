@@ -27,7 +27,6 @@ public class BoardService implements GenericService<BoardDTO> {
     private final RoleService roleService;
     private final BoardRoleService boardRoleService;
     private final ModelMapper modelMapper;
-    private final ChatRoomService chatRoomService;
 
     public List<BoardDTO> findAll(UUID userId) {
         List<BoardDTO> allBoards = boardRepository.findAllByOwnerId(userId).stream().map(this::convertToDTO).collect(Collectors.toList());

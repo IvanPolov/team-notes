@@ -5,7 +5,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.foundUser = null;
     $scope.isFounded = false;
     $scope.Users = [];
-
+    $scope.isChatConnected = false;
     $scope.Colors = [
         {colorHex: '#e06666', description: 'red'},
         {colorHex: '#f6b26b', description: 'orange'},
@@ -149,7 +149,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 console.log($scope.foundUser)
                 $scope.Users.push($scope.foundUser);
                 $scope.isFounded = false;
-                // $scope.connect();
+                connect();
             })
     }
 //remove user from the board
@@ -175,7 +175,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             })
     }
     $scope.fillBoardWithNotes = function (currentBoard) {
-        disconnect();
+        $scope.disconnect();
         console.log('board id: ' + currentBoard.id)
         $scope.currentBoard = currentBoard;
         $scope.getBoardUsers();
@@ -311,31 +311,32 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     }
 
     // Chat functions
-    var stompClient = null;
+    let stompClient = null;
     $scope.newMessage = null;
 
-    connect = function () {
-        // var endpoint = '/ws/?access_token=' + auth.access_token;
-        var socket = new SockJS("/team-notes/secured/ws/");
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, onConnected, onError);
+    let connect = function () {
+        if (!$scope.isChatConnected) {
+            const socket = new SockJS("/team-notes/secured/ws/");
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, onConnected, onError);
+            $scope.isChatConnected = true;
+        }
     };
 
     const onConnected = () => {
         console.log("connected");
-        stompClient.subscribe(
-            "/secured/topic/" + $scope.currentBoard.id + "/secured/topic",
-            onMessageReceived);
+        stompClient.subscribe("/secured/topic/" + $scope.currentBoard.id,
+            onMessageReceived)//console.log("Answer message recived"));
         // connectingElement.classList.add('hidden');
     };
 
     function onError(error) {
+        $scope.disconnect();
         // connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
         // connectingElement.style.color = 'red';
     }
 
-
-    disconnect = function () {
+    $scope.disconnect = function () {
         if (stompClient !== null) {
             stompClient.disconnect();
         }
@@ -343,8 +344,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         console.log("Disconnected");
     }
 
-
-    $scope.sendNewMessage = function(newMessage) {
+    $scope.sendNewMessage = function (newMessage) {
         $scope.newMessage = newMessage;
         if (newMessage.trim() !== "" && stompClient) {
             const message = {
@@ -360,18 +360,29 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     };
     $scope.messageForm = document.querySelector('#messageForm');
 
-    function onMessageReceived(payload) {
+    onMessageReceived = function (payload) {
         var message = JSON.parse(payload.body);
+        console.log("Answer message recived");
+        console.log("Answer message body " + payload.body);
+
         var messageElement = document.createElement('li');
         messageElement.classList.add('chat-message');
 
-        var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
+        var usernameElement = document.createElement('b');
+        var usernameText = document.createTextNode(message.senderName);
+        var dateElement = document.createElement('small');
+        var iElement = document.createElement('i');
+        var brElement = document.createElement('br');
+        var dateTimeText = document.createTextNode(new Date(message.sentMessageDate).toLocaleString("en-US"));
         usernameElement.appendChild(usernameText);
+        iElement.appendChild(dateElement);
+        dateElement.appendChild(dateTimeText);
         messageElement.appendChild(usernameElement);
+        messageElement.appendChild(brElement);
+        messageElement.appendChild(iElement);
 
         var textElement = document.createElement('p');
-        var messageText = document.createTextNode(message.content);
+        var messageText = document.createTextNode(message.message);
         textElement.appendChild(messageText);
         messageElement.appendChild(textElement);
         messageArea.appendChild(messageElement);
@@ -395,4 +406,5 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         });
     };
 
-});
+})
+;

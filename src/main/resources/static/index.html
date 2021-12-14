@@ -492,25 +492,28 @@ class="border d-flex align-items-end" -->
             </div>
 
             <div class="col-md-6 col-lg-7 col-xl-8">
-
                 <ul class="list-unstyled"
-                    style="max-width: 50vw; max-height: 20vh;overflow-y: auto; overflow-x: hidden;"
-                    ng-repeat="chatMessage in chatMessagesPage.content">
-                    <li class="d-flex justify-content-between mb-2">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between p-3">
-                                <p class="fw-bold mb-0">{{chatMessage.sender}}</p>
-                                <p class="text-muted small mb-0"><i class="far fa-clock"></i>
-                                    {{chatMessage.sentMessageDate}}</p>
-                            </div>
-                            <div class="card-body">
-                                <p class="mb-0">
-                                    {{chatMessage.message}}
-                                </p>
-                            </div>
-                        </div>
-                    </li>
+                    style="max-width: 50vw; height: 15vh;overflow-y: auto; overflow-x: hidden;"
+                    id="messageArea">
                 </ul>
+<!--                <ul class="list-unstyled"-->
+<!--                    style="max-width: 50vw; max-height: 20vh;overflow-y: auto; overflow-x: hidden;"-->
+<!--                    ng-repeat="chatMessage in chatMessagesPage.content">-->
+<!--                    <li class="d-flex justify-content-between mb-2">-->
+<!--                        <div class="card">-->
+<!--                            <div class="card-header d-flex justify-content-between p-3">-->
+<!--                                <p class="fw-bold mb-0">{{chatMessage.sender}}</p>-->
+<!--                                <p class="text-muted small mb-0"><i class="far fa-clock"></i>-->
+<!--                                    {{chatMessage.sentMessageDate}}</p>-->
+<!--                            </div>-->
+<!--                            <div class="card-body">-->
+<!--                                <p class="mb-0">-->
+<!--                                    {{chatMessage.message}}-->
+<!--                                </p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                </ul>-->
                 <div class="bg-white mb-3">
                     <div class="form-outline">
                                 <textarea class="form-control" id="textAreaExample2" rows="3"
