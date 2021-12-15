@@ -419,5 +419,15 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         });
     };
     $scope.disconnect();
+
+    $scope.tryToLogout = function () {
+        $scope.disconnect();
+        $scope.clearUser();
+    };
+
+    $scope.clearUser = function () {
+        $scope.user=null;
+        $http.defaults.headers.common.Authorization = '';
+        location.replace('promo.html');};
 })
 ;
