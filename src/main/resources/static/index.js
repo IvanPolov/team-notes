@@ -5,7 +5,10 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.foundUser = null;
     $scope.isFounded = false;
     $scope.Users = [];
+
     $scope.isChatConnected = false;
+    $scope.currentChatBoardId = null;
+    $scope.isShowChat = false;
     $scope.Colors = [
         {colorHex: '#e06666', description: 'red'},
         {colorHex: '#f6b26b', description: 'orange'},
@@ -140,6 +143,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
 
 //add user to board
     $scope.addUser = function () {
+        // $scope.disconnect();
         console.log('add user func')
         // PUT http://localhost:8180/api/v1/board/{{boardId}}/addUser
         $http.get(contextPath + '/board/' + $scope.currentBoard.id + '/addUser/' + $scope.foundUser.id)
@@ -150,6 +154,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 $scope.Users.push($scope.foundUser);
                 $scope.isFounded = false;
                 connect();
+
             })
     }
 //remove user from the board
@@ -157,6 +162,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.delete(contextPath + '/board/' + $scope.currentBoard.id + '/removeUser/' + user.id)
             .then(function () {
                 $scope.Users.splice($scope.Users.indexOf(user), 1);
+
             })
     }
 
@@ -164,6 +170,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $scope.getUser();
     }
     $scope.getBoardUsers = function () {
+        $scope.disconnect();
 
         // GET http://localhost:8180/api/v1/user/board/{{boardId}}
         $http.get(contextPath + "/user/board/" + $scope.currentBoard.id)
@@ -189,6 +196,8 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     };
 
     $scope.getBoards = function () {
+        $scope.disconnect();
+        //$scope.isShowChat=false;
         console.log('get all boards function');
         $http.get(contextPath + '/board/user/' + $scope.user.id)
             .then(function (response) {
@@ -225,6 +234,8 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.delete(contextPath + '/board/' + id)
             .then(function (resp) {
                 $scope.getBoards();
+                $scope.disconnect();
+                $scope.isShowChat=false;
             })
 
     };
@@ -320,14 +331,14 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             stompClient = Stomp.over(socket);
             stompClient.connect({}, onConnected, onError);
             $scope.isChatConnected = true;
+            // $scope.isShowChat = true;
         }
     };
 
     const onConnected = () => {
         console.log("connected");
-        stompClient.subscribe("/secured/topic/" + $scope.currentBoard.id,
-            onMessageReceived)//console.log("Answer message recived"));
-        // connectingElement.classList.add('hidden');
+        stompClient.subscribe("/secured/topic/" + $scope.currentBoard.id,  //this set destination for subscribing for recive of all new message for this board
+            onMessageReceived);  // this is the consumer of all messages received for this board
     };
 
     function onError(error) {
@@ -339,7 +350,10 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.disconnect = function () {
         if (stompClient !== null) {
             stompClient.disconnect();
+
         }
+        $scope.isShowChat=false;
+        $scope.isChatConnected = false;
         // setConnected(false);
         console.log("Disconnected");
     }
@@ -358,7 +372,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }
         $scope.newMessage = null;
     };
-    $scope.messageForm = document.querySelector('#messageForm');
 
     onMessageReceived = function (payload) {
         var message = JSON.parse(payload.body);
@@ -405,6 +418,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             console.log(response.data);
         });
     };
-
+    $scope.disconnect();
 })
 ;
