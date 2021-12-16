@@ -1,7 +1,7 @@
 package com.gbdevteam.teamnotes.model.chat;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gbdevteam.teamnotes.model.Board;
+import com.gbdevteam.teamnotes.util.ChatCommands;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -26,5 +26,7 @@ public class ChatMessage {
     private Date sentMessageDate;
 @ManyToOne
     private Board board;
+
+    private ChatCommands command;
 
 }

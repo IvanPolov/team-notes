@@ -22,6 +22,15 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.SortProperties = ['priority', 'color', 'isFavorite', 'createDate', 'lastModifiedDate'];
     $scope.propertyName = 'priority';
     $scope.reverse = true;
+    $scope.newMessage = "";
+    $scope.command = null;
+    $scope.sendingMmessage=null;
+    const ChatCommands = {
+        UPDATE_Board: "UPDATE_Board",
+        UPDATE_Note: "UPDATE_Note",
+        DELETE_Note: "DELETE_Note",
+        CHAT_Message: "CHAT_Message"
+    }
 
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
@@ -40,10 +49,16 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.post(contextPath + '/note', $scope.newNote)
             .then(function (resp) {
                 $scope.fillBoardWithNotes($scope.currentBoard);
-                // $scope.newNote = null;
                 document.querySelector('#closeNoteButton').click();
-            })
+            });
 
+        $scope.sendingMmessage={
+            command: ChatCommands.UPDATE_Board,
+            message: "Created new Note...",
+            currenBoardId: $scope.currentBoard.id
+        }
+        sendMessage();
+        $scope.sendingMmessage=null;
     }
 
     $scope.setNote = function (note) {
@@ -56,32 +71,31 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         console.log(note)
         $http.put(contextPath + '/note', note)
             .then(function (resp) {
-                $scope.fillBoardWithNotes($scope.currentBoard);
-            })
 
+                $scope.fillBoardWithNotes($scope.currentBoard);
+            });
+        $scope.sendingMmessage={
+            command: ChatCommands.UPDATE_Note,
+            message: "Updated Note...",
+            currenBoardId: $scope.currentBoard.id
+        }
+        sendMessage();
+        $scope.sendingMmessage=null;
     }
     $scope.deleteNote = function (id) {
         console.log('note id: ' + id)
         $http.delete(contextPath + '/note/' + id)
             .then(function (resp) {
                 $scope.fillBoardWithNotes($scope.currentBoard);
-            })
+            });
 
+        $scope.sendingMmessage={
+            command: ChatCommands.DELETE_Note,
+            message: "Deleted Note...",
+            currenBoardId: $scope.currentBoard.id
+        }
+        sendMessage();
     };
-
-    // $scope.isDataReady = function (dataForm, boardName){
-    //     return !(dataForm.$pristine || dataForm.$invalid || !dataForm.name);
-    //
-    // }
-    // $scope.invitedUser = $scope.user;
-    // $scope.invitedUser.email = 'some@email.com';
-    // $scope.updateUsers = function (){
-    // console.log($scope.invitedUser)
-    // $http.get(contextPath+'/user/' + $scope.invitedUser.email)
-    //     .then(function (resp){
-    //
-    // });
-    // }
 
     //get user by email
     $scope.findUser = function (email) {
@@ -154,7 +168,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 $scope.Users.push($scope.foundUser);
                 $scope.isFounded = false;
                 connect();
-
             })
     }
 //remove user from the board
@@ -162,15 +175,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.delete(contextPath + '/board/' + $scope.currentBoard.id + '/removeUser/' + user.id)
             .then(function () {
                 $scope.Users.splice($scope.Users.indexOf(user), 1);
-
-            })
-    }
+            });
+     }
 
     if (!$scope.user) {
         $scope.getUser();
     }
     $scope.getBoardUsers = function () {
-        $scope.disconnect();
 
         // GET http://localhost:8180/api/v1/user/board/{{boardId}}
         $http.get(contextPath + "/user/board/" + $scope.currentBoard.id)
@@ -182,7 +193,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             })
     }
     $scope.fillBoardWithNotes = function (currentBoard) {
-        $scope.disconnect();
+
         console.log('board id: ' + currentBoard.id)
         $scope.currentBoard = currentBoard;
         $scope.getBoardUsers();
@@ -196,7 +207,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     };
 
     $scope.getBoards = function () {
-        $scope.disconnect();
+
         //$scope.isShowChat=false;
         console.log('get all boards function');
         $http.get(contextPath + '/board/user/' + $scope.user.id)
@@ -235,9 +246,8 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             .then(function (resp) {
                 $scope.getBoards();
                 $scope.disconnect();
-                $scope.isShowChat=false;
+                $scope.isShowChat = false;
             })
-
     };
 
     //find all roles of the board
@@ -306,6 +316,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.sortNotes = function (propertyName) {
         $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
         $scope.propertyName = propertyName;
+        $scope.sendingMmessage={
+            command: ChatCommands.UPDATE_Board,
+            message: "Sorted Notes...",
+            currenBoardId: $scope.currentBoard.id
+        }
+        sendMessage();
+        $scope.sendingMmessage=null;
     }
     $scope.colorComparator = function (v1, v2) {
         if (v1.type === 'string' || v2.type === 'string') {
@@ -323,7 +340,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
 
     // Chat functions
     let stompClient = null;
-    $scope.newMessage = null;
 
     let connect = function () {
         if (!$scope.isChatConnected) {
@@ -331,7 +347,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             stompClient = Stomp.over(socket);
             stompClient.connect({}, onConnected, onError);
             $scope.isChatConnected = true;
-            // $scope.isShowChat = true;
         }
     };
 
@@ -339,12 +354,23 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         console.log("connected");
         stompClient.subscribe("/secured/topic/" + $scope.currentBoard.id,  //this set destination for subscribing for recive of all new message for this board
             onMessageReceived);  // this is the consumer of all messages received for this board
+
+        $scope.sendingMmessage={
+            command: ChatCommands.CHAT_Message,
+            message: "User with name '" +$scope.user.username + "' entered the chat.",
+            currenBoardId: $scope.currentBoard.id
+        }
+        sendMessage();
+        $scope.sendingMmessage=null;
     };
+
+
+
 
     function onError(error) {
         $scope.disconnect();
         // connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
-        // connectingElement.style.color = 'red';
+
     }
 
     $scope.disconnect = function () {
@@ -352,31 +378,47 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             stompClient.disconnect();
 
         }
-        $scope.isShowChat=false;
+        $scope.isShowChat = false;
         $scope.isChatConnected = false;
         // setConnected(false);
         console.log("Disconnected");
     }
 
-    $scope.sendNewMessage = function (newMessage) {
-        $scope.newMessage = newMessage;
-        if (newMessage.trim() !== "" && stompClient) {
-            const message = {
-                message: $scope.newMessage,
-                currenBoardId: $scope.currentBoard.id
-            };
-            stompClient.send("/app/secured/chat", {}, JSON.stringify(message));
-            console.log("Your message " + newMessage + " was sent onto server");
-            $scope.newMessage = null;
-
+    $scope.sendNewMessage = function () {
+        $scope.sendingMmessage={
+            command: $scope.CHAT_Message,
+            message: $scope.newMessage,
+            currenBoardId: $scope.currentBoard.id
         }
-        $scope.newMessage = null;
+        sendMessage();
+        $scope.newMessage="";
+        $scope.sendingMmessage=null;
+    }
+    sendMessage = function () {
+        if (stompClient) {
+            stompClient.send("/app/secured/chat", {}, JSON.stringify($scope.sendingMmessage));
+        }
     };
 
+
     onMessageReceived = function (payload) {
-        var message = JSON.parse(payload.body);
+        let message = JSON.parse(payload.body);
         console.log("Answer message recived");
         console.log("Answer message body " + payload.body);
+
+        switch (message.command) {
+            case 'UPDATE_Board':
+                $scope.fillBoardWithNotes($scope.currentBoard);
+                break;
+            case 'UPDATE_Note':
+                $scope.fillBoardWithNotes($scope.currentBoard);
+                break;
+            case 'DELETE_Note':
+                $scope.fillBoardWithNotes($scope.currentBoard);
+                break;
+        }
+        //
+
 
         var messageElement = document.createElement('li');
         messageElement.classList.add('chat-message');
@@ -400,6 +442,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         messageElement.appendChild(textElement);
         messageArea.appendChild(messageElement);
         messageArea.scrollTop = messageArea.scrollHeight;
+
     }
 
 
@@ -418,7 +461,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             console.log(response.data);
         });
     };
-    $scope.disconnect();
+
 
     $scope.tryToLogout = function () {
         $scope.disconnect();
@@ -426,8 +469,9 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     };
 
     $scope.clearUser = function () {
-        $scope.user=null;
+        $scope.user = null;
         $http.defaults.headers.common.Authorization = '';
-        location.replace('promo.html');};
+        location.replace('promo.html');
+    };
 })
 ;

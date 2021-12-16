@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.dto;
 
+import com.gbdevteam.teamnotes.util.ChatCommands;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,5 +19,7 @@ public class OutChatMessageDTO {
     private Date sentMessageDate;
 
     private String boardID;
+
+    private ChatCommands command;
 
 }

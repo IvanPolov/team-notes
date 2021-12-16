@@ -517,12 +517,12 @@ class="border d-flex align-items-end" -->
                 <div class="bg-white mb-3">
                     <div class="form-outline">
                                 <textarea class="form-control" id="textAreaExample2" rows="3"
-                                          placeholder="Write your message here" ng-model="newMessage" name="newMessage"
+                                          placeholder="Write your message here" ng-model="newMessage"   name="newMessage"
                                           required ng-required="true"></textarea>
                     </div>
                 </div>
-                <button type="button" ng-disabled="!newMessage" class="btn btn-info btn-rounded float-end"
-                        ng-click="sendNewMessage(newMessage)">Send
+                <button type="button" ng-disabled="!newMessage" class="btn btn-info btn-rounded float-end" id="sendNewMessage"
+                        ng-click="sendNewMessage()">Send
                 </button>
                 <button type="button" class="btn btn-info btn-rounded float-end"
                         ng-click="showChat()">Show

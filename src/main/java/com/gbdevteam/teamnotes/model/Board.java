@@ -55,7 +55,7 @@ public class Board {
     @EqualsAndHashCode.Exclude
     private Set<BoardRole> boardRoles = new HashSet<>();
 
-
+    @JsonIgnoreProperties("board")
     @OneToMany(
             mappedBy = "board",
             cascade = CascadeType.ALL)
