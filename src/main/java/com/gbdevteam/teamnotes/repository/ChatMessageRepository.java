@@ -18,9 +18,13 @@ import java.util.UUID;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 
+    ChatMessage findFirstByBoardIdOrderByIdDesc(UUID boardId);
+
+
 
     ChatMessage findTopByBoardId(UUID boardId);
-//    List<ChatMessage> findChatMessageByBoardIdAndIdIsLessThanAndIdGreaterThan(UUID boardId, int firstId, int lastId);
+
+    //    List<ChatMessage> findChatMessageByBoardIdAndIdIsLessThanAndIdGreaterThan(UUID boardId, int firstId, int lastId);
     Page<ChatMessage> findAllByBoardId(UUID boardId, Pageable pageable);
 
 }

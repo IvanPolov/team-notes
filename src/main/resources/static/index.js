@@ -427,11 +427,12 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }).then(function successCallBack(response) {
             let minPageIndex = 0;
             $scope.ChatMessageArray.push(response.data)
-
-            appendMessageToChat(response.data);
+            console.log(response.data);
+            // appendMessageToChat(response.data);
         }, function errorCallback(response) {
             console.log(response.data);
         });
+        messageArea.scrollTop = messageArea.scrollHeight;
     };
 
     $scope.getLastMessagesFromChatHistoryDB = function () {
@@ -447,6 +448,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }, function errorCallback(response) {
             console.log(response.data);
         });
+        messageArea.scrollTop = messageArea.scrollHeight;
     };
 
     let i = 0;

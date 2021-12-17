@@ -53,7 +53,7 @@ public class ChatMessageService {
     }
 
     public OutHistoryChatMessageDTO findNewChatMessage(UUID boardId) {
-        ChatMessage chatMessage = chatMessageRepository.findTopByBoardId(boardId);
+        ChatMessage chatMessage = chatMessageRepository.findFirstByBoardIdOrderByIdDesc(boardId);
         return modelMapper.map(chatMessage, OutHistoryChatMessageDTO.class);
     }
 

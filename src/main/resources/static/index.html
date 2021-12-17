@@ -493,8 +493,17 @@ class="border d-flex align-items-end" -->
 
             <div class="col-md-6 col-lg-7 col-xl-8">
                 <ul class="list-unstyled"
-                    style="max-width: 50vw; height: 15vh;overflow-y: auto; overflow-x: hidden;"
+                    style="max-width: 50vw; height: 300px; max-height: 25vh;overflow-y: auto; overflow-x: hidden;"
                     id="messageArea">
+<!--                    <div ng-scroller>-->
+                        <div id="list-example" class="list-group" ng-scroller-repeat="item in ChatMessageArray" data-bs-spy="scroll" >
+                            <a class="list-group-item list-group-item-action" href="#{{item.id}}">{{item.id}}</a>
+                        </div>
+                        <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example" ng-repeat="item in ChatMessageArray">
+                            <h4 id="{{item.senderName}}">{{item.senderName}}</h4>
+                            <p>{{item.message}}</p>
+                        </div>
+<!--                    </div>-->
                 </ul>
                 <ul class="list-unstyled"
                     style="max-width: 50vw; max-height: 20vh;overflow-y: auto; overflow-x: hidden;"
@@ -527,13 +536,7 @@ class="border d-flex align-items-end" -->
                 <button type="button" class="btn btn-info btn-rounded float-end"
                         ng-click="showChat()">Show
                 </button>
-                <div id="list-example" class="list-group" ng-repeat="item in ChatMessageArray" >
-                    <a class="list-group-item list-group-item-action" href="#{{item.id}}">{{item.id}}</a>
-                </div>
-                <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example" ng-repeat="item in ChatMessageArray">
-                    <h4 id="{{item.senderName}}">{{item.senderName}}</h4>
-                    <p>{{chatMessage.message}}</p>
-                </div>
+
             </div>
 
         </div>
