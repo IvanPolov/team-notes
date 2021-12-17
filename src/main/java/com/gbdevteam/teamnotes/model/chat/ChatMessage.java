@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.model.chat;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.gbdevteam.teamnotes.model.Board;
 import com.gbdevteam.teamnotes.util.ChatCommands;
 import lombok.Data;
@@ -24,7 +25,8 @@ public class ChatMessage {
     private String senderName;
 
     private Date sentMessageDate;
-@ManyToOne
+    @JsonIgnoreProperties("chatMessages")
+    @ManyToOne
     private Board board;
 
     private ChatCommands command;

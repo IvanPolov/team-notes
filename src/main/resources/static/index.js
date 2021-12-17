@@ -1,4 +1,5 @@
 angular.module('app', []).controller('indexController', function ($rootScope, $scope, $http, $interval, $compile) {
+    $scope.messageArea = undefined;
     const contextPath = 'http://localhost:8180/team-notes/api/v1';
 
     $scope.invitedUser = null;
@@ -397,7 +398,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }
     };
 
-
     onMessageReceived = function (payload) {
         let message = JSON.parse(payload.body);
         console.log("Answer message body " + payload.body);
@@ -426,14 +426,12 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             }
         }).then(function successCallBack(response) {
             let minPageIndex = 0;
-            response.data.sentMessageDate=new Date(response.data.sentMessageDate).toLocaleString("en-US");
+            response.data.sentMessageDate = new Date(response.data.sentMessageDate).toLocaleString("en-US");
             $scope.ChatMessageArray.push(response.data)
             console.log(response.data);
-            // appendMessageToChat(response.data);
         }, function errorCallback(response) {
             console.log(response.data);
         });
-        messageArea.scrollTop = messageArea.scrollHeight;
     };
 
     $scope.getLastMessagesFromChatHistoryDB = function () {
@@ -447,14 +445,15 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }).then(function successCallBack(response) {
 
             $scope.ChatMessageArray = response.data.content;
-            $scope.ChatMessageArray.forEach(function (item, i) {
-item[i].sentMessageDate=new Date(item[i].sentMessageDate).toLocaleString("en-US");
-            });
-
+            if (response.data.content !== null) {
+                $scope.ChatMessageArray.forEach(function (item, i) {
+                    item[i].sentMessageDate = new Date(item[i].sentMessageDate).toLocaleString("en-US");
+                });
+            }
         }, function errorCallback(response) {
             console.log(response.data);
         });
-        messageArea.scrollTop = messageArea.scrollHeight;
+        // $scope.messageAreaScrollTop();
     };
 
     let i = 0;
@@ -496,6 +495,11 @@ item[i].sentMessageDate=new Date(item[i].sentMessageDate).toLocaleString("en-US"
             messageArea.scrollTop = messageArea.scrollHeight;
 
         });
+
+    };
+
+    $scope.messageAreaScrollTop = function () {
+        messageArea.scrollTop = messageArea.scrollHeight;
 
     };
 
