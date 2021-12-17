@@ -491,38 +491,37 @@ class="border d-flex align-items-end" -->
 
             </div>
 
-            <div class="col-md-6 col-lg-7 col-xl-8">
-                <ul class="list-unstyled"
-                    style="max-width: 50vw; height: 300px; max-height: 25vh;overflow-y: auto; overflow-x: hidden;"
-                    id="messageArea">
-<!--                    <div ng-scroller>-->
-                        <div id="list-example" class="list-group" ng-scroller-repeat="item in ChatMessageArray" data-bs-spy="scroll" >
-                            <a class="list-group-item list-group-item-action" href="#{{item.id}}">{{item.id}}</a>
-                        </div>
-                        <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example" ng-repeat="item in ChatMessageArray">
-                            <h4 id="{{item.senderName}}">{{item.senderName}}</h4>
-                            <p>{{item.message}}</p>
-                        </div>
-<!--                    </div>-->
-                </ul>
-                <ul class="list-unstyled"
-                    style="max-width: 50vw; max-height: 20vh;overflow-y: auto; overflow-x: hidden;"
-                    ng-repeat="chatMessage in chatMessagesPage.content">
-                    <li class="d-flex justify-content-between mb-2">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between p-3">
-                                <p class="fw-bold mb-0">{{chatMessage.sender}}</p>
-                                <p class="text-muted small mb-0"><i class="far fa-clock">
-                                    {{chatMessage.sentMessageDate}}</i></p>
+            <div class="col-md-6 col-lg-7 col-xl-8" >
+<!--                <ul class="list-unstyled"-->
+<!--                    style="max-width: 50vw; height: 300px; max-height: 25vh;overflow-y: auto; overflow-x: hidden;"-->
+<!--                    id="messageArea">-->
+<!--&lt;!&ndash;                    <div ng-scroller>&ndash;&gt;-->
+<!--                        <div id="list-example" class="list-group"  data-bs-spy="scroll" >-->
+<!--                            <a class="list-group-item list-group-item-action" href="#{{item.id}}">{{item.id}}</a>-->
+<!--                        </div>-->
+<!--                        <div ng-scroll="item in ChatMessageArray" data-target="#list-example" data-offset="0" class="scrollspy-example" ng-repeat="item in ChatMessageArray">-->
+<!--                            <h4 id="{{item.senderName}}">{{item.senderName}}</h4>-->
+<!--                            <p>{{item.message}}</p>-->
+<!--                        </div>-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--                </ul>-->
+                <ul class="list-unstyled" style="max-width: 50vw;  height: 300px; max-height: 20vh;overflow-y: auto; overflow-x: hidden;" id="messageArea">
+                    <li class="d-flex justify-content-between mb-2" ng-repeat="item in ChatMessageArray" >
+                        <div class="card" >
+                            <div class="card-header d-flex justify-content-between p-3" style="min-width:300px;">
+                                <p class="fw-bold mb-0">{{item.senderName}}</p>
+                                <p class="text-muted small mb-0" class="d-flex justify-content-end"><i class="far fa-clock">
+                                    {{item.sentMessageDate}}</i></p>
                             </div>
                             <div class="card-body">
                                 <p class="mb-0">
-                                    {{chatMessage.message}}
+                                    {{item.message}}
                                 </p>
                             </div>
                         </div>
                     </li>
                 </ul>
+
                 <div class="bg-white mb-3">
                     <div class="form-outline">
                                 <textarea class="form-control" id="textAreaExample2" rows="3"
@@ -533,9 +532,7 @@ class="border d-flex align-items-end" -->
                 <button type="button" ng-disabled="!newMessage" class="btn btn-info btn-rounded float-end" id="sendNewMessage"
                         ng-click="sendNewMessage()">Send
                 </button>
-                <button type="button" class="btn btn-info btn-rounded float-end"
-                        ng-click="showChat()">Show
-                </button>
+
 
             </div>
 

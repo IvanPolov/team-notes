@@ -426,6 +426,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             }
         }).then(function successCallBack(response) {
             let minPageIndex = 0;
+            response.data.sentMessageDate=new Date(response.data.sentMessageDate).toLocaleString("en-US");
             $scope.ChatMessageArray.push(response.data)
             console.log(response.data);
             // appendMessageToChat(response.data);
@@ -444,7 +445,12 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 chatId: $scope.currentBoard.id
             }
         }).then(function successCallBack(response) {
+
             $scope.ChatMessageArray = response.data.content;
+            $scope.ChatMessageArray.forEach(function (item, i) {
+item[i].sentMessageDate=new Date(item[i].sentMessageDate).toLocaleString("en-US");
+            });
+
         }, function errorCallback(response) {
             console.log(response.data);
         });
