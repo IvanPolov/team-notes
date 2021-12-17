@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Id;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -16,6 +18,9 @@ import java.util.UUID;
 
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 
+
+    ChatMessage findTopByBoardId(UUID boardId);
+//    List<ChatMessage> findChatMessageByBoardIdAndIdIsLessThanAndIdGreaterThan(UUID boardId, int firstId, int lastId);
     Page<ChatMessage> findAllByBoardId(UUID boardId, Pageable pageable);
 
 }

@@ -43,7 +43,7 @@ public class BoardService implements GenericService<BoardDTO> {
 
     public UUID create(BoardDTO boardDTO) {
         Board dbBoard = convertToEntity(boardDTO);
-        if (dbBoard.getChatMessages()==null) {  //In case if Collection is not initialized;
+        if (dbBoard.getChatMessages() == null) {  //In case if Collection is not initialized;
             dbBoard.setChatMessages(new ArrayList<>());
         }
         boardRepository.save(dbBoard);

@@ -61,12 +61,24 @@ public class ChatController {
 
     @GetMapping("/messages")
     public ResponseEntity<?> findChatMessages(@RequestParam("chatId") String boardId) {
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Recived new request for show all messages!");
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Recived request from BoardID: " + boardId);
-        int page, pageSize;
-        page = 1;
-        pageSize = 1;
+        log.info(">>>>>>>>>> Recived new request for show all messages!");
+        log.info(">>>>>>>>>> Recived request from BoardID: " + boardId);
+        int pageSize;
+//        page = 1;
+//        pageSize = 10;
         return ResponseEntity
-                .ok(chatMessageService.findNewChatMessagePage(UUID.fromString(boardId), page, pageSize));
+                .ok(chatMessageService.findNewChatMessagePage(UUID.fromString(boardId)));
     }
+
+    @GetMapping("/messages/get-one/")
+    public ResponseEntity<?> findChatMessage(@RequestParam("chatId") String boardId) {
+        log.info(">>>>>>>>>> Recived request from BoardID: " + boardId + " to get last message from chat history DB");
+        int pageSize;
+//        page = 1;
+//        pageSize = 10;
+        return ResponseEntity
+                .ok(chatMessageService.findNewChatMessage(UUID.fromString(boardId)));
+    }
+
 }
+

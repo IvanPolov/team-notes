@@ -24,7 +24,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.reverse = true;
     $scope.newMessage = "";
     $scope.command = null;
-    $scope.sendingMmessage=null;
+    $scope.sendingMmessage = null;
     const ChatCommands = {
         UPDATE_Board: "UPDATE_Board",
         UPDATE_Note: "UPDATE_Note",
@@ -32,6 +32,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         CHAT_Message: "CHAT_Message"
     }
 
+    $scope.ChatMessageArray = [];
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
             console.log('acronym: ' + sentence + 'size: ' + size);
@@ -52,13 +53,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 document.querySelector('#closeNoteButton').click();
             });
 
-        $scope.sendingMmessage={
+        $scope.sendingMmessage = {
             command: ChatCommands.UPDATE_Board,
             message: "Created new Note...",
             currenBoardId: $scope.currentBoard.id
         }
         sendMessage();
-        $scope.sendingMmessage=null;
+        $scope.sendingMmessage = null;
     }
 
     $scope.setNote = function (note) {
@@ -74,13 +75,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
 
                 $scope.fillBoardWithNotes($scope.currentBoard);
             });
-        $scope.sendingMmessage={
+        $scope.sendingMmessage = {
             command: ChatCommands.UPDATE_Note,
             message: "Updated Note...",
             currenBoardId: $scope.currentBoard.id
         }
         sendMessage();
-        $scope.sendingMmessage=null;
+        $scope.sendingMmessage = null;
     }
     $scope.deleteNote = function (id) {
         console.log('note id: ' + id)
@@ -89,7 +90,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 $scope.fillBoardWithNotes($scope.currentBoard);
             });
 
-        $scope.sendingMmessage={
+        $scope.sendingMmessage = {
             command: ChatCommands.DELETE_Note,
             message: "Deleted Note...",
             currenBoardId: $scope.currentBoard.id
@@ -176,7 +177,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             .then(function () {
                 $scope.Users.splice($scope.Users.indexOf(user), 1);
             });
-     }
+    }
 
     if (!$scope.user) {
         $scope.getUser();
@@ -316,13 +317,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.sortNotes = function (propertyName) {
         $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
         $scope.propertyName = propertyName;
-        $scope.sendingMmessage={
+        $scope.sendingMmessage = {
             command: ChatCommands.UPDATE_Board,
             message: "Sorted Notes...",
             currenBoardId: $scope.currentBoard.id
         }
         sendMessage();
-        $scope.sendingMmessage=null;
+        $scope.sendingMmessage = null;
     }
     $scope.colorComparator = function (v1, v2) {
         if (v1.type === 'string' || v2.type === 'string') {
@@ -338,7 +339,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         angular.element(document.getElementById(id)).append(temp)
     }
 
-    // Chat functions
+    // <<<<<<<<<<<<<<<< Chat functions >>>>>>>>>>>>>>>>>>
     let stompClient = null;
 
     let connect = function () {
@@ -355,28 +356,24 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         stompClient.subscribe("/secured/topic/" + $scope.currentBoard.id,  //this set destination for subscribing for recive of all new message for this board
             onMessageReceived);  // this is the consumer of all messages received for this board
 
-        $scope.sendingMmessage={
+        $scope.sendingMmessage = {
             command: ChatCommands.CHAT_Message,
-            message: "User with name '" +$scope.user.username + "' entered the chat.",
+            message: "User with name '" + $scope.user.username + "' entered the chat.",
             currenBoardId: $scope.currentBoard.id
         }
         sendMessage();
-        $scope.sendingMmessage=null;
+        $scope.sendingMmessage = null;
+        $scope.getLastMessagesFromChatHistoryDB();
     };
-
-
 
 
     function onError(error) {
         $scope.disconnect();
-        // connectingElement.textContent = 'Could not connect to WebSocket server. Please refresh this page to try again!';
-
     }
 
     $scope.disconnect = function () {
         if (stompClient !== null) {
             stompClient.disconnect();
-
         }
         $scope.isShowChat = false;
         $scope.isChatConnected = false;
@@ -385,14 +382,14 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     }
 
     $scope.sendNewMessage = function () {
-        $scope.sendingMmessage={
+        $scope.sendingMmessage = {
             command: $scope.CHAT_Message,
             message: $scope.newMessage,
             currenBoardId: $scope.currentBoard.id
         }
         sendMessage();
-        $scope.newMessage="";
-        $scope.sendingMmessage=null;
+        $scope.newMessage = "";
+        $scope.sendingMmessage = null;
     }
     sendMessage = function () {
         if (stompClient) {
@@ -403,9 +400,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
 
     onMessageReceived = function (payload) {
         let message = JSON.parse(payload.body);
-        console.log("Answer message recived");
         console.log("Answer message body " + payload.body);
-
         switch (message.command) {
             case 'UPDATE_Board':
                 $scope.fillBoardWithNotes($scope.currentBoard);
@@ -417,37 +412,30 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 $scope.fillBoardWithNotes($scope.currentBoard);
                 break;
         }
-        //
+        $scope.getLastMessageFromChatHistoryDB();
+    };
 
 
-        var messageElement = document.createElement('li');
-        messageElement.classList.add('chat-message');
+    $scope.getLastMessageFromChatHistoryDB = function () {
+        console.log("Get last message from chat history DB")
+        $http({
+            url: "/team-notes/messages/get-one/",
+            method: "GET",
+            params: {
+                chatId: $scope.currentBoard.id
+            }
+        }).then(function successCallBack(response) {
+            let minPageIndex = 0;
+            $scope.ChatMessageArray.push(response.data)
 
-        var usernameElement = document.createElement('b');
-        var usernameText = document.createTextNode(message.senderName);
-        var dateElement = document.createElement('small');
-        var iElement = document.createElement('i');
-        var brElement = document.createElement('br');
-        var dateTimeText = document.createTextNode(new Date(message.sentMessageDate).toLocaleString("en-US"));
-        usernameElement.appendChild(usernameText);
-        iElement.appendChild(dateElement);
-        dateElement.appendChild(dateTimeText);
-        messageElement.appendChild(usernameElement);
-        messageElement.appendChild(brElement);
-        messageElement.appendChild(iElement);
+            appendMessageToChat(response.data);
+        }, function errorCallback(response) {
+            console.log(response.data);
+        });
+    };
 
-        var textElement = document.createElement('p');
-        var messageText = document.createTextNode(message.message);
-        textElement.appendChild(messageText);
-        messageElement.appendChild(textElement);
-        messageArea.appendChild(messageElement);
-        messageArea.scrollTop = messageArea.scrollHeight;
-
-    }
-
-
-    $scope.showChat = function () {
-        console.log("'Show chat'-command from a boardId" + $scope.currentBoard.id)
+    $scope.getLastMessagesFromChatHistoryDB = function () {
+        console.log("Get last 10 messages (one page) from chat history DB")
         $http({
             url: "/team-notes/messages",
             method: "GET",
@@ -455,11 +443,52 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 chatId: $scope.currentBoard.id
             }
         }).then(function successCallBack(response) {
-
-            $scope.chatMessagesPage = response.data;
+            $scope.ChatMessageArray = response.data.content;
         }, function errorCallback(response) {
             console.log(response.data);
         });
+    };
+
+    let i = 0;
+    appendMessageToChat = function (pages) {
+        // let message = JSON.parse(payload.body);
+        $scope.ChatMessageArray = pages.content;
+        if ($scope.ChatMessageArray.length === 0) {
+            i = 0
+        } else {
+            i = $scope.ChatMessageArray.length - 1;
+        }
+
+        $scope.ChatMessageArray.forEach(function (item, i) {
+            // alert( i + ": " + item + " (массив:" + arr + ")" );
+
+
+            // let message = $scope.ChatMessageArray[i];
+            let message = item;
+            var messageElement = document.createElement('li');
+            messageElement.classList.add('chat-message');
+
+            var usernameElement = document.createElement('b');
+            var usernameText = document.createTextNode(message.senderName);
+            var dateElement = document.createElement('small');
+            var iElement = document.createElement('i');
+            var brElement = document.createElement('br');
+            var dateTimeText = document.createTextNode(new Date(message.sentMessageDate).toLocaleString("en-US"));
+            usernameElement.appendChild(usernameText);
+            iElement.appendChild(dateElement);
+            dateElement.appendChild(dateTimeText);
+            messageElement.appendChild(usernameElement);
+            messageElement.appendChild(brElement);
+            messageElement.appendChild(iElement);
+            var textElement = document.createElement('p');
+            var messageText = document.createTextNode(message.message);
+            textElement.appendChild(messageText);
+            messageElement.appendChild(textElement);
+            messageArea.appendChild(messageElement);
+            messageArea.scrollTop = messageArea.scrollHeight;
+
+        });
+
     };
 
 
