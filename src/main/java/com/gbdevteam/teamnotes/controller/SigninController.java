@@ -36,7 +36,7 @@ public class SigninController {
         if (userService.login(userAuthDto)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
-            return ResponseEntity.status(403)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .header(HttpHeaders.CONTENT_TYPE, MediaTypes.HTTP_PROBLEM_DETAILS_JSON_VALUE)
                     .body(Problem.create()
                             .withTitle("Authentication error")
