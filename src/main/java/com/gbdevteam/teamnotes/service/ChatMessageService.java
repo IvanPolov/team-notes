@@ -58,19 +58,27 @@ public class ChatMessageService {
     }
 
     public Page<OutHistoryChatMessageDTO> findNewChatMessagePage(UUID boardId) {
-//        log.info(boardId.toString());
-//        int previousMessageId = Math.max(chatId - PAGE_SIZE, 0);
-//        if (chatId < 0) {  //   if chatId=-1 than get last one messsage and put into page.
-//            chatId = chatMessageRepository.findTopByBoardId(boardId);
-//            previousMessageId = chatId;
-//        } else if (chatId == 0) { //   if chatId=0 than get last 10 messsages and put into page.
-//            chatId = chatMessageRepository.fin().lastIndexOf();.findTopByBoardId(boardId);
+        List<ChatMessage> chatMessagePage;
+        long lastIndex =chatMessageRepository.findFirstByBoardIdOrderByIdDesc(boardId).getId();
+        if (lastIndex<=PAGE_SIZE) {
+            chatMessagePage = chatMessageRepository.findChatMessagesByBoardIdAndIdBetween(boardId, 1L, lastIndex);
+        } else {
+            chatMessagePage = chatMessageRepository.findChatMessagesByBoardIdAndIdBetween(boardId, lastIndex-PAGE_SIZE, lastIndex);
+        }
+        Page<OutHistoryChatMessageDTO> outHistoryMessages = new PageImpl(chatMessagePage.stream().map(s -> modelMapper.map(s, OutHistoryChatMessageDTO.class)).collect(Collectors.toList()));
+        return outHistoryMessages;
+    }
 
-//        List<ChatMessage> chatMessagePage = chatMessageRepository.findChatMessageByBoardIdAndIdIsLessThanAndIdGreaterThan(boardId, chatId, previousMessageId);
+    @Transactional
+    public List<OutHistoryChatMessageDTO> findHistoryChatMessagePage(UUID boardId, Long firstId) {
 
-
-        Page<ChatMessage> chatMessagePage = chatMessageRepository.findAllByBoardId(boardId, PageRequest.of(0, PAGE_SIZE));
-        Page<OutHistoryChatMessageDTO> outHistoryMessages = new PageImpl<>(chatMessagePage.getContent().stream().map(s -> modelMapper.map(s, OutHistoryChatMessageDTO.class)).collect(Collectors.toList()), chatMessagePage.getPageable(), chatMessagePage.getTotalElements());
+        List<ChatMessage> chatMessagePage;
+        if (firstId<=PAGE_SIZE) {
+            chatMessagePage = chatMessageRepository.findChatMessagesByBoardIdAndIdBetween(boardId, 1L, firstId);
+        } else {
+            chatMessagePage = chatMessageRepository.findChatMessagesByBoardIdAndIdBetween(boardId, firstId-PAGE_SIZE, firstId);
+        }
+        List<OutHistoryChatMessageDTO> outHistoryMessages = chatMessagePage.stream().map(s -> modelMapper.map(s, OutHistoryChatMessageDTO.class)).collect(Collectors.toList());
         return outHistoryMessages;
     }
 

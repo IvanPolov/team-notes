@@ -26,6 +26,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.newMessage = "";
     $scope.command = null;
     $scope.sendingMmessage = null;
+    $scope.scrollStop = false;
     const ChatCommands = {
         UPDATE_Board: "UPDATE_Board",
         UPDATE_Note: "UPDATE_Note",
@@ -379,7 +380,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }
         $scope.isShowChat = false;
         $scope.isChatConnected = false;
-        // setConnected(false);
         console.log("Disconnected");
     }
 
@@ -416,7 +416,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $scope.getLastMessageFromChatHistoryDB();
     };
 
-
     $scope.getLastMessageFromChatHistoryDB = function () {
         console.log("Get last message from chat history DB")
         $http({
@@ -426,6 +425,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 chatId: $scope.currentBoard.id
             }
         }).then(function successCallBack(response) {
+            $scope.scrollStop = false;
             let minPageIndex = 0;
             response.data.sentMessageDate = new Date(response.data.sentMessageDate).toLocaleString("en-US");
             $scope.ChatMessageArray.push(response.data)
@@ -444,74 +444,77 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 chatId: $scope.currentBoard.id
             }
         }).then(function successCallBack(response) {
-
-            $scope.ChatMessageArray = response.data.content;
-            if (response.data.content !== null) {
-                $scope.ChatMessageArray.forEach(function (item, i) {
-                    item[i].sentMessageDate = new Date(item[i].sentMessageDate).toLocaleString("en-US");
+            $scope.scrollStop = false;
+            if (response.data !== null) {
+                let temParr = [];
+                temParr = response.data.content;
+                temParr.forEach(function (item, i, temParr) {
+                    item.sentMessageDate = new Date(item.sentMessageDate).toLocaleString("en-US");
                 });
+                $scope.ChatMessageArray = temParr;
             }
         }, function errorCallback(response) {
             console.log(response.data);
         });
-        // $scope.messageAreaScrollTop();
+        $scope.scrollNext();
+        $scope.messageAreaScrollTop();
     };
 
     $scope.messageAreaScrollTop = function () {
-        messageArea.scrollTop = messageArea.scrollHeight;
-
-
+        if (!$scope.scrollStop) {
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }
     };
 
     $scope.toggleChatWindow = function (id) {
         if (document.getElementById(id).style.display === 'none') {
             document.getElementById(id).style.display = 'block';
-            $scope.scrollNext();
+            messageArea.scrollTop = messageArea.scrollHeight;
         } else {
             document.getElementById(id).style.display = 'none';
         }
     };
 
     $scope.checkScrolling = function () {
-        // if ($scope.checkScrolling.scrollCheck) {
-        //     return;
-        // }
         $scope.checkScrolling.scrollCheck = messageArea.scrollTop === 0;
         if ($scope.checkScrolling.scrollCheck) {
-            alert("край!");
-            getPreviousMessagesFromChatHistoryDB();
+            if ($scope.ChatMessageArray[0].id !== 1) {
+                messageArea.scrollTop = 3;
+                $scope.getPreviousMessagesFromChatHistoryDB();
+            }
         }
-        // checkReading.noticeBox.innerHTML = checkReading.read ? "Спасибо вам." : "Пожалуйста, прокрутите и прочитайте следующий текст.";
     }
 
     $scope.scrollNext = function () {
-        // $scope.ChatMessageArea.scrollHeight-this.scrollTop === this.clientHeight;
         $scope.ChatMessageArea.onscroll = $scope.checkScrolling;
         $scope.checkScrolling.call($scope.ChatMessageArea);
     };
 
     $scope.getPreviousMessagesFromChatHistoryDB = function () {
-        console.log("Get last 10 messages (one page) from chat history DB")
+
+        console.log("Get last previous 10 messages from chat history DB")
         $http({
-            url: "/team-notes/messages",
+            url: "/team-notes/history",
             method: "GET",
             params: {
-                chatId: $scope.currentBoard.id
+                chatId: $scope.currentBoard.id,
+                firstID: $scope.ChatMessageArray[0].id - 1
             }
         }).then(function successCallBack(response) {
-
-            $scope.ChatMessageArray = response.data.content;
-            if (response.data.content !== null) {
-                $scope.ChatMessageArray.forEach(function (item, i) {
-                    item[i].sentMessageDate = new Date(item[i].sentMessageDate).toLocaleString("en-US");
+            $scope.scrollStop = true;
+            if (response.data !== null) {
+                let temParr = [];
+                temParr = response.data;
+                temParr.forEach(function (item, i, temParr) {
+                    item.sentMessageDate = new Date(item.sentMessageDate).toLocaleString("en-US");
                 });
+                $scope.ChatMessageArray = temParr.concat($scope.ChatMessageArray);
+                console.log($scope.ChatMessageArray[0].id)
             }
         }, function errorCallback(response) {
             console.log(response.data);
         });
-        // $scope.messageAreaScrollTop();
     };
-
 
     $scope.tryToLogout = function () {
         $scope.disconnect();
@@ -521,6 +524,18 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.clearUser = function () {
         $scope.user = null;
         $http.defaults.headers.common.Authorization = '';
+        $scope.invitedUser = null;
+        $scope.foundUser = null;
+        $scope.isFounded = false;
+        $scope.Users = null;
+
+        $scope.isChatConnected = false;
+        $scope.currentChatBoardId = null;
+        $scope.isShowChat = false;
+        $scope.newMessage = "";
+        $scope.command = null;
+        $scope.sendingMmessage = null;
+        $scope.ChatMessageArray = null;
         location.replace('promo.html');
     };
 

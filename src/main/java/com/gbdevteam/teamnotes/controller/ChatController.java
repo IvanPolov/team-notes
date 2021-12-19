@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 import java.util.UUID;
 
+import static java.lang.Long.parseLong;
+
 @Controller
 @RestController
 @RequiredArgsConstructor
@@ -35,24 +37,20 @@ public class ChatController {
     private final UserService userService;
 
     @MessageMapping("/secured/chat")
-//    @SendTo("/secured/topic/")
     public void processMessage(@Headers @Payload ChatMessageDTO chatMessage, Principal principal) throws IllegalAccessException {
-        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Recived new request for handle sended new message!");
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Received new request for handle sent new message!");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        String name = auth.getName();
         String name = principal.getName();
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sender name: " + name);
         User currentUser = userService.findByEmail(name);
         log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Current user: " + name);
         chatMessage.setSenderName(name);
         if (currentUser.isChatWriter()) {
-//        if (true) {
             OutChatMessageDTO saved = chatMessageService.save(chatMessage);
             log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> chatMessage: " + saved.toString());
             messagingTemplate.convertAndSend(
                     "/secured/topic/" + saved.getBoardID(),
                     saved);
-//            return saved;
         } else {
             throw new IllegalAccessException();
         }
@@ -63,31 +61,23 @@ public class ChatController {
     public ResponseEntity<?> findChatMessages(@RequestParam("chatId") String boardId) {
         log.info(">>>>>>>>>> Recived new request for show all messages!");
         log.info(">>>>>>>>>> Recived request from BoardID: " + boardId);
-        int pageSize;
-//        page = 1;
-//        pageSize = 10;
         return ResponseEntity
                 .ok(chatMessageService.findNewChatMessagePage(UUID.fromString(boardId)));
     }
 
     @GetMapping("/history")
-    public ResponseEntity<?> findPreviousChatMessages(@RequestParam("chatId") String boardId) {
+    public ResponseEntity<?> findPreviousChatMessages(@RequestParam("chatId") String boardId, @RequestParam("firstID") String id) {
         log.info(">>>>>>>>>> Recived new request for show all messages!");
         log.info(">>>>>>>>>> Recived request from BoardID: " + boardId);
-        int pageSize;
-//        page = 1;
-//        pageSize = 10;
+        Long firstIdL = Long.parseLong(id);
         return ResponseEntity
-                .ok(chatMessageService.findNewChatMessagePage(UUID.fromString(boardId)));
+                .ok(chatMessageService.findHistoryChatMessagePage(UUID.fromString(boardId), firstIdL));
     }
 
 
     @GetMapping("/messages/get-one/")
     public ResponseEntity<?> findChatMessage(@RequestParam("chatId") String boardId) {
-        log.info(">>>>>>>>>> Recived request from BoardID: " + boardId + " to get last message from chat history DB");
-        int pageSize;
-//        page = 1;
-//        pageSize = 10;
+        log.info(">>>>>>>>>> Received request from BoardID: " + boardId + " to get last message from chat history DB");
         return ResponseEntity
                 .ok(chatMessageService.findNewChatMessage(UUID.fromString(boardId)));
     }
