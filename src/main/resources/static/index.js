@@ -33,6 +33,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         CHAT_Message: "CHAT_Message"
     }
 
+
     $scope.ChatMessageArray = [];
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
@@ -456,53 +457,18 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         // $scope.messageAreaScrollTop();
     };
 
-    let i = 0;
-    appendMessageToChat = function (pages) {
-        // let message = JSON.parse(payload.body);
-        $scope.ChatMessageArray = pages.content;
-        if ($scope.ChatMessageArray.length === 0) {
-            i = 0
-        } else {
-            i = $scope.ChatMessageArray.length - 1;
-        }
-
-        $scope.ChatMessageArray.forEach(function (item, i) {
-            // alert( i + ": " + item + " (массив:" + arr + ")" );
-
-
-            // let message = $scope.ChatMessageArray[i];
-            let message = item;
-            var messageElement = document.createElement('li');
-            messageElement.classList.add('chat-message');
-
-            var usernameElement = document.createElement('b');
-            var usernameText = document.createTextNode(message.senderName);
-            var dateElement = document.createElement('small');
-            var iElement = document.createElement('i');
-            var brElement = document.createElement('br');
-            var dateTimeText = document.createTextNode(new Date(message.sentMessageDate).toLocaleString("en-US"));
-            usernameElement.appendChild(usernameText);
-            iElement.appendChild(dateElement);
-            dateElement.appendChild(dateTimeText);
-            messageElement.appendChild(usernameElement);
-            messageElement.appendChild(brElement);
-            messageElement.appendChild(iElement);
-            var textElement = document.createElement('p');
-            var messageText = document.createTextNode(message.message);
-            textElement.appendChild(messageText);
-            messageElement.appendChild(textElement);
-            messageArea.appendChild(messageElement);
-            messageArea.scrollTop = messageArea.scrollHeight;
-
-        });
-
-    };
-
     $scope.messageAreaScrollTop = function () {
         messageArea.scrollTop = messageArea.scrollHeight;
 
     };
 
+    $scope.toggleChatWindow = function (id) {
+        if (document.getElementById(id).style.display === 'none') {
+            document.getElementById(id).style.display = 'block';
+        } else {
+            document.getElementById(id).style.display = 'none';
+        }
+    };
 
     $scope.tryToLogout = function () {
         $scope.disconnect();

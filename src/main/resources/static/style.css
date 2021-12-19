@@ -13,7 +13,7 @@ body {
 }
 
 .notes {
-    min-height: 50vh;
+    min-height: 85vh;
 }
 
 .note:hover, .board:hover {

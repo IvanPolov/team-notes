@@ -67,7 +67,7 @@
     <div class="vl"></div>
     <div class="d-flex flex-grow-1 justify-content-end align-items-center" style="margin-right: 2px">
         <span class="text-white">{{user.username}}</span>
-        <a class="button-simple-style m-2"  ng-click="tryToLogout()">
+        <a class="button-simple-style m-2" ng-click="tryToLogout()">
             <span>Sign out</span>
             <i class="bi bi-box-arrow-right fa-lg"></i>
         </a>
@@ -88,6 +88,7 @@
     <!--    </div>-->
 </div>
 
+<!-- For next functionality - notifications  -->
 <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
         <img src="..." class="rounded me-2" alt="...">
@@ -459,37 +460,50 @@ class="border d-flex align-items-end" -->
     </div>
 </div>
 
+<!-- Chat. -->
+<div class="d-flex justify-content-end" style="margin-bottom: 1vh; margin-right: 10px"
+     ng-show="isChatConnected && Users.length>1">
 
-<section style="background-color: rgb(225, 225, 225);" ng-show="isChatConnected && Users.length>1">
+    <button class="btn btn-info btn-rounded float-end" ng-click="toggleChatWindow('chatModalWindow')"
+            title="Chat with team" type="button">Chat
+    </button>
+</div>
 
-    <div tabindex="-1" class="d-flex justify-content-end flex-row-reverse ">
-        <div class="row" style="max-width: 800px; ">
+<div  id="chatModalWindow"
+     style="width: 58vw; height: 50vh; position: absolute; bottom: 2vh; margin: 3px; right: 85px; display: none;"
+     data-bs-keyboard="false" tabindex="-1">
 
+    <section class="rounded mb-3 m-2 pb-1" class=" d-flex justify-content-end bottom" style="background-color: white; border-color: darkgrey; border-width: thick ;width: 56vw; height: 50vh;padding-top: 5px;">
+        <div class="row" style="width: 55vw; height: 48vh; background-color: whitesmoke;  margin: 5px">
             <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
                 <div class="card">
-                    <div class="card-header">
-                        <i class="bi bi-person-lines-fill"></i>
+                    <div class="card-header fw-bold mt0-m mb-1">
+                        <i class="bi bi-person-lines-fill "></i>
                         Members
                     </div>
                     <ul class="list-group list-group-flush" style="max-height: 23vh;overflow-y: auto;"
                         ng-repeat="u in Users">
                         <li class="list-group-item">
-                            <p name="userName" class="fw-bold mb-0">{{u.senderName}}</p>
-                            <small name="userEmail" class="card-subtitle mb-1 text-muted">{{u.email}}</small>
+                            <p name="userName" class="fw-bold mb-4 mt1-m mb-1">{{u.username}}</p>
+                            <p><small name="userEmail" class="card-subtitle mb-1 text-muted">{{u.email}}</small></p>
                     </ul>
                 </div>
 
             </div>
-            <div class="col-md-6 col-lg-7 col-xl-8" >
-                <ul class="list-unstyled" style="max-width: 50vw;  height: 300px; max-height: 20vh;overflow-y: auto; overflow-x: hidden;" id="messageArea" >
-                    <li class="d-flex justify-content-between mb-2" ng-repeat="item in ChatMessageArray" ng-init="messageAreaScrollTop()">
-                        <div class="card" >
-                            <div class="card-header d-flex justify-content-between p-3" style="min-width:300px;">
-                                <p class="fw-bold mb-0">{{item.senderName}}</p><br>
-                                <p class="text-muted small mb-0" class="d-flex justify-content-end"><i class="far fa-clock">
+            <div class="col-md-6 col-lg-7 col-xl-8">
+                <ul class="list-unstyled"
+                    style="max-width: 50vw; height: 33vh; overflow-y: auto; overflow-x: hidden;"
+                    id="messageArea">
+                    <li class="d-flex justify-content-between mb-2" ng-repeat="item in ChatMessageArray"
+                        ng-init="messageAreaScrollTop()" >
+                        <div class="card" style="min-width: 50%">
+                            <div class="card-header toast-header d-flex justify-content-between p-2"
+                                 style="min-width:300px;">
+                                <p class="fw-bold mb1-ns">{{item.senderName}}</p>
+                                <p class="text-muted small mb-1-n"><i class="far fa-clock">
                                     {{item.sentMessageDate}}</i></p>
                             </div>
-                            <div class="card-body" >
+                            <div class="card-body" style="min-width: 50%">
                                 <p class="mb-0">
                                     {{item.message}}
                                 </p>
@@ -501,22 +515,25 @@ class="border d-flex align-items-end" -->
 
                 <div class="bg-white mb-3">
                     <div class="form-outline">
-                                <textarea class="form-control" id="textAreaExample2" rows="3"
-                                          placeholder="Write your message here" ng-model="newMessage"   name="newMessage"
-                                          required ng-required="true"></textarea>
+                                   <textarea class="form-control" id="textAreaExample2" rows="3"
+                                             placeholder="Write your message here" ng-model="newMessage"
+                                             name="newMessage"
+                                             required ng-required="true"></textarea>
                     </div>
                 </div>
-                <button type="button" ng-disabled="!newMessage" class="btn btn-info btn-rounded float-end" id="sendNewMessage"
+                <button type="button" ng-disabled="!newMessage" class="btn btn-info btn-rounded float-end"
+                        id="sendNewMessage"
                         ng-click="sendNewMessage()">Send
                 </button>
             </div>
-
         </div>
+    </section>
 
-    </div>
-</section>
+</div>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script crossorigin="anonymous"
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js">
