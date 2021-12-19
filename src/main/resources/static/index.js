@@ -32,9 +32,9 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         DELETE_Note: "DELETE_Note",
         CHAT_Message: "CHAT_Message"
     }
-
-
     $scope.ChatMessageArray = [];
+
+    $scope.ChatMessageArea = document.getElementById("messageArea");
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
             console.log('acronym: ' + sentence + 'size: ' + size);
@@ -460,15 +460,58 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.messageAreaScrollTop = function () {
         messageArea.scrollTop = messageArea.scrollHeight;
 
+
     };
 
     $scope.toggleChatWindow = function (id) {
         if (document.getElementById(id).style.display === 'none') {
             document.getElementById(id).style.display = 'block';
+            $scope.scrollNext();
         } else {
             document.getElementById(id).style.display = 'none';
         }
     };
+
+    $scope.checkScrolling = function () {
+        // if ($scope.checkScrolling.scrollCheck) {
+        //     return;
+        // }
+        $scope.checkScrolling.scrollCheck = messageArea.scrollTop === 0;
+        if ($scope.checkScrolling.scrollCheck) {
+            alert("край!");
+            getPreviousMessagesFromChatHistoryDB();
+        }
+        // checkReading.noticeBox.innerHTML = checkReading.read ? "Спасибо вам." : "Пожалуйста, прокрутите и прочитайте следующий текст.";
+    }
+
+    $scope.scrollNext = function () {
+        // $scope.ChatMessageArea.scrollHeight-this.scrollTop === this.clientHeight;
+        $scope.ChatMessageArea.onscroll = $scope.checkScrolling;
+        $scope.checkScrolling.call($scope.ChatMessageArea);
+    };
+
+    $scope.getPreviousMessagesFromChatHistoryDB = function () {
+        console.log("Get last 10 messages (one page) from chat history DB")
+        $http({
+            url: "/team-notes/messages",
+            method: "GET",
+            params: {
+                chatId: $scope.currentBoard.id
+            }
+        }).then(function successCallBack(response) {
+
+            $scope.ChatMessageArray = response.data.content;
+            if (response.data.content !== null) {
+                $scope.ChatMessageArray.forEach(function (item, i) {
+                    item[i].sentMessageDate = new Date(item[i].sentMessageDate).toLocaleString("en-US");
+                });
+            }
+        }, function errorCallback(response) {
+            console.log(response.data);
+        });
+        // $scope.messageAreaScrollTop();
+    };
+
 
     $scope.tryToLogout = function () {
         $scope.disconnect();
@@ -480,5 +523,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.defaults.headers.common.Authorization = '';
         location.replace('promo.html');
     };
+
 })
 ;

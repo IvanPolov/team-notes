@@ -70,6 +70,18 @@ public class ChatController {
                 .ok(chatMessageService.findNewChatMessagePage(UUID.fromString(boardId)));
     }
 
+    @GetMapping("/history")
+    public ResponseEntity<?> findPreviousChatMessages(@RequestParam("chatId") String boardId) {
+        log.info(">>>>>>>>>> Recived new request for show all messages!");
+        log.info(">>>>>>>>>> Recived request from BoardID: " + boardId);
+        int pageSize;
+//        page = 1;
+//        pageSize = 10;
+        return ResponseEntity
+                .ok(chatMessageService.findNewChatMessagePage(UUID.fromString(boardId)));
+    }
+
+
     @GetMapping("/messages/get-one/")
     public ResponseEntity<?> findChatMessage(@RequestParam("chatId") String boardId) {
         log.info(">>>>>>>>>> Recived request from BoardID: " + boardId + " to get last message from chat history DB");
