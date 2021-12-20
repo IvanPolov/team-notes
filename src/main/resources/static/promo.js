@@ -18,9 +18,13 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
     $scope.loginModal = new bootstrap.Modal(document.getElementById('login'), {
         keyboard: false
     })
-
+    $scope.ringRegistrationModal = new bootstrap.Modal(document.getElementById('ringRegistrationModal'), {
+        keyboard: false
+    })
 
     $scope.signup = function (signupForm) {
+        document.querySelector('#closeUserButton').click()
+        $scope.ringRegistrationModal.show();
         console.log('signup function started')
         if (signupForm.$valid) {
             $http.post(contextPath + '/signup', $scope.user, httpOptions)
@@ -30,27 +34,23 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                         $scope.errorMessage = '';
                         $scope.user = null;
                         $scope.submitted = false;
-                        // $scope.user = resp.data.user
-                        // $scope.signupNotification = 'registration is successful'
-                        document.querySelector('#closeUserButton').click()
-                        $scope.signupSuccessModal.show()
-                        // setTimeout(
-                        //     () => {
-                        //         location.replace('index.html');
-                        //     },
-                        //     7 * 1000
-                        // );
+                        $scope.ringRegistrationModal.hide();
+                        $scope.ringRegistrationModal.dispose();
+                        $scope.signupSuccessModal.show();
                     },
                     function error(resp) {
                         $scope.errorTitle = resp.title;
                         $scope.errorMessage = resp.detail;
                         $scope.message = '';
                     });
+
         }
+
     };
 
     $scope.enterIntoService = function () {
         $scope.signupSuccessModal.dispose();
+
         location.replace('index.html');
 
     };
