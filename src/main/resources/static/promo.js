@@ -71,7 +71,7 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
                 },
                 function error(resp) {
                     $scope.isErrorLogin = true;
-                    if (resp.status === 403) {
+                    if (resp.status === 401) {
                         $scope.errorMessage = resp.data.detail;
                     } else {
                         $scope.errorMessage = "You entered incorrect data";

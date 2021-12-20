@@ -2,11 +2,13 @@ package com.gbdevteam.teamnotes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.gbdevteam.teamnotes.model.chat.ChatMessage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.*;
@@ -53,11 +55,19 @@ public class Board {
     @EqualsAndHashCode.Exclude
     private Set<BoardRole> boardRoles = new HashSet<>();
 
+    @JsonIgnoreProperties("board")
+    @OneToMany(
+            mappedBy = "board",
+            cascade = CascadeType.ALL)
+    private Collection<ChatMessage> chatMessages;
+
     public Board(String name, String description, UUID ownerId) {
         this.name = name;
         this.description = description;
         this.ownerId = ownerId;
+        chatMessages = new ArrayList<>();
     }
+
 
     public void setUser(User user) {
         users.add(user);
@@ -67,5 +77,4 @@ public class Board {
         Optional<User> user = users.stream().filter(u -> u.getId().equals(userId)).findFirst();
         user.ifPresent(value -> users.remove(value));
     }
-
 }

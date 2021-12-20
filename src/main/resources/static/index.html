@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="en" ng-app="app" xmlns="http://www.w3.org/1999/html">
 
 <head>
@@ -9,7 +8,8 @@
           integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" rel="stylesheet">
     <script crossorigin="anonymous" src="https://kit.fontawesome.com/7ffeb8118c.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+    <script src="chat-board/stomp.js" type="text/javascript"></script>
     <script src="index.js"></script>
     <script src="front.js" type="text/javascript"></script>
     <link href="style.css" rel="stylesheet">
@@ -67,7 +67,7 @@
     <div class="vl"></div>
     <div class="d-flex flex-grow-1 justify-content-end align-items-center" style="margin-right: 2px">
         <span class="text-white">{{user.username}}</span>
-        <a class="button-simple-style m-2" href="/team-notes/logout">
+        <a class="button-simple-style m-2" ng-click="tryToLogout()">
             <span>Sign out</span>
             <i class="bi bi-box-arrow-right fa-lg"></i>
         </a>
@@ -87,7 +87,25 @@
     <!--        </a>-->
     <!--    </div>-->
 </div>
-<!-- container for notes or boards -->
+
+<!-- For next functionality - notifications  -->
+<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+        <img src="..." class="rounded me-2" alt="...">
+        <strong class="me-auto">Bootstrap</strong>
+        <small>11 mins ago</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        Hello, world! This is a toast message.
+    </div>
+</div>
+
+
+<!-- container for notes or boards.
+class="border d-flex align-items-end" -->
+
+
 <div class="notes d-flex bg-easy">
     <div class="container">
 
@@ -95,7 +113,9 @@
             <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
                 <use xlink:href="#exclamation-triangle-fill"/>
             </svg>
-            <div>Your email is not confirmed! If you don't confirmed email within 30 days, your account will be blocked.</div>
+            <div>Your email is not confirmed! If you don't confirmed email within 30 days, your account will be
+                blocked.
+            </div>
         </div>
         <div class="notes_block row">
             <div class="board-header text-light p-1 d-flex justify-content-between align-items-center">
@@ -122,8 +142,11 @@
                         <i class="bi bi-filter-square fa-lg"></i>
                     </button>
                     <ul aria-labelledby="sorting" class="dropdown-menu">
-                        <li ng-repeat="property in SortProperties"><button class="btn w-100 m-0 p-0" ng-click='sortNotes(property)'>
-                            {{property}}<span class="sort-order ms-1" ng-show="property === propertyName" ng-class="{reverse: reverse}"></span></button></li>
+                        <li ng-repeat="property in SortProperties">
+                            <button class="btn w-100 m-0 p-0" ng-click='sortNotes(property)'>
+                                {{property}}<span class="sort-order ms-1" ng-show="property === propertyName"
+                                                  ng-class="{reverse: reverse}"></span></button>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -187,41 +210,44 @@
                                 <input class="input-header py-2" ng-init="n.header" ng-model="n.header" readonly
                                        type="text"/>
                                 <div class="d-flex align-items-center ms-auto" ng-show="isAllowed(0)">
-                                    <button aria-label="Edit" class="btn p-2" data-bs-target="#addNote" data-bs-toggle="modal" ng-click="setNote(n)"
+                                    <button aria-label="Edit" class="btn p-2" data-bs-target="#addNote"
+                                            data-bs-toggle="modal" ng-click="setNote(n)"
                                             ng-show="isAllowed(0)"
                                             type="button">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button aria-label="Favorite" class="btn p-2" ng-click="n.isFavorite = !n.isFavorite; updateNote(n)"
+                                    <button aria-label="Favorite" class="btn p-2"
+                                            ng-click="n.isFavorite = !n.isFavorite; updateNote(n)"
                                             type="button">
-                                        <i class="bi" ng-class="{'bi-star':!n.isFavorite,'bi-star-fill':n.isFavorite}"></i>
+                                        <i class="bi"
+                                           ng-class="{'bi-star':!n.isFavorite,'bi-star-fill':n.isFavorite}"></i>
                                     </button>
-<!--                                    <div class="me-1 priority-buttons-block">-->
-<!--                                        <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp(n)"-->
-<!--                                                type="button">-->
-<!--                                            <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>-->
-<!--                                        </button>-->
-<!--                                        <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown(n)"-->
-<!--                                                type="button">-->
-<!--                                            <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>-->
-<!--                                        </button>-->
-<!--                                    </div>-->
-<!--                                    <span class="priority-value text-dark fw-bold fs-4" name="priority" ng-model="newNote.priority">{{n.priority}}</span>-->
-<!--                                    <div class="dropdown ms-2">-->
-<!--                                        <button aria-expanded="false" class="btn p-0"-->
-<!--                                                data-bs-toggle="dropdown"-->
-<!--                                                id="{{'opt'+ n.id}}" type="button">-->
-<!--                                            <i class="bi bi-paint-bucket fa-lg"></i>-->
-<!--                                        </button>-->
-<!--                                        <ul aria-labelledby="{{'opt'+ n.id}}" class="dropdown-menu">-->
-<!--                                            <li ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}">-->
-<!--                                                <button class="btn w-100 m-0 p-0" ng-click="setColor(n, c.colorHex)">-->
-<!--                                                    {{c.description}}-->
-<!--                                                </button>-->
+                                    <!--                                    <div class="me-1 priority-buttons-block">-->
+                                    <!--                                        <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp(n)"-->
+                                    <!--                                                type="button">-->
+                                    <!--                                            <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>-->
+                                    <!--                                        </button>-->
+                                    <!--                                        <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown(n)"-->
+                                    <!--                                                type="button">-->
+                                    <!--                                            <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>-->
+                                    <!--                                        </button>-->
+                                    <!--                                    </div>-->
+                                    <!--                                    <span class="priority-value text-dark fw-bold fs-4" name="priority" ng-model="newNote.priority">{{n.priority}}</span>-->
+                                    <!--                                    <div class="dropdown ms-2">-->
+                                    <!--                                        <button aria-expanded="false" class="btn p-0"-->
+                                    <!--                                                data-bs-toggle="dropdown"-->
+                                    <!--                                                id="{{'opt'+ n.id}}" type="button">-->
+                                    <!--                                            <i class="bi bi-paint-bucket fa-lg"></i>-->
+                                    <!--                                        </button>-->
+                                    <!--                                        <ul aria-labelledby="{{'opt'+ n.id}}" class="dropdown-menu">-->
+                                    <!--                                            <li ng-repeat="c in Colors" ng-style="{'background-color':c.colorHex}">-->
+                                    <!--                                                <button class="btn w-100 m-0 p-0" ng-click="setColor(n, c.colorHex)">-->
+                                    <!--                                                    {{c.description}}-->
+                                    <!--                                                </button>-->
 
-<!--                                            </li>-->
-<!--                                        </ul>-->
-<!--                                    </div>-->
+                                    <!--                                            </li>-->
+                                    <!--                                        </ul>-->
+                                    <!--                                    </div>-->
                                     <button aria-label="Delete" class="btn p-2" ng-click="deleteNote(n.id)"
                                             type="button">
                                         <i class="fas fa-trash-alt"></i>
@@ -309,21 +335,24 @@
                         </button>
                     </div>
                     <div class="d-flex align-items-center">
-                    <div class="priority d-flex align-items-center">
-                        <span class="modal-title me-1 fw-bold fs-6">Priority: </span>
-                        <div class="me-1 priority-buttons-block">
-                            <button aria-label="PriorityUp" class="btn p-0 row priority-button" ng-click="priorityUp(newNote)"
-                                    type="button">
-                                <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>
-                            </button>
-                            <button aria-label="PriorityDown" class="btn p-0 row priority-button" ng-click="priorityDown(newNote)"
-                                    type="button">
-                                <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>
-                            </button>
+                        <div class="priority d-flex align-items-center">
+                            <span class="modal-title me-1 fw-bold fs-6">Priority: </span>
+                            <div class="me-1 priority-buttons-block">
+                                <button aria-label="PriorityUp" class="btn p-0 row priority-button"
+                                        ng-click="priorityUp(newNote)"
+                                        type="button">
+                                    <i class="bi bi-chevron-compact-up p-0 fa-xs"></i>
+                                </button>
+                                <button aria-label="PriorityDown" class="btn p-0 row priority-button"
+                                        ng-click="priorityDown(newNote)"
+                                        type="button">
+                                    <i class="bi bi-chevron-compact-down p-0 fa-xs"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                        <div class="priority-value text-dark fw-bold fs-5" >
-                            {{newNote.priority}}</div>
+                        <div class="priority-value text-dark fw-bold fs-5">
+                            {{newNote.priority}}
+                        </div>
                     </div>
                     <button aria-label="Checklist" class="btn p-2" ng-click="addChecklist('checklist-'+ n.id)"
                             type="button">
@@ -411,6 +440,101 @@
         </form>
     </div>
 </div>
+<!-- Modal window for about success entering. -->
+<div class="modal fade" id="signupSuccessModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4> You have successfully registered!</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    {{message}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="enterIntoService()"> Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chat. -->
+<div class="d-flex justify-content-end" style="margin-bottom: 1vh; margin-right: 10px"
+     ng-show="isChatConnected && Users.length>1">
+
+    <button class="btn btn-info btn-rounded float-end" ng-click="toggleChatWindow('chatModalWindow')"
+            title="Chat with team" type="button">Chat
+    </button>
+</div>
+
+<div id="chatModalWindow"
+     style="width: 58vw; height: 50vh; position: absolute; bottom: 2vh; margin: 3px; right: 85px; display: none;"
+     data-bs-keyboard="false" tabindex="-1"  ng-show="isChatConnected && Users.length>1">
+
+    <section class="rounded mb-3 m-2 pb-1" class=" d-flex justify-content-end bottom"
+             style="background-color: white; border-color: darkgrey; border-width: thick ;width: 56vw; height: 50vh;padding-top: 5px;">
+        <div class="row" style="width: 55vw; min-height: 48vh; background-color: whitesmoke;  margin: 5px">
+            <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
+                <div class="card">
+                    <div class="card-header fw-bold mt0-m mb-1">
+                        <i class="bi bi-person-lines-fill "></i>
+                        Members
+                    </div>
+                    <ul class="list-group list-group-flush"
+                        ng-repeat="u in Users">
+                        <li class="list-group-item">
+                            <div name="userName" class="fw-bold mb-1 mt0-m mb-1">{{u.username}}</div>
+                            <small name="userEmail" class="card-subtitle mb-1 text-muted">{{u.email}}</small>
+                    </ul>
+                </div>
+
+            </div>
+            <div class="col-md-6 col-lg-7 col-xl-8">
+                <ul class="list-unstyled"
+                    style="max-width: 50vw; height: 33vh; overflow-y: auto; overflow-x: hidden;"
+                    id="messageArea">
+                    <li class="d-flex justify-content-between mb-2" ng-repeat="item in ChatMessageArray"
+                        ng-init="messageAreaScrollTop()">
+                        <div class="card" style="min-width: 50%">
+                            <div class="card-header toast-header d-flex justify-content-between p-2"
+                                 style="min-width:300px;">
+                                <p class="fw-bold mb1-ns">{{item.senderName}}</p>
+                                <p class="text-muted small mb-0-n"><i class="far fa-clock">
+                                    {{item.sentMessageDate}}</i></p>
+                            </div>
+                            <div class="card-body" style="min-width: 50%">
+                                <p class="mb-0">
+                                    {{item.message}}
+                                </p>
+                                <span id="messageId{{item.id}}"></span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="bg-white mb-3">
+                    <div class="form-outline">
+                                   <textarea class="form-control" id="textAreaExample2" rows="3"
+                                             placeholder="Write your message here" ng-model="newMessage"
+                                             name="newMessage"
+                                             required ng-required="true"></textarea>
+                    </div>
+                </div>
+                <button type="button" ng-disabled="!newMessage" class="btn btn-info btn-rounded float-end"
+                        id="sendNewMessage"
+                        ng-click="sendNewMessage()">Send
+                </button>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script crossorigin="anonymous"
         integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js">
