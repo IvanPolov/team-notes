@@ -91,7 +91,7 @@
 <!-- For next functionality - notifications  -->
 <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
-        <img src="..." class="rounded me-2" alt="...">
+        <img src="" class="rounded me-2" alt="...">
         <strong class="me-auto">Bootstrap</strong>
         <small>11 mins ago</small>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -117,10 +117,10 @@ class="border d-flex align-items-end" -->
                 blocked.
             </div>
         </div>
-        <div class="notes_block row">
-            <div class="board-header text-light p-1 d-flex justify-content-between align-items-center">
-                <h4 class="ms-2">{{currentBoard.name}}</h4>
-                <div ng-repeat="u in Users">
+        <div class="notes_block row unselectable">
+            <div class="board-header text-light p-1 d-flex justify-content-between align-items-center flex-wrap">
+                <h4 class="mx-2">{{currentBoard.name}}</h4>
+                <div ng-repeat="u in Users" class="me-1">
                     <span>{{u.email}}</span>
                 </div>
                 <button class="btn text-white" data-bs-target="#addUser" data-bs-toggle="modal" type="button">
@@ -161,8 +161,9 @@ class="border d-flex align-items-end" -->
                     <div class="board rounded mb-3 m-2">
                         <form name="boardForm" ng-init="updatingBoard = {board}" ng-submit="updateBoard(board)"
                               novalidate>
-                            <div class="margin-top border-bottom input_group bg-primary bg-opacity-5 text-white rounded-15 p-1 d-flex align-items-center">
-                                <input class="pl-5 input-header" ng-init="board.name" ng-model="board.name" ng-readonly="user.id != board.ownerId"
+                            <div class="board-plate-header margin-top border-bottom input_group bg-primary bg-opacity-5 text-white rounded-15 p-1 d-flex align-items-center">
+                                <input class="pl-5 input-header" ng-init="board.name" ng-model="board.name"
+                                       ng-readonly="user.id != board.ownerId"
                                        required
                                        title="{{board.name}}" type="text"/>
                                 <div class="d-flex align-items-center ms-auto">
@@ -177,7 +178,7 @@ class="border d-flex align-items-end" -->
                                 </div>
                             </div>
                             <div class="m-1">
-                                <textarea class="form-control" ng-init="board.description" ng-model="board.description"
+                                <textarea class="form-control board-description" ng-init="board.description" ng-model="board.description"
                                           required ng-readonly="user.id != board.ownerId"></textarea>
                             </div>
                             <div class="d-flex align-items-center">
@@ -264,8 +265,8 @@ class="border d-flex align-items-end" -->
 
                             </div>
                             <div class="margin-bottom m-2 font-weight-light small"><i
-                                    class="bi bi-cloud-plus mx-1 fa-lg"></i>{{n.createDate}}<i
-                                    class="bi bi-arrow-clockwise mx-1 fa-lg"></i>{{n.lastModifiedDate}}
+                                    class="bi bi-cloud-plus mx-1 fa-lg"></i>{{n.localCreateDate}}<i
+                                    class="bi bi-arrow-clockwise mx-1 fa-lg"></i>{{n.localLastModifiedDate}}
                             </div>
                             <button class="btn m-1" ng-style="{'display': (noteForm.$pristine|| noteForm.$invalid || (n.header == '{{n.header}}' && n.content == '{{n.content}}')) && isPriorityValid('{{n.priority}}', n)
                                         ? 'none' : 'block'}"
@@ -354,10 +355,60 @@ class="border d-flex align-items-end" -->
                             {{newNote.priority}}
                         </div>
                     </div>
-                    <button aria-label="Checklist" class="btn p-2" ng-click="addChecklist('checklist-'+ n.id)"
+                    <button aria-label="Checklist" class="btn p-2 mb-2"
+                            ng-click="showChecklistCreation = !showChecklistCreation"
                             type="button">
                         Add checklist<i class="bi bi-list-check fa-lg ms-1"></i>
                     </button>
+                    <div class="rounded bg-easy p-1"
+                         ng-style="{'display': showChecklistCreation ? 'block':'none'}">
+                        <input class="form-control mb-1" id="checklistHeader" ng-model="newChecklist.name"
+                               placeholder="Checklist header..."
+                               type="text">
+                        <button class="btn btn-light" type="button" ng-click="saveCheckListName(newChecklist.name)">
+                            Add
+                        </button>
+                    </div>
+                    <div ng-repeat="cl in newNote.checklists" class="mb-1">
+                        <hr>
+                        <div class="d-flex align-items-center mb-1"><i class="bi bi-list-ul fa-lg me-1"></i>
+                            <input class="form-control" ng-model="cl.name" placeholder="Checklist header..."
+                                   type="text">
+                        </div>
+                        <ul>
+                            <li ng-repeat="cli in cl.items" class="mb-1 w-90 d-flex align-items-baseline">
+                                <input class="form-check-input me-1" type="checkbox" ng-model="cli.isCompleted">
+                                <textarea class="form-control" ng-model="cli.content"
+                                          oninput="auto_grow(this)" placeholder="type your thoughts..."
+                                          type="text" ng-style="{'text-decoration':!cli.isCompleted ? 'none':'line-through'}"></textarea>
+                                <button aria-label="deleteCheckListItem" class="btn p-2 mb-2"
+                                        ng-click="deleteChecklistItem(cl,cli)"
+                                        type="button">
+                                    <i class="bi bi-x fa-lg"></i>
+                                </button>
+                            </li>
+
+                        </ul>
+                        <div class="rounded bg-easy p-1 mb-1" ng-style="{'display': showChecklistItemCreation ? 'block':'none'}">
+                            <textarea class="form-control mb-1" ng-model="newCLItem.content" id="newCLItem"
+                                      rows="2" placeholder="type your thoughts..."
+                                      type="text"
+                                      ng-change="showStuffById()"></textarea>
+                            <button aria-label="Checklist" class="btn btn-light p-2 mb-2"
+                                    ng-click="saveChecklistItem(cl)"
+                                    type="button">
+                                Save
+                            </button>
+                        </div>
+
+                        <button aria-label="Checklist" class="btn bg-easy p-2 mb-2"
+                                ng-click="showChecklistItemCreation = !showChecklistItemCreation; focusElement('newCLItem')"
+                                type="button">
+                            Add item
+                        </button>
+                        <hr>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal" id="closeNoteButton" type="button">Close
@@ -424,7 +475,8 @@ class="border d-flex align-items-end" -->
                             </button>
                             <div ng-if="getUserRole(u.id).role != 'OWNER'">
                                 <label>
-                                    <select ng-options="role as role for role in RoleTypes" ng-model="getUserRole(u.id).role" ng-change="updateRole(u.id)"
+                                    <select ng-options="role as role for role in RoleTypes"
+                                            ng-model="getUserRole(u.id).role" ng-change="updateRole(u.id)"
                                             ng-disabled="(userRole != 'OWNER' && userRole != 'MANAGER')"></select>
                                 </label>
                             </div>
@@ -461,22 +513,25 @@ class="border d-flex align-items-end" -->
 </div>
 
 <!-- Chat. -->
-<div class="d-flex justify-content-end" style="margin-bottom: 1vh; margin-right: 10px"
-     ng-show="isChatConnected && Users.length>1">
+<div class="w-100 d-flex flex-wrap justify-content-end">
+    <div class="d-flex justify-content-end me-2 mb-2"
+         ng-show="isChatConnected && Users.length>1">
 
-    <button class="btn btn-info btn-rounded float-end" ng-click="toggleChatWindow('chatModalWindow')"
-            title="Chat with team" type="button">Chat
-    </button>
+        <button class="btn btn-primary btn-rounded float-end" ng-click="toggleChatWindow('chatModalWindow')"
+                title="Chat with team" type="button">Chat
+        </button>
+    </div>
 </div>
 
-<div id="chatModalWindow"
-     style="width: 58vw; height: 50vh; position: absolute; bottom: 2vh; margin: 3px; right: 85px; display: none;"
-     data-bs-keyboard="false" tabindex="-1"  ng-show="isChatConnected && Users.length>1">
 
-    <section class="rounded mb-3 m-2 pb-1" class=" d-flex justify-content-end bottom"
-             style="background-color: white; border-color: darkgrey; border-width: thick ;width: 56vw; height: 50vh;padding-top: 5px;">
-        <div class="row" style="width: 55vw; min-height: 48vh; background-color: whitesmoke;  margin: 5px">
-            <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
+<div id="chatModalWindow"
+     style="position: absolute; bottom: 10vh; margin: 3px; right: 15px; display: none;min-width: 50vw;"
+     data-bs-keyboard="false" tabindex="-1" ng-show="isChatConnected && Users.length>1">
+
+    <section class="rounded m-2 p-2" class=" d-flex justify-content-end bottom"
+             style="background-color: white; border-color: darkgrey; border-width: thick">
+        <div class="row p-1 rounded" style="background-color: whitesmoke;">
+            <div class="col-md-6 col-lg-5 col-xl-4 mb-md-0 mb-2">
                 <div class="card">
                     <div class="card-header fw-bold mt0-m mb-1">
                         <i class="bi bi-person-lines-fill "></i>
@@ -493,18 +548,17 @@ class="border d-flex align-items-end" -->
             </div>
             <div class="col-md-6 col-lg-7 col-xl-8">
                 <ul class="list-unstyled"
-                    style="max-width: 50vw; height: 33vh; overflow-y: auto; overflow-x: hidden;"
+                    style="height: 300px; overflow-y: auto; overflow-x: hidden;"
                     id="messageArea">
-                    <li class="d-flex justify-content-between mb-2" ng-repeat="item in ChatMessageArray"
+                    <li class="mb-2 me-2" ng-repeat="item in ChatMessageArray"
                         ng-init="messageAreaScrollTop()">
-                        <div class="card" style="min-width: 50%">
-                            <div class="card-header toast-header d-flex justify-content-between p-2"
-                                 style="min-width:300px;">
-                                <p class="fw-bold mb1-ns">{{item.senderName}}</p>
-                                <p class="text-muted small mb-0-n"><i class="far fa-clock">
-                                    {{item.sentMessageDate}}</i></p>
+                        <div class="card w-100" style="min-width: 150px;">
+                            <div class="card-header toast-header d-flex justify-content-between p-2 flex-wrap w-100">
+                                <span class="fw-bold mb1-ns">{{item.senderName}}</span>
+                                <span class="text-muted small mb-0-n"><i class="far fa-clock">
+                                    {{item.sentMessageDate}}</i></span>
                             </div>
-                            <div class="card-body" style="min-width: 50%">
+                            <div class="card-body w-100">
                                 <p class="mb-0">
                                     {{item.message}}
                                 </p>
@@ -522,7 +576,7 @@ class="border d-flex align-items-end" -->
                                              required ng-required="true"></textarea>
                     </div>
                 </div>
-                <button type="button" ng-disabled="!newMessage" class="btn btn-info btn-rounded float-end"
+                <button type="button" ng-disabled="!newMessage" class="btn btn-primary btn-rounded float-end"
                         id="sendNewMessage"
                         ng-click="sendNewMessage()">Send
                 </button>

@@ -4,6 +4,7 @@ import com.gbdevteam.teamnotes.dto.BoardRoleDTO;
 import com.gbdevteam.teamnotes.model.BoardRoleEnum;
 import com.gbdevteam.teamnotes.service.BoardRoleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @Validated
-
+@Slf4j
 public class BoardRoleController {
 
     private final BoardRoleService boardRoleService;
@@ -32,7 +33,7 @@ public class BoardRoleController {
         return BoardRoleEnum.values();
     }
 
-    @GetMapping("/{boardId}/users/{userId}/")
+    @GetMapping("/{boardId}/users/{userId}")
     public BoardRoleDTO getBoardUserRole(@PathVariable("boardId") UUID boardId, @PathVariable("userId") UUID userId) {
         return boardRoleService.findBoardUserRole(boardId, userId);
     }

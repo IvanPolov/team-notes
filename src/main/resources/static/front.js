@@ -1,5 +1,7 @@
 function auto_grow(element) {
-    element.style.height = element.scrollHeight + "px";
+    if(element.style.height < (element.scrollHeight + "px")) {
+        element.style.height = element.scrollHeight + "px"
+    }
 }
 
 function auto_shrink(element) {
@@ -15,6 +17,11 @@ function showStuff(className, show) {
         if (show) el.style.display = 'block';
         else el.style.display = 'none';
     })
+}
+function showStuffById(id, show) {
+    let element = document.getElementById(id)
+        if (show) element.style.display = 'block'
+        else element.style.display = 'none'
 }
 
 

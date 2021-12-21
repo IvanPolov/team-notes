@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -29,6 +30,9 @@ public class Note {
 
     @Column(length = 600)
     private String content;
+
+    @OneToMany
+    private List<Checklist> checklists;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

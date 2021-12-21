@@ -2,6 +2,7 @@ package com.gbdevteam.teamnotes.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,6 +18,6 @@ public class Checklist {
 
     private String name;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<ChecklistItem> items;
 }

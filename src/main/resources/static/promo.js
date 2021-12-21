@@ -18,30 +18,36 @@ angular.module('app', []).controller('promoController', function ($scope, $http)
     $scope.loginModal = new bootstrap.Modal(document.getElementById('login'), {
         keyboard: false
     })
+    $scope.signupForm = document.getElementById('signupForm')
     $scope.ringRegistrationModal = new bootstrap.Modal(document.getElementById('ringRegistrationModal'), {
+        keyboard: false
+    })
+    $scope.errorModal = new bootstrap.Modal(document.getElementById('errorModal'), {
         keyboard: false
     })
 
     $scope.signup = function (signupForm) {
         document.querySelector('#closeUserButton').click()
-        $scope.ringRegistrationModal.show();
+        $scope.ringRegistrationModal.show()
         console.log('signup function started')
         if (signupForm.$valid) {
             $http.post(contextPath + '/signup', $scope.user, httpOptions)
                 .then(function success(resp) {
-                        $scope.message = resp.data.detail;
-                        $scope.isEmailSended = true;
-                        $scope.errorMessage = '';
-                        $scope.user = null;
-                        $scope.submitted = false;
-                        $scope.ringRegistrationModal.hide();
-                        $scope.ringRegistrationModal.dispose();
-                        $scope.signupSuccessModal.show();
+                        $scope.message = resp.data.detail
+                        $scope.isEmailSended = true
+                        $scope.errorMessage = ''
+                        $scope.user = null
+                        $scope.submitted = false
+                        $scope.ringRegistrationModal.hide()
+                        $scope.signupSuccessModal.show()
                     },
                     function error(resp) {
-                        $scope.errorTitle = resp.title;
-                        $scope.errorMessage = resp.detail;
-                        $scope.message = '';
+                        $scope.ringRegistrationModal.hide()
+                        $scope.errorModal.show()
+                        $scope.user.email = '';
+                        $scope.errorTitle = resp.title
+                        $scope.errorMessage = resp.detail
+                        $scope.message = 'We can\'t send message to your email. Perhaps the specified email does not exist'
                     });
 
         }

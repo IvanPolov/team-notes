@@ -19,7 +19,7 @@ public class BoardDTO {
     private List<NoteDTO> notes;
     private UUID ownerId;
     private Set<UserDTO> users;
-    private Set<BoardDTO> boardRoles;
+    private Set<BoardRoleDTO> boardRoles;
     private Set<ColorDTO> colors;
 
     public BoardDTO(String name, String description, UUID ownerId) {

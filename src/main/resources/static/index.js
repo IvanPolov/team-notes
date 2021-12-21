@@ -1,14 +1,19 @@
 angular.module('app', []).controller('indexController', function ($rootScope, $scope, $http, $interval, $compile) {
     const contextPath = 'http://localhost:8180/team-notes/api/v1';
 
-    $scope.invitedUser = null;
-    $scope.foundUser = null;
-    $scope.isFounded = false;
-    $scope.Users = [];
+    $scope.invitedUser = null
+    $scope.foundUser = null
+    $scope.isFounded = false
+    $scope.Users = []
 
-    $scope.isChatConnected = false;
-    $scope.currentChatBoardId = null;
-    $scope.isShowChat = false;
+    $scope.newChecklist = {name:'Checklist'}
+    $scope.newCLItem = {isCompleted: false}
+    $scope.showChecklistCreation = false
+    $scope.showChecklistItemCreation = false
+
+    $scope.isChatConnected = false
+    $scope.currentChatBoardId = null
+    $scope.isShowChat = false
     $scope.Colors = [
         {colorHex: '#e06666', description: 'red'},
         {colorHex: '#f6b26b', description: 'orange'},
@@ -17,7 +22,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         {colorHex: '#76a5af', description: 'cyan'},
         {colorHex: '#6d9eeb', description: 'blue'},
         {colorHex: '#8e7cc3', description: 'purple'},
-        {colorHex: '#c27ba0', description: 'magenta'}];
+        {colorHex: '#c27ba0', description: 'magenta'}]
 
     $scope.SortProperties = ['priority', 'color', 'isFavorite', 'createDate', 'lastModifiedDate'];
     $scope.propertyName = 'priority';
@@ -43,6 +48,11 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             return acro;
         }
         return '';
+    }
+
+    $scope.focusElement = function (id){
+        let myEl = document.getElementById(id)
+        myEl.focus()
     }
 
 
@@ -166,11 +176,12 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.get(contextPath + '/board/' + $scope.currentBoard.id + '/addUser/' + $scope.foundUser.id)
             .then(function () {
                 console.log('add user func resp')
-                $scope.invitedUser.email = null;
+                $scope.invitedUser.email = null
                 console.log($scope.foundUser)
-                $scope.Users.push($scope.foundUser);
-                $scope.isFounded = false;
-                connect();
+                $scope.Users.push($scope.foundUser)
+                $scope.getRole($scope.foundUser.id)
+                $scope.isFounded = false
+                connect()
             })
     }
 //remove user from the board
@@ -208,7 +219,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             method: 'GET'
         }).then(function (response) {
             $scope.Notes = response.data;
-            connect();
+            $scope.Notes.forEach(n => {
+                if(!n.localCreateDate) {
+                    n.localCreateDate = new Date(n.createDate).toLocaleString()
+                }
+                n.localLastModifiedDate = new Date(n.lastModifiedDate).toLocaleString()
+            })
+            connect()
         });
     };
 
@@ -268,18 +285,27 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
                 $scope.getBoardRoleTypes()
             })
     }
+    $scope.getRole = function (userId){
+        // GET http://localhost:8180/api/v1/board-roles/{{boardId}}/users/{{userId}}/
+        $http.get(contextPath + '/board-roles/' + $scope.currentBoard.id + '/users/' + userId)
+            .then(function (resp) {
+                $scope.Roles.push(resp.data)
+                console.log($scope.Roles)
+            })
+    }
     //link the role to the user
     $scope.linkRoleToUser = function (userId) {
         $scope.userRole = $scope.getUserRole(userId).role;
         console.log($scope.userRole)
     }
     $scope.getUserRole = function (userId){
-        // console.log($scope.Roles?.find(r => r.userId === userId))
         return $scope.Roles?.find(r => r.userId === userId);
     }
     $scope.updateRole = function (userId){
-        console.log($scope.getUserRole(userId))
-        $http.post(contextPath + '/board-roles/set', $scope.getUserRole(userId))
+        let userRole = $scope.getUserRole(userId)
+        if(userRole) {
+            $http.post(contextPath + '/board-roles/set', userRole)
+        }
     }
 
     //types of board roles
@@ -334,13 +360,13 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.sortNotes = function (propertyName) {
         $scope.reverse = ($scope.propertyName === propertyName) ? !$scope.reverse : false;
         $scope.propertyName = propertyName;
-        $scope.sendingMmessage = {
-            command: ChatCommands.UPDATE_Board,
-            message: "Sorted Notes...",
-            currenBoardId: $scope.currentBoard.id
-        }
-        sendMessage();
-        $scope.sendingMmessage = null;
+        // $scope.sendingMmessage = {
+        //     command: ChatCommands.UPDATE_Board,
+        //     message: "Sorted Notes...",
+        //     currenBoardId: $scope.currentBoard.id
+        // }
+        // sendMessage();
+        // $scope.sendingMmessage = null;
     }
     $scope.colorComparator = function (v1, v2) {
         if (v1.type === 'string' || v2.type === 'string') {
@@ -348,6 +374,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }
         return v1.value.localeCompare(v2.value);
     }
+    // <<<<<<<<<<<<<<<< Checklist functions >>>>>>>>>>>>>>>>>>
     $scope.addChecklist = function (id) {
         let checkListHtml = '<div><input class="input-header py-2" ng-readonly="!isAllowed(0)" type="text" placeholder="checklist name..."/>' +
             '<span>{{n.header}}</span><input class="input-header py-2" ng-readonly="!isAllowed(0)" type="text" placeholder="checklist item..."/>' +
@@ -355,6 +382,23 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         let temp = $compile(checkListHtml)($scope)
         angular.element(document.getElementById(id)).append(temp)
     }
+
+    $scope.saveCheckListName =function(checklistName){
+        if(!$scope.newNote.checklists) $scope.newNote.checklists = [];
+        $scope.newNote.checklists.push({name:checklistName,items:[]})
+        $scope.showChecklistCreation = false;
+    }
+    $scope.saveChecklistItem =function(checklist){
+        if(!checklist.items) checklist.items = [];
+        checklist.items.push(angular.copy($scope.newCLItem))
+        $scope.newCLItem = {isCompleted:false};
+        $scope.showChecklistItemCreation = false;
+    }
+    $scope.deleteChecklistItem = function(checklist,checklistItem) {
+        let index = checklist.items.indexOf(checklistItem)
+            checklist.items.splice(index,1)
+    }
+    // <<<<<<<<<<<<<<<< Checklist functions >>>>>>>>>>>>>>>>>> end
 
     // <<<<<<<<<<<<<<<< Chat functions >>>>>>>>>>>>>>>>>>
     let stompClient = null;
@@ -492,9 +536,11 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
     $scope.checkScrolling = function () {
         $scope.checkScrolling.scrollCheck = messageArea.scrollTop === 0;
         if ($scope.checkScrolling.scrollCheck) {
-            if ($scope.ChatMessageArray[0].id !== 1) {
-                messageArea.scrollTop = 3;
-                $scope.getPreviousMessagesFromChatHistoryDB();
+            if($scope.ChatMessageArray[0]) {
+                if ($scope.ChatMessageArray[0].id !== 1) {
+                    messageArea.scrollTop = 3;
+                    $scope.getPreviousMessagesFromChatHistoryDB();
+                }
             }
         }
     }

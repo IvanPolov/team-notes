@@ -8,6 +8,7 @@ import com.gbdevteam.teamnotes.model.BoardRoleEnum;
 import com.gbdevteam.teamnotes.model.User;
 import com.gbdevteam.teamnotes.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class BoardService implements GenericService<BoardDTO> {
 
     private final BoardRepository boardRepository;
@@ -47,11 +49,12 @@ public class BoardService implements GenericService<BoardDTO> {
             dbBoard.setChatMessages(new ArrayList<>());
         }
         boardRepository.save(dbBoard);
-        boardRoleService.create(new BoardRoleDTO(dbBoard.getId(), dbBoard.getOwnerId(), BoardRoleEnum.OWNER));
+        boardRoleService.save(new BoardRoleDTO(dbBoard.getId(), dbBoard.getOwnerId(), BoardRoleEnum.OWNER));
         return dbBoard.getId();
     }
 
     public void update(BoardDTO board) {
+        log.info(board.toString());
         update(convertToEntity(board));
     }
 
@@ -60,7 +63,6 @@ public class BoardService implements GenericService<BoardDTO> {
     }
 
     public void deleteById(UUID id) {
-//        noteService.deleteAll(id);
         boardRepository.deleteById(id);
     }
 
@@ -71,7 +73,7 @@ public class BoardService implements GenericService<BoardDTO> {
     public void addUser(UUID boardId, UUID userId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException("Board service exception. Board not found."));
         board.setUser(userService.findUserById(userId));
-        boardRoleService.create(new BoardRoleDTO(boardId, userId, BoardRoleEnum.READER));
+        boardRoleService.save(new BoardRoleDTO(boardId, userId, BoardRoleEnum.READER));
         update(board);
     }
 

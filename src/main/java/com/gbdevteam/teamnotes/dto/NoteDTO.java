@@ -5,10 +5,13 @@ import com.gbdevteam.teamnotes.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -26,10 +29,10 @@ public class NoteDTO {
     @Min(0)
     @Max(9)
     private int priority;
+    private List<ChecklistDTO> checklists;
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
+    @Column(updatable = false)
     private Date createDate;
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date lastModifiedDate;
 }

@@ -54,14 +54,18 @@
                 <i class="bi bi-box-arrow-in-right fa-lg"></i>
             </button>
         </div>
-        <div class="promo-signup d-flex align-items-end">
-            <img alt="Work together" class="promo-image" src="/team-notes/image/hands.jpg">
-            <button class="btn-primary mb-1 signup-over-image" data-bs-target="#signup" data-bs-toggle="modal"
-                    title="Sign up" type="button">
-                <span>Sign up for free</span>
-            </button>
-        </div>
-        <div class="content-hr flex-grow-1 bg-dark"></div>
+    </div>
+    <div class="promo-signup d-flex align-items-end m-0">
+        <img alt="Work together" class="promo-image" src="/team-notes/image/hands.jpg">
+        <button class="btn-primary mb-1 signup-over-image" data-bs-target="#signup" data-bs-toggle="modal"
+                title="Sign up" type="button">
+            <span>Sign up for free</span>
+        </button>
+    </div>
+    <div class="content-hr flex-grow-1 bg-dark d-flex flex-column align-items-center justify-content-center text-white">
+        <div class="my-2 fs-5">Notes Team</div>
+        <div class="mb-2">team.notes.devteam@gmail.com</div>
+        <div class="mb-2 fw-lighter">@Copyright. All rights reserved.</div>
     </div>
     <div class="modal" id="signup" role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
@@ -78,7 +82,6 @@
                         <div class="d-flex">
                             <input class="form-control mb-2 w-80" id="validationServer01" name="email"
                                    ng-change="validateEmail(signupForm)"
-                                   ng-class="signupForm.email.$valid && isEmailValid && !signupForm.email.$pristine ? 'valid-form':'invalid-form'"
                                    ng-model="user.email" ng-model-options="{debounce:1000}" ng-required="true"
                                    placeholder="Your email..." required
                                    type="email">
@@ -91,7 +94,6 @@
                         <label class="form-label" for="validationServer02">Username</label>
                         <div class="d-flex">
                             <input class="form-control mb-2 w-80" id="validationServer02" name="username"
-                                   ng-class="signupForm.username.$valid && signupForm.username.$dirty ? 'valid-form':'invalid-form'"
                                    ng-minlength="5"
                                    ng-model="user.username" ng-required="true" placeholder="Your username..."
                                    type="text">
@@ -154,7 +156,7 @@
     </svg>
 
     <!-- Modal window for processing of registration. -->
-    <div class="modal fade" id="ringRegistrationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade" id="ringRegistrationModal" data-bs-toggle="modal" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true" class="body-ring">
         <div class="modal-dialog modal-dialog-centered">
 <!--            <div class="modal-content">-->
@@ -168,7 +170,7 @@
     </div>
 
     <!-- Modal window for about success entering. -->
-    <div class="modal fade" id="signupSuccessModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    <div class="modal fade" id="signupSuccessModal" data-bs-toggle="modal" data-bs-keyboard="false" tabindex="-1"
          aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -182,6 +184,25 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" ng-click="enterIntoService()"> Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="errorModal" data-bs-toggle="modal" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4> Registration Failed!</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        {{message}}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Ok</button>
                 </div>
             </div>
         </div>

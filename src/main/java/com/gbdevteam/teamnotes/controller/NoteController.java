@@ -38,6 +38,7 @@ public class NoteController {
     @PostMapping
     public void create(@Valid @RequestBody NoteDTO note, Principal principal) {
         if (!boardRoleService.checkRole(note.getBoardId(), principal.getName()).equals(BoardRoleEnum.READER)) {
+            log.info(note.toString());
             noteService.create(note);
         }
     }

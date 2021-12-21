@@ -104,12 +104,12 @@ public class SignupController {
         if (userService.verifyNewUserEmail(email, uuId)) {
             log.info("New User was confirmed by email!");
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("Thank you! Your account was confirmed by email!");
+                    .body("<div style='width:100%;height:90vh; display:flex; align-items:center;justify-content:center'><h3>Thank you! Your account was confirmed by email!</h3></div>");
 
         } else {
             log.error("Bad link to verify new user!");
             return ResponseEntity.badRequest()
-                    .body("Ooops. Your Link is not valid.");
+                    .body("<div style='width:100%;height:90vh; display:flex; align-items:center;justify-content:center'><h3>Whoops! Your Link is not valid.</h3></div>");
 
 
         }
