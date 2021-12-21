@@ -8,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
-import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.util.*;

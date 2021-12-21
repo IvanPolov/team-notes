@@ -34,8 +34,11 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         CHAT_Message: "CHAT_Message"
     }
     $scope.ChatMessageArray = [];
-
     $scope.ChatMessageArea = document.getElementById("messageArea");
+    $scope.countMissedMessages = 0;
+    $scope.missedMessagesIndicator = document.getElementById('missedMessagesNumber');
+
+
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
             console.log('acronym: ' + sentence + 'size: ' + size);
@@ -134,7 +137,6 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
 
     $scope.flag = false;
     $scope.checkUser = function () {
-
         if (!$scope.isVerified) {
             $http.get(contextPath + '/user/check')
                 .then(function (resp1) {
@@ -197,7 +199,7 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             })
     }
     $scope.fillBoardWithNotes = function (currentBoard) {
-
+        $scope.isShowChat = false;
         console.log('board id: ' + currentBoard.id)
         $scope.currentBoard = currentBoard;
         $scope.getBoardUsers();
@@ -428,7 +430,8 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             $scope.scrollStop = false;
             let minPageIndex = 0;
             response.data.sentMessageDate = new Date(response.data.sentMessageDate).toLocaleString("en-US");
-            $scope.ChatMessageArray.push(response.data)
+            $scope.ChatMessageArray.push(response.data);
+            $scope.countMissedMessagesFunction();
             console.log(response.data);
         }, function errorCallback(response) {
             console.log(response.data);
@@ -466,12 +469,29 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }
     };
 
+    $scope.countMissedMessagesFunction = function () {
+        if (!$scope.isShowChat) {
+            $scope.countMissedMessages++;
+        } else {
+            $scope.countMissedMessages = 0;
+        }
+    };
+
+
     $scope.toggleChatWindow = function (id) {
+        // $scope.isShowChat=true;
         if (document.getElementById(id).style.display === 'none') {
+            $scope.isShowChat = true;
             document.getElementById(id).style.display = 'block';
             messageArea.scrollTop = messageArea.scrollHeight;
+            $scope.countMissedMessages = 0;
+            $scope.missedMessagesIndicator.style.visibility = 'hidden';
+            // $scope.countMissedMessages = 0;
         } else {
+            $scope.missedMessagesIndicator.style.visibility = 'visible';
+            $scope.isShowChat = false;
             document.getElementById(id).style.display = 'none';
+            // $scope.countMissedMessagesFunction();
         }
     };
 
@@ -516,6 +536,11 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         });
     };
 
+    $scope.initNewMessage = function () {
+        // $scope.countMissedMessagesFunction();
+        $scope.messageAreaScrollTop();
+    };
+
     $scope.tryToLogout = function () {
         $scope.disconnect();
         $scope.clearUser();
@@ -539,5 +564,4 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         location.replace('promo.html');
     };
 
-})
-;
+});
