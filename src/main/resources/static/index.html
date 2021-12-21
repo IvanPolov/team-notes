@@ -463,15 +463,17 @@ class="border d-flex align-items-end" -->
 <!-- Chat. -->
 <div class="d-flex justify-content-end" style="margin-bottom: 1vh; margin-right: 10px"
      ng-show="isChatConnected && Users.length>1">
-
-    <button class="btn btn-info btn-rounded float-end" ng-click="toggleChatWindow('chatModalWindow')"
-            title="Chat with team" type="button">Chat
-    </button>
+    <div style="width:95px;">
+        <button class="btn btn-primary" ng-click="toggleChatWindow('chatModalWindow')"
+                title="Chat with team" type="button">Chat <span class="badge" id="missedMessagesNumber">{{countMissedMessages}}</span>
+        </button>
+    </div>
+    <!--    <span class="sr-only">непрочитанных сообщений</span>-->
 </div>
 
 <div id="chatModalWindow"
-     style="width: 58vw; height: 50vh; position: absolute; bottom: 2vh; margin: 3px; right: 85px; display: none;"
-     data-bs-keyboard="false" tabindex="-1"  ng-show="isChatConnected && Users.length>1">
+     style="width: 58vw; height: 50vh; position: absolute; bottom: 2vh; margin: 3px; right: 95px; display: none;"
+     data-bs-keyboard="false" tabindex="-1" ng-show="isShowChat">
 
     <section class="rounded mb-3 m-2 pb-1" class=" d-flex justify-content-end bottom"
              style="background-color: white; border-color: darkgrey; border-width: thick ;width: 56vw; height: 50vh;padding-top: 5px;">
@@ -496,7 +498,7 @@ class="border d-flex align-items-end" -->
                     style="max-width: 50vw; height: 33vh; overflow-y: auto; overflow-x: hidden;"
                     id="messageArea">
                     <li class="d-flex justify-content-between mb-2" ng-repeat="item in ChatMessageArray"
-                        ng-init="messageAreaScrollTop()">
+                        ng-init="initNewMessage()">
                         <div class="card" style="min-width: 50%">
                             <div class="card-header toast-header d-flex justify-content-between p-2"
                                  style="min-width:300px;">
@@ -526,6 +528,7 @@ class="border d-flex align-items-end" -->
                         id="sendNewMessage"
                         ng-click="sendNewMessage()">Send
                 </button>
+
             </div>
         </div>
     </section>

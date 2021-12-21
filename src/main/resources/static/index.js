@@ -34,8 +34,11 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         CHAT_Message: "CHAT_Message"
     }
     $scope.ChatMessageArray = [];
-
     $scope.ChatMessageArea = document.getElementById("messageArea");
+    $scope.countMissedMessages =0;
+    $scope.missedMessagesIndicator=document.getElementById('missedMessagesNumber');
+
+
     $scope.acronym = function (sentence, size) {
         if (sentence != null) {
             console.log('acronym: ' + sentence + 'size: ' + size);
@@ -466,11 +469,27 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }
     };
 
+     $scope.countMissedMessagesFunction = function () {
+        if (isShowChat) {
+            $scope.missedMessagesIndicator.style.visibility ='hidden';
+            $scope.countMissedMessages=0;
+        } else {
+            if ($scope.countMissedMessages===0) {
+                $scope.missedMessagesIndicator.style.visibility ='hidden';
+            }
+            $scope.missedMessagesIndicator.style.visibility ='visible';
+            $scope.countMissedMessages++;
+     };
+
+
+
     $scope.toggleChatWindow = function (id) {
         if (document.getElementById(id).style.display === 'none') {
+            $scope.isShowChat = true;
             document.getElementById(id).style.display = 'block';
             messageArea.scrollTop = messageArea.scrollHeight;
         } else {
+            $scope.isShowChat = false;
             document.getElementById(id).style.display = 'none';
         }
     };
@@ -514,6 +533,11 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         }, function errorCallback(response) {
             console.log(response.data);
         });
+    };
+
+    $scope.initNewMessage = function () {
+        $scope.countMissedMessagesFunction();
+        $scope.messageAreaScrollTop();
     };
 
     $scope.tryToLogout = function () {
