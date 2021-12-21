@@ -33,7 +33,7 @@ public class User {
 
     private String password;
 
-    @OneToMany(mappedBy = "owner", cascade=ALL)
+    @OneToMany(mappedBy = "owner", cascade = ALL)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnoreProperties("owner")
@@ -54,6 +54,8 @@ public class User {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Date dateRegistration;
+
+    private boolean isChatWriter = true;
 
     public User(String email, String username, Boolean isVerified, String password, List<Role> roles) {
         this.email = email;
@@ -81,5 +83,8 @@ public class User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+
+
+
     }
 }

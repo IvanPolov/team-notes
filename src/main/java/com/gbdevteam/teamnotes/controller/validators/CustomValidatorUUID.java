@@ -2,12 +2,10 @@ package com.gbdevteam.teamnotes.controller.validators;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 @NoArgsConstructor
 @Slf4j
