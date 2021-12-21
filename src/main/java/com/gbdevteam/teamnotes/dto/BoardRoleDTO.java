@@ -12,7 +12,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BoardRoleDTO {
 
+    private UUID id;
     private UUID boardId;
     private UUID userId;
     private BoardRoleEnum role;
+
+    public BoardRoleDTO(UUID boardId, UUID userId, BoardRoleEnum role) {
+        this.boardId = boardId;
+        this.userId = userId;
+        this.role = role;
+    }
 }

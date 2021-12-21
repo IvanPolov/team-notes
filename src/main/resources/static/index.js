@@ -156,6 +156,9 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
             $http.delete(contextPath + '/board/' + $scope.currentBoard.id + '/removeUser/' + user.id)
                 .then(function () {
                     $scope.Users.splice($scope.Users.indexOf(user), 1);
+                    if(user.id === $scope.user?.id) {location.reload()
+                    console.log('reload page')
+                    }
                 })
         }
 
@@ -233,15 +236,22 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.get(contextPath + '/board-roles/' + $scope.currentBoard.id)
             .then(function (resp) {
                 $scope.Roles = resp.data
-                console.log($scope.Roles)
                 $scope.linkRoleToUser($scope.user?.id)
                 $scope.getBoardRoleTypes()
             })
     }
     //link the role to the user
     $scope.linkRoleToUser = function (userId) {
-        $scope.userRole = $scope.Roles.find(r => r.userId === userId).role;
+        $scope.userRole = $scope.getUserRole(userId).role;
         console.log($scope.userRole)
+    }
+    $scope.getUserRole = function (userId){
+        // console.log($scope.Roles?.find(r => r.userId === userId))
+        return $scope.Roles?.find(r => r.userId === userId);
+    }
+    $scope.updateRole = function (userId){
+        console.log($scope.getUserRole(userId))
+        $http.post(contextPath + '/board-roles/set', $scope.getUserRole(userId))
     }
 
     //types of board roles
@@ -249,6 +259,10 @@ angular.module('app', []).controller('indexController', function ($rootScope, $s
         $http.get(contextPath + '/board-roles/types')
             .then(function (resp) {
                 $scope.RoleTypes = resp.data;
+                const index = $scope.RoleTypes.indexOf('OWNER')
+                if(index > -1){
+                    $scope.RoleTypes.splice(index,1)
+                }
                 console.log($scope.RoleTypes)
             });
     }

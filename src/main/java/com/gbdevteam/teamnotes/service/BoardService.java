@@ -46,7 +46,7 @@ public class BoardService implements GenericService<BoardDTO> {
 
     public UUID create(BoardDTO boardDTO) {
         Board dbBoard = boardRepository.save(convertToEntity(boardDTO));
-        boardRoleService.create(new BoardRoleDTO(dbBoard.getId(), dbBoard.getOwnerId(), BoardRoleEnum.OWNER));
+        boardRoleService.save(new BoardRoleDTO(dbBoard.getId(), dbBoard.getOwnerId(), BoardRoleEnum.OWNER));
         return dbBoard.getId();
     }
 
@@ -70,7 +70,7 @@ public class BoardService implements GenericService<BoardDTO> {
     public void addUser(UUID boardId, UUID userId) {
         Board board = boardRepository.findById(boardId).orElseThrow(() -> new NoSuchElementException("Board service exception. Board not found."));
         board.setUser(userService.findUserById(userId));
-        boardRoleService.create(new BoardRoleDTO(boardId, userId, BoardRoleEnum.READER));
+        boardRoleService.save(new BoardRoleDTO(boardId, userId, BoardRoleEnum.READER));
         update(board);
     }
 

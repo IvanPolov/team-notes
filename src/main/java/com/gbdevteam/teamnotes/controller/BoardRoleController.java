@@ -40,8 +40,8 @@ public class BoardRoleController {
     @PostMapping("/set")
     public void setBoardUserRole(@Valid @RequestBody BoardRoleDTO boardRoleDTO, Principal principal) {
         BoardRoleEnum boardRole = boardRoleService.checkRole(boardRoleDTO.getBoardId(), principal.getName());
-        if (boardRole.equals(BoardRoleEnum.OWNER) || boardRole.equals(BoardRoleEnum.MANAGER)) {
-            boardRoleService.create(boardRoleDTO);
+        if ((boardRole.equals(BoardRoleEnum.OWNER) || boardRole.equals(BoardRoleEnum.MANAGER)) && !boardRoleDTO.getRole().equals(BoardRoleEnum.OWNER) ) {
+            boardRoleService.save(boardRoleDTO);
         }
     }
 }

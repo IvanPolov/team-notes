@@ -5,6 +5,7 @@ import com.gbdevteam.teamnotes.model.BoardRole;
 import com.gbdevteam.teamnotes.model.BoardRoleEnum;
 import com.gbdevteam.teamnotes.repository.BoardRoleRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class BoardRoleService {
 
     private final ModelMapper modelMapper;
@@ -38,11 +40,9 @@ public class BoardRoleService {
         return findBoardUserRole(boardId, userID).getRole();
     }
 
-    public UUID create(BoardRoleDTO boardRoleDTO) {
-        return boardRoleRepository.save(convertToEntity(boardRoleDTO)).getId();
-    }
-
-    public void update(BoardRoleDTO boardRoleDTO) {
+    public void save(BoardRoleDTO boardRoleDTO) {
+//        BoardRole boardRole = boardRoleRepository.findByBoardIdAndUserId(boardRoleDTO.getBoardId(), boardRoleDTO.getUserId());
+//        if(boardRole != null) boardRole.setRole(boardRoleDTO.getRole());
         boardRoleRepository.save(convertToEntity(boardRoleDTO));
     }
 
