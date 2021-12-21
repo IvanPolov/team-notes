@@ -465,7 +465,8 @@ class="border d-flex align-items-end" -->
      ng-show="isChatConnected && Users.length>1">
     <div style="width:95px;">
         <button class="btn btn-primary" ng-click="toggleChatWindow('chatModalWindow')"
-                title="Chat with team" type="button">Chat <span class="badge" id="missedMessagesNumber">{{countMissedMessages}}</span>
+                title="Chat with team" type="button">Chat <span class="badge" id="missedMessagesNumber"
+                                                                ng-show="countMissedMessages>0">{{countMissedMessages}}</span>
         </button>
     </div>
     <!--    <span class="sr-only">непрочитанных сообщений</span>-->
