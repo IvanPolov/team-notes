@@ -519,7 +519,8 @@ class="border d-flex align-items-end" -->
          ng-show="isChatConnected && Users.length>1">
 
         <button class="btn btn-primary btn-rounded float-end" ng-click="toggleChatWindow('chatModalWindow')"
-                title="Chat with team" type="button">Chat
+                title="Chat with team" type="button">Chat<span class="badge" id="missedMessagesNumber"
+                                                               ng-show="countMissedMessages>0">{{countMissedMessages}}</span>
         </button>
     </div>
 </div>
@@ -527,7 +528,7 @@ class="border d-flex align-items-end" -->
 
 <div id="chatModalWindow"
      style="position: absolute; bottom: 10vh; margin: 3px; right: 15px; display: none;min-width: 50vw;"
-     data-bs-keyboard="false" tabindex="-1" ng-show="isChatConnected && Users.length>1">
+     data-bs-keyboard="false" tabindex="-1" ng-show="isShowChat">
 
     <section class="rounded m-2 p-2" class=" d-flex justify-content-end bottom"
              style="background-color: white; border-color: darkgrey; border-width: thick">
@@ -552,14 +553,14 @@ class="border d-flex align-items-end" -->
                     style="height: 300px; overflow-y: auto; overflow-x: hidden;"
                     id="messageArea">
                     <li class="mb-2 me-2" ng-repeat="item in ChatMessageArray"
-                        ng-init="messageAreaScrollTop()">
+                        ng-init="initNewMessage()">
                         <div class="card w-100" style="min-width: 150px;">
                             <div class="card-header toast-header d-flex justify-content-between p-2 flex-wrap w-100">
                                 <span class="fw-bold mb1-ns">{{item.senderName}}</span>
                                 <span class="text-muted small mb-0-n"><i class="far fa-clock">
                                     {{item.sentMessageDate}}</i></span>
                             </div>
-                            <div class="card-body w-100">
+                            <div class="card-body" style="min-width: 50%">
                                 <p class="mb-0">
                                     {{item.message}}
                                 </p>
@@ -581,6 +582,7 @@ class="border d-flex align-items-end" -->
                         id="sendNewMessage"
                         ng-click="sendNewMessage()">Send
                 </button>
+
             </div>
         </div>
     </section>
