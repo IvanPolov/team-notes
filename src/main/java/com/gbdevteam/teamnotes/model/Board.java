@@ -1,5 +1,6 @@
 package com.gbdevteam.teamnotes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.gbdevteam.teamnotes.model.chat.ChatMessage;
@@ -26,10 +27,12 @@ public class Board {
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "board")
+    @JsonIgnore
     @JsonManagedReference
     private List<Note> notes;
 
     @ManyToOne
+    @JsonIgnore
     @JsonIgnoreProperties("myBoards")
     @JoinColumn(name = "owner_id", insertable = false, updatable = false)
     private User owner;
@@ -38,6 +41,7 @@ public class Board {
     private UUID ownerId;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JsonIgnoreProperties(value = "boards", allowSetters = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
