@@ -1,9 +1,6 @@
 package com.gbdevteam.teamnotes.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,14 +10,14 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @Entity
 @NoArgsConstructor
-public class Note implements Serializable {
+public class Note {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -32,12 +29,15 @@ public class Note implements Serializable {
     private String header;
 
     @Column(length = 600)
-    private String content;//second split String -> class Content
+    private String content;
+
+    @OneToMany
+    private List<Checklist> checklists;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @JsonBackReference
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "board_id", insertable = false, updatable = false)
     private Board board;
 
@@ -47,16 +47,20 @@ public class Note implements Serializable {
     @ManyToOne
     private User creator;
 
-    @CreationTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
-    private Date createDate;
+    private String color;
 
+    private int priority;
+
+    private Boolean isFavorite;
+
+    @CreationTimestamp
+    private Date createDate;
     @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date lastModifiedDate;
 
-    public Note(String header, String content){
+    public Note(String header, String content, UUID boardId) {
         this.header = header;
         this.content = content;
+        this.boardId = boardId;
     }
 }
